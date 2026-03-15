@@ -14,26 +14,11 @@ FDCAN_TxHeaderTypeDef tx_Head;
 CAN_Motor_para_t can_dbc_msg;
 CAN_Motor_List1_t can_dbc_list1;
 CAN_Motor_List2_t can_dbc_list2;
-
-extern float theta;
-extern float Ia_fb, Ib_fb, Ic_fb;
-extern uint32_t adc_cnt;
-extern float target_rpm, target_iq;
-extern float Id_fb, Iq_fb;
 extern struct SMO_Parameter SMO_OB;
-extern float Speed_Ref, Speed_Fb;
-extern enum SpeedCtrlState_t spd_ctrl_state;
-extern enum Motor_State Motor_State;
-extern uint8_t Speed_Switch_Flag;
-extern uint8_t MOTOR_Run_flag;
-extern float Encode_theta, Encode_rpm;
-extern int16_t Encode_ABZ_offset;
-extern uint32_t adc_cnt;
-extern uint16_t adc_v24;
-
-extern uint8_t MOTOR_Run_flag;
-extern float Speed_Command;
-
+extern struct NonFluxObserver_Parameter NonFlux_OB;
+extern Speed_Ctrl_t Speed_Ctrl;
+extern Current_Task_t Current_Task;
+extern float Udc_1ms;
 uint8_t Can_Run_request;
 float Can_speed_request;
 
@@ -49,12 +34,12 @@ void fdcan_transmit_data(void)
     tx_Head.FDFormat = FDCAN_CLASSIC_CAN;            // Use classic CAN format
     tx_Head.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // No Tx events
     tx_Head.MessageMarker = 0;                       // Message marker for identification
-    can_dbc_msg.Motor_status = (float)Motor_State;
-    can_dbc_msg.Speed_status = (float)spd_ctrl_state;
-    can_dbc_msg.Bus_Voltage = (float)((float)adc_v24 * 1.1f * 78.0f / 4095.0f); // Convert Vbus to integer and scale by 10
-    can_dbc_msg.Id = (Id_fb);                                                   // Scale Id_fb by 4
-    can_dbc_msg.Iq = (Iq_fb);                                                   // Convert Iq_fb to integer
-    can_dbc_msg.Speed_rpm = (Speed_Fb);                                         // Shift Speed_Fb by 80 to fit in uint8_t
+    can_dbc_msg.Motor_status = (float)Current_Task.Motor_State;
+    can_dbc_msg.Speed_status = (float)Speed_Ctrl.spd_ctrl_state;
+    can_dbc_msg.Bus_Voltage = (float)(Udc_1ms); // Convert Vbus to integer and scale by 10
+    can_dbc_msg.Id = (Current_Task.Id_fb);                                                   // Scale Id_fb by 4
+    can_dbc_msg.Iq = (Current_Task.Iq_fb);                                                   // Convert Iq_fb to integer
+    can_dbc_msg.Speed_rpm = (Speed_Ctrl.Speed_Fb);                                         // Shift Speed_Fb by 80 to fit in uint8_t
     CAN_Pack_Motor_para(send_buffer, &can_dbc_msg);
     // Transmit the data over FDCAN
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_Head, (uint8_t *)send_buffer);
@@ -91,6 +76,10 @@ void fdcan_transmit_data(void)
 }
 
 FDCAN_RxHeaderTypeDef rx_Head;
+
+extern uint8_t MOTOR_Run_flag;
+extern float Speed_Command;
+
 
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {

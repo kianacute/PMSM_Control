@@ -1,0 +1,77 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.32.0.0
+Copyright (C) 2020 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: gf Kiacute, fg, LIC=UJWP0-BW4RJ-63NMB-20GJY-M53IU-T0T4J
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.32.0.0
+Toolchain Path:  D:\Keil\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.32.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.8.0
+Dialog DLL:      TCM.DLL V1.46.0.0
+ 
+<h2>Project:</h2>
+D:\STM32\Motor\PMSM_Control\Project\PMSM_Control\MDK-ARM\PMSM_Control.uvprojx
+Project File Date:  03/15/2026
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil\ARM\ARMCC\Bin'
+Build target 'PMSM_Control'
+compiling speed_ctrl.c...
+../Current_Loop/inc/Current_Task.h(60): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
+..\Speed_Loop\Src\speed_ctrl.c(57): warning:  #1295-D: Deprecated declaration SPEED_CTRL_ALIGN_Task - give arg types
+  void SPEED_CTRL_ALIGN_Task();
+..\Speed_Loop\Src\speed_ctrl.c(189): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c(189): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c(193): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c(193): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+..\Speed_Loop\Src\speed_ctrl.c: 8 warnings, 0 errors
+linking...
+Program Size: Code=37672 RO-data=2812 RW-data=888 ZI-data=9552  
+FromELF: creating hex file...
+"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 8 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
+                ARM.CMSIS.5.7.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.4.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32G4xx_DFP.2.1.0.pack
+                Keil.STM32G4xx_DFP.2.1.0
+                STMicroelectronics STM32G4 Series Device Support
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_PMSM_Control
+  D:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.4.0
+      Include file:  CMSIS\Core\Include\tz_context.h
+Build Time Elapsed:  00:00:00
+</pre>
+</body>
+</html>

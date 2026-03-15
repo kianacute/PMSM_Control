@@ -7,36 +7,50 @@
 #include "Hal_Math.h"
 #include "FreeRTOS.h"
 
-enum SpeedCtrlState_t spd_ctrl_state;
-uint32_t spd_ctrl_timer = 0;
+
 
 extern uint8_t MOTOR_Run_flag;
-
-extern MOTOR_t PMSM_42JS;
-uint32_t tick_count_idle;
-
-float target_iq, target_id, target_is;
-
-float Speed_Ref, Speed_Fb;
-
 extern float Speed_Command;
+extern MOTOR_t PMSM_42JS;
 
-float Speed_Sub_Step, Speed_Add_Step;
+float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
+float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755, 
+                                0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
+float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
+                                0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
 
-static MOTOR_t *pMotor;
+Speed_Ctrl_t Speed_Ctrl = {
+    .FREQ_Hz = 1000,
+    .IF_Start_Speed_Lookup = {0},
+    .IF_Start_Iq_Lookup = {0}
+};
 
-Hal_PI_t Speed_PI;
+uint8_t align_done = 0;
 
 void Speed_Ctrl_Init(void)
 {
-    spd_ctrl_state = SPEED_CTRL_IDLE;
-    spd_ctrl_timer = 0;
-    pMotor = &PMSM_42JS;
-    Speed_PI.kp = 5.1755e-04;
-    Speed_PI.ki = 9.1609e-05;
-    Speed_PI.out_max = 5.0f;
-    Speed_PI.out_min = -5.0f;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
+    Speed_Ctrl.spd_ctrl_timer = 0;
+    Speed_Ctrl.pMotor = &PMSM_42JS;
+    Speed_Ctrl.Speed_PI.kp = 5.1755e-04;
+    Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
+    Speed_Ctrl.Speed_PI.out_max = 5.0f;
+    Speed_Ctrl.Speed_PI.out_min = -5.0f;
     Speed_Command = 2500.0f;
+    /* IF阶段初始化查表*/
+    Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
+    Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
+    Speed_Ctrl.IF_Start_Speed_Lookup.table_size = Speed_Ctrl.pMotor->IF_Start_Profile_Length;
+    Speed_Ctrl.IF_Start_Iq_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
+    Speed_Ctrl.IF_Start_Iq_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Iq_A;
+    Speed_Ctrl.IF_Start_Iq_Lookup.table_size = Speed_Ctrl.pMotor->IF_Start_Profile_Length;
+    /* 速度环PI初始化查表*/
+    Speed_Ctrl.Speed_PI_Ki_Lookup.x_table = Speed_PI_Lookup_Speed_index;
+    Speed_Ctrl.Speed_PI_Ki_Lookup.y_table = Speed_PI_Lookup_Ki;
+    Speed_Ctrl.Speed_PI_Ki_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
+    Speed_Ctrl.Speed_PI_Kp_Lookup.x_table = Speed_PI_Lookup_Speed_index;
+    Speed_Ctrl.Speed_PI_Kp_Lookup.y_table = Speed_PI_Lookup_Kp;
+    Speed_Ctrl.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float); 
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -51,12 +65,12 @@ uint32_t speed_cnt = 0;
 void Speed_Ctrl_Task(void)
 {
     speed_cnt++;
-    switch (spd_ctrl_state)
+    switch (Speed_Ctrl.spd_ctrl_state)
     {
     case SPEED_CTRL_ALIGN:
         // Handle align state
         SPEED_CTRL_ALIGN_Task();
-        spd_ctrl_timer++;
+        Speed_Ctrl.spd_ctrl_timer++;
         break;
     case SPEED_CTRL_IDLE:
         // Handle idle state
@@ -65,43 +79,42 @@ void Speed_Ctrl_Task(void)
     case SPEED_CTRL_OPEN:
         // Handle open state
         SPEED_CTRL_OPEN_Task();
-        spd_ctrl_timer++;
+        Speed_Ctrl.spd_ctrl_timer++;
         break;
     case SPEED_CTRL_SWITCH:
         // Handle switch state
         SPEED_CTRL_SWITCH_Task();
-        spd_ctrl_timer++;
+        Speed_Ctrl.spd_ctrl_timer++;
         break;
     case SPEED_CTRL_RUN:
         // Handle run state
         SPEED_CTRL_RUN_Task();
-        spd_ctrl_timer++;
+        Speed_Ctrl.spd_ctrl_timer++;
         break;
     case SPEED_CTRL_WAIT:
         // Handle brake state
         SPEED_CTRL_WAIT_Task();
-        spd_ctrl_timer++;
+        Speed_Ctrl.spd_ctrl_timer++;
         break;
     default:
-        spd_ctrl_state = SPEED_CTRL_IDLE;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
         break;
     }
 }
-
-uint8_t align_done = 0;
 
 void SPEED_CTRL_IDLE_Task(void)
 {
     if (MOTOR_Run_flag == 1)
     {
-        spd_ctrl_state = SPEED_CTRL_ALIGN;
-        tick_count_idle = xTaskGetTickCount();
-        Speed_Ref = 0;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_ALIGN;
+        Speed_Ctrl.tick_count_idle = xTaskGetTickCount();
+        Speed_Ctrl.Speed_Ref = 0;
+        Speed_Ctrl.Speed_Switch_Flag = 0;
         align_done = 0;
     }
     else
     {
-        spd_ctrl_state = SPEED_CTRL_IDLE;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
     }
 }
 
@@ -110,15 +123,15 @@ extern float theta;
 void SPEED_CTRL_ALIGN_Task()
 {
     // Alignment logic can be implemented here if needed
-    target_id = 1.0f;
-    target_iq = 0;
-    Speed_Ref = 0;
-    // theta = 0; // Align to d-axis
-    vTaskDelay(100);
-    align_done = 1;
-    vTaskDelay(100);
-    target_id = 0.0f;
-    vTaskDelay(100);
+    // Speed_Ctrl.target_id = 1.0f;
+    // Speed_Ctrl.target_iq = 0;
+    // Speed_Ctrl.Speed_Ref = 0;
+    // // theta = 0; // Align to d-axis
+    // vTaskDelay(100);
+    // align_done = 1;
+    // vTaskDelay(100);
+    // Speed_Ctrl.target_id = 0.0f;
+    // vTaskDelay(100);
     // vTaskDelay(1000);
     // theta = 0.17*6;
     // vTaskDelay(5000);
@@ -126,39 +139,35 @@ void SPEED_CTRL_ALIGN_Task()
     // vTaskDelay(5000);
     // theta = 0.17*18;
     // vTaskDelay(5000);
-    spd_ctrl_state = SPEED_CTRL_OPEN;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
 }
 
 void SPEED_CTRL_OPEN_Task(void)
 {
-    float tick_count = (xTaskGetTickCount() - tick_count_idle) / 1000.0f;
-    Speed_Ref = Lookup_Table_Linear(tick_count, pMotor->IF_Start_Ramp_Sec,
-                                    pMotor->IF_Start_Speed_RPM, pMotor->IF_Start_Profile_Length);
-    target_iq = Lookup_Table_Linear(tick_count, pMotor->IF_Start_Ramp_Sec, 
-                                    pMotor->IF_Start_Iq_A, pMotor->IF_Start_Profile_Length);
-    target_id = 0;
-    if(Speed_Ref >= 600)
+    float tick_count = (xTaskGetTickCount() - Speed_Ctrl.tick_count_idle) / 1000.0f;
+    Speed_Ctrl.Speed_Ref = Lookup_Table_Linear(tick_count, &Speed_Ctrl.IF_Start_Speed_Lookup);
+    Speed_Ctrl.target_iq = Lookup_Table_Linear(tick_count, &Speed_Ctrl.IF_Start_Iq_Lookup);
+    Speed_Ctrl.target_id = 0;
+    if(Speed_Ctrl.Speed_Ref >= 600)
     {
-        spd_ctrl_state = SPEED_CTRL_SWITCH;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_SWITCH;
     }
 }
 
-extern uint8_t Speed_Switch_Flag;
-
 void SPEED_CTRL_SWITCH_Task(void)
 {
-    if (Speed_Switch_Flag == 0)
+    if (Speed_Ctrl.Speed_Switch_Flag == 0)
     {
-        target_iq -= (SPEED_SWITCH_ID_SUB_STEP);
-        if (target_iq < 0)
+        Speed_Ctrl.target_iq -= (SPEED_SWITCH_ID_SUB_STEP);
+        if (Speed_Ctrl.target_iq < 0)
         {
-            target_iq = 0;
+            Speed_Ctrl.target_iq = 0;
         }
     }
     else
     {
-        Speed_PI.integral = target_iq;
-        spd_ctrl_state = SPEED_CTRL_RUN;
+        Speed_Ctrl.Speed_PI.integral = Speed_Ctrl.target_iq;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
     }
 }
 
@@ -167,25 +176,31 @@ void SPEED_CTRL_RUN_Task(void)
 {
     if (MOTOR_Run_flag == 1)
     {
-        Speed_Ref = Oblique_Wave(Speed_Command, Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-        target_iq = Hal_PI_f32(&Speed_PI, Speed_Ref - Speed_Fb);
-        if(Speed_Ref <= 600 && Speed_Ref >= -600)
+        Speed_Ctrl.Speed_Command = Speed_Command;
+        Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
+
+        /*转速环PI参数查表*/
+        Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Kp_Lookup);
+        Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Ki_Lookup);
+
+        Speed_Ctrl.target_iq = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
+        if(Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
         {
-            target_id = Oblique_Wave(0.3f, target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+            Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         }
         else
         {
-            target_id = Oblique_Wave(0.0f, target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+            Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         }
     }
     else if (MOTOR_Run_flag == 0)
     {
-        Speed_Ref = Oblique_Wave(0.0f, Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-        target_iq = Hal_PI_f32(&Speed_PI, Speed_Ref - Speed_Fb);
-        target_id = Oblique_Wave(0.0f, target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-        if (Speed_Ref < 600)
+        Speed_Ctrl.Speed_Ref = Oblique_Wave(0.0f, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
+        Speed_Ctrl.target_iq = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
+        Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        if (Speed_Ctrl.Speed_Ref < 600)
         {
-            spd_ctrl_state = SPEED_CTRL_WAIT;
+            Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_WAIT;
         }
     }
 }
@@ -193,5 +208,5 @@ void SPEED_CTRL_RUN_Task(void)
 void SPEED_CTRL_WAIT_Task(void)
 {
     vTaskDelay(2000);
-    spd_ctrl_state = SPEED_CTRL_IDLE;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
 }

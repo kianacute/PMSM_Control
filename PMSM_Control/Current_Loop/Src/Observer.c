@@ -7,6 +7,27 @@
 struct SMO_Parameter SMO_OB = {0};
 extern MOTOR_t PMSM_42JS;
 
+float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
+float Speed_index[10] = {0, 20, 50, 100, 250, 500, 600, 600, 600, 600};
+float Observer_PLL_Kp[10] = {0.1f, 0.5f, 1.0f, 5.0f, 10.0f, 20.0f, 50.0f, 50.0f, 50.0f, 50.0f};
+float Observer_PLL_Ki[10] = {0.01f, 0.05f, 0.1f, 0.5f, 1.0f, 2.0f, 10.0f, 10.0f, 10.0f, 10.0f};
+
+
+void PLL_PI_Parameter_Init(struct PLL *pPLL, float Speed_Ref)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        if (Speed_Ref < Speed_index[i])
+        {
+            pPLL->PLL_PI.kp = Observer_PLL_Kp[i];
+            pPLL->PLL_PI.ki = Observer_PLL_Ki[i];
+            break;
+        }
+    }
+}
+
+void PLL_PI_Parameter_Update(struct PLL *pPLL, float Speed_Ref);
+
 void SMO_Observer_Init(void)
 {
     // memset(&SMO, 0, sizeof(SMO));

@@ -16,11 +16,18 @@ typedef struct Hal_PI_f32
     float32_t output;       // Output value
 }Hal_PI_t;
 
+typedef struct Lookup_Table
+{
+    float *x_table;
+    float *y_table;
+    uint32_t table_size;
+}Lookup_Table_t;
+
 float32_t Hal_PI_f32(Hal_PI_t* controller, float error);
 
 float32_t Hal_LPF_f32(float coff, float input);
 
-float Lookup_Table_Linear(float x, float x_table[], float y_table[], uint32_t table_size);
+float Lookup_Table_Linear(float x, Lookup_Table_t *table);
 
 int binary_search_float_first(float arr[], uint32_t n, float target);
 

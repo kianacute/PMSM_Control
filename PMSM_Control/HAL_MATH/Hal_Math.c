@@ -32,7 +32,7 @@ float32_t Hal_PI_f32(Hal_PI_t *controller, float error)
      return controller->output;
 }
 
-/// @brief 一维二分查找，数组必须满足单调性，查找到小于等于目标值的最后一个元素的下标
+/// @brief 二分查找，数组必须满足单调性
 /// @param arr 浮点数组，数组下标从0开始
 /// @param n 数组长度
 /// @param target 目标值
@@ -68,25 +68,22 @@ int binary_search_float_first(float arr[], uint32_t n, float target)
 /// @param y_table 查找表的y坐标数组
 /// @param table_size 查找表的大小
 /// @return 插值结果
-float Lookup_Table_Linear(float x, float x_table[], float y_table[], uint32_t table_size)
+float Lookup_Table_Linear(float x, Lookup_Table_t *table)
 {
-     if (x <= x_table[0])
+     if (x <= table->x_table[0])
      {
-          return y_table[0];
+          return table->y_table[0];
      }
-     else if (x >= x_table[table_size - 1])
+     else if (x >= table->x_table[table->table_size - 1])
      {
-          return y_table[table_size - 1];
+          return table->y_table[table->table_size - 1];
      }
-     else
-     {
-          int idx = binary_search_float_first(x_table, table_size, x);
-          float x0 = x_table[idx];
-          float y0 = y_table[idx];
-          float x1 = x_table[idx + 1];
-          float y1 = y_table[idx + 1];
-          return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
-     }
+     int idx = binary_search_float_first(table->x_table, table->table_size, x);
+     float x0 = table->x_table[idx];
+     float y0 = table->y_table[idx];
+     float x1 = table->x_table[idx + 1];
+     float y1 = table->y_table[idx + 1];
+     return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
 }
 
 /// @brief 将角度限制在0-2PI范围内

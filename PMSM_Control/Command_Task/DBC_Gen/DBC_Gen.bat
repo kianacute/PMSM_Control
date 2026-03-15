@@ -1,0 +1,1 @@
+python .\DBC_Message_Gen.py --dbc Test.dbc --msgs Motor_CMD,Motor_para,Motor_List1,Motor_List2 --output CAN_DBC_Messages.h

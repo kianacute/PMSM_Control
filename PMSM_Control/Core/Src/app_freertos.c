@@ -111,8 +111,6 @@ void my_task1(void *argument)
     }
 }
 
-uint32_t my_task2_cnt; 
-
 
 extern uint32_t adc_cnt;
 uint8_t printf_buffer[100];
