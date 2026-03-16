@@ -184,6 +184,9 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
                      &Current_Task.Ubeta_Ref, Current_Task.sinVal, Current_Task.cosVal);
     SVPWM_Calculate(PWM_MAX_DUTY, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, &Current_Task.sector);
+    Current_Task.Voltage_err = arm_sqrt_f32((Current_Task.Ualpha_Ref * Current_Task.Ualpha_Ref
+                             + Current_Task.Ubeta_Ref * Current_Task.Ubeta_Ref) - Udc / WEAK_VOLTAGE_COMPENSATION, 
+                                &Current_Task.Voltage_err);          
 }
 
 void Current_PWM_Switch(uint8_t PWM_Flag)
@@ -328,10 +331,10 @@ void Current_Task_Switch(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Udc_1ms);
-    vofa_buffer.data[3] = (float32_t)(Current_Task.Id_fb);
-    vofa_buffer.data[4] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[5] = (float32_t)(Current_Task.Ia_fb);
+    vofa_buffer.data[2] = (float32_t)(Current_Task.Id_fb);
+    vofa_buffer.data[3] = (float32_t)(Current_Task.Iq_fb);
+    vofa_buffer.data[4] = (float32_t)(Current_Task.Voltage_err);
+    vofa_buffer.data[5] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
     vofa_buffer.data[6] = (float32_t)(Current_Task.Ib_fb);
     vofa_buffer.data[7] = (float32_t)(Current_Task.Ic_fb);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));

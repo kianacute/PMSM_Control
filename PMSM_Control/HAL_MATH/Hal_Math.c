@@ -129,3 +129,76 @@ float Oblique_Wave(float end_value, float cur_value, float Add_Step, float Sub_S
      }
      return cur;
 }
+
+
+void PLL_Updata(struct PLL *pPLL, float alpha, float beta, float Discrete_time)
+{
+    float deta = alpha * arm_cos_f32(pPLL->theta) - beta * arm_sin_f32(pPLL->theta);
+    pPLL->we = Hal_PI_f32(&pPLL->PLL_PI, deta);
+    pPLL->theta = (pPLL->theta + pPLL->we * Discrete_time);
+    pPLL->theta = Limit_2PI(pPLL->theta);
+    return;
+}
+
+/// @brief 滞回比较器初始化函数
+/// @param hcomp 滞回比较器结构体指针
+/// @param th_h 高阈值
+/// @param th_l 低阈值
+/// @param delay 延迟时间，单位为周期数 (例如，delay=5表示需要连续5个周期满足条件才改变输出状态)
+/// @author
+void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l, uint32_t delay) {
+    hcomp->enable = 0;
+    hcomp->reset = 0;
+    hcomp->threshold_high = th_h;
+    hcomp->threshold_low = th_l;
+    hcomp->delay_time = delay;
+    hcomp->delay_cnt = 0;
+    hcomp->pre_result = 0;
+    hcomp->comp_out = 0;
+}
+
+
+/// @brief 滞回比较器核心处理（必须周期性调用）
+/// @param hcomp 滞回比较器结构体指针
+/// @author doubao
+void Hysteresis_Comp_Process(Hysteresis_Comp_TypeDef *hcomp, float analog_input) {
+    // 1. 复位优先
+    if (hcomp->reset) {
+        hcomp->comp_out = 0;
+        hcomp->delay_cnt = 0;
+        hcomp->pre_result = 0;
+        return;
+    }
+
+    // 2. 未使能
+    if (!hcomp->enable) {
+        hcomp->comp_out = 0;
+        hcomp->delay_cnt = 0;
+        return;
+    }
+
+    // 3. 滞回核心逻辑
+    uint8_t current_pre;
+    if (hcomp->comp_out) {
+        // 当前输出1 → 低于下限才准备变0
+        current_pre = (analog_input >= hcomp->threshold_low);
+    } else {
+        // 当前输出0 → 高于上限才准备变1
+        current_pre = (analog_input >= hcomp->threshold_high);
+    }
+
+    // 4. 延迟防抖
+    if (current_pre != hcomp->pre_result) {
+        hcomp->delay_cnt = 0;
+        hcomp->pre_result = current_pre;
+    } else {
+        if (hcomp->delay_cnt < hcomp->delay_time) {
+            hcomp->delay_cnt++;
+        }
+    }
+
+    // 5. 延迟满足才更新输出
+    if (hcomp->delay_cnt >= hcomp->delay_time) {
+        hcomp->comp_out = current_pre;
+    }
+}

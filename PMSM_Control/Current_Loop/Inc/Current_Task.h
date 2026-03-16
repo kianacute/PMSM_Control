@@ -5,11 +5,12 @@
 #include "Hal_Math.h"
 #include "Motor_parameter.h"
 
-#define MOTOR_ADC_OFFSET_SAMPLE_CNT (100U)
-#define PWM_OPEN                    (1U)
-#define PWM_CLOSE                   (0U)
-#define ADC_OPAMP_GAIN              (0.02197265625f)
-#define PWM_MAX_DUTY                (8000.0f)
+#define MOTOR_ADC_OFFSET_SAMPLE_CNT                 (100U)
+#define PWM_OPEN                                    (1U)
+#define PWM_CLOSE                                   (0U)
+#define ADC_OPAMP_GAIN                              (0.02197265625f)
+#define PWM_MAX_DUTY                                (8000.0f)
+#define WEAK_VOLTAGE_COMPENSATION                   (2.0f/3.0f)
 
 enum Motor_State{
     MOTOR_IDLE = 0,
@@ -22,12 +23,12 @@ enum Motor_State{
 typedef struct Current_Task
 {
     // Define any necessary variables and structures for the current task
-    uint32_t FREQ_HZ;
-    float Loop_time_s;
-    MOTOR_t *pMotor;
-    Hal_PI_t Id_PI;
-    Hal_PI_t Iq_PI;
-    float Ud_Target, Uq_Target;
+    uint32_t FREQ_HZ;                                       //电流环频率
+    float Loop_time_s;                                      //电流环循环时间
+    MOTOR_t *pMotor;                            //电机参数指针  
+    Hal_PI_t Id_PI;                             //d轴电流PI控制器参数
+    Hal_PI_t Iq_PI;                                     //q轴电流PI控制器参数
+    float Ud_Target, Uq_Target;                             
     float Id_Ref, Iq_Ref;
     float Id_fb, Iq_fb;
     float Ualpha_Ref, Ubeta_Ref, sinVal, cosVal;
@@ -36,6 +37,7 @@ typedef struct Current_Task
     float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
     float Ia_fb, Ib_fb, Ic_fb;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
+    float Voltage_err;
     uint8_t sector;
     enum Motor_State Motor_State;
     uint8_t PWM_OPEN_Flag;

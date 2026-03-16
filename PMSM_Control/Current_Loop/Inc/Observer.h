@@ -5,15 +5,9 @@
 #include "Motor_parameter.h"
 #include "Hal_Math.h"
 
-struct PLL
-{
-    Hal_PI_t PLL_PI;
-    float we;
-    float theta;
-};
-
 struct SMO_Parameter
 {
+    float discrete_time;
     float Gain_Min;
     float Gain_Add;
     float est_Max;
@@ -26,10 +20,13 @@ struct SMO_Parameter
     float we_lpf;
     struct PLL SMO_PLL;
     MOTOR_t *pMotor;
+    Lookup_Table_t PLL_Kp_Lookup;
+    Lookup_Table_t PLL_Ki_Lookup;
 };
 
 struct Encoder_Parameter
 {
+    float discrete_time;
     float theta;          /*电角度*/
     float speed_we;       /*电角速度*/
     float speed_rpm;      /*机械转速*/
@@ -42,10 +39,13 @@ struct Encoder_Parameter
     struct PLL tPLL;
     uint8_t z_flag;
     uint32_t num_per_coil;
+    Lookup_Table_t PLL_Kp_Lookup;
+    Lookup_Table_t PLL_Ki_Lookup;
 };
 
 struct NonFluxObserver_Parameter
 {
+    float discrete_time;
     float gama;
     struct PLL tPLL;
     float Flux_alpha;
@@ -58,6 +58,8 @@ struct NonFluxObserver_Parameter
     float Eta_alpha;
     float Eta_beta;
     MOTOR_t *pMotor;
+    Lookup_Table_t PLL_Kp_Lookup;
+    Lookup_Table_t PLL_Ki_Lookup;
 };
 
 void SMO_Observer_Init(void);

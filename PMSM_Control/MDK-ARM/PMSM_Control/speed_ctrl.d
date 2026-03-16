@@ -21,3 +21,4 @@ pmsm_control\speed_ctrl.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/R
 pmsm_control\speed_ctrl.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 pmsm_control\speed_ctrl.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 pmsm_control\speed_ctrl.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+pmsm_control\speed_ctrl.o: ../Current_Loop/inc/Observer.h

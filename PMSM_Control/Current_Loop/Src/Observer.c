@@ -1,6 +1,5 @@
 #include "Observer.h"
 #include "arm_math.h"
-#include "Hal_Math.h"
 #include "Motor_parameter.h"
 #include "tim.h"
 
@@ -8,25 +7,9 @@ struct SMO_Parameter SMO_OB = {0};
 extern MOTOR_t PMSM_42JS;
 
 float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
-float Speed_index[10] = {0, 20, 50, 100, 250, 500, 600, 600, 600, 600};
-float Observer_PLL_Kp[10] = {0.1f, 0.5f, 1.0f, 5.0f, 10.0f, 20.0f, 50.0f, 50.0f, 50.0f, 50.0f};
-float Observer_PLL_Ki[10] = {0.01f, 0.05f, 0.1f, 0.5f, 1.0f, 2.0f, 10.0f, 10.0f, 10.0f, 10.0f};
-
-
-void PLL_PI_Parameter_Init(struct PLL *pPLL, float Speed_Ref)
-{
-    for (int i = 0; i < 10; i++)
-    {
-        if (Speed_Ref < Speed_index[i])
-        {
-            pPLL->PLL_PI.kp = Observer_PLL_Kp[i];
-            pPLL->PLL_PI.ki = Observer_PLL_Ki[i];
-            break;
-        }
-    }
-}
-
-void PLL_PI_Parameter_Update(struct PLL *pPLL, float Speed_Ref);
+float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
+float Observer_PLL_Kp[10] = {500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f};
+float Observer_PLL_Ki[10] = {0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f};
 
 void SMO_Observer_Init(void)
 {
@@ -39,17 +22,7 @@ void SMO_Observer_Init(void)
     SMO_OB.SMO_PLL.PLL_PI.ki = 10.1f / 1.0f;
     SMO_OB.SMO_PLL.PLL_PI.out_max = 10000.0f;
     SMO_OB.SMO_PLL.PLL_PI.out_min = -10000.0f;
-}
-
-float deta;
-
-int PLL_Updata(struct PLL *pPLL, float alpha, float beta)
-{
-    deta = alpha * arm_cos_f32(pPLL->theta) - beta * arm_sin_f32(pPLL->theta);
-    pPLL->we = Hal_PI_f32(&pPLL->PLL_PI, deta);
-    pPLL->theta = (pPLL->theta + pPLL->we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S);
-    pPLL->theta = Limit_2PI(pPLL->theta);
-    return 0;
+    SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
 }
 
 int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
@@ -76,10 +49,10 @@ int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
     }
     SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s
                      * SMO->ia_mat_k + Ualpha / SMO->pMotor->phase_inductance_s - Est_a / SMO->pMotor->phase_inductance_s)
-                     * MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+                     * SMO->discrete_time;
     SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s
                      * SMO->ib_mat_k + Ubeta / SMO->pMotor->phase_inductance_s - Est_b / SMO->pMotor->phase_inductance_s)
-                     * MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+                     * SMO->discrete_time;
 
     /*观测到的反电动势必须滤波*/
     SMO->E_alpha = Est_a * SMO->E_LPF_Coff + SMO->E_alpha * (1 - SMO->E_LPF_Coff);
@@ -88,7 +61,7 @@ int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
     /*保留这一拍的数据*/
     SMO->ia_mat_k = SMO->ia_mat_k1;
     SMO->ib_mat_k = SMO->ib_mat_k1;
-    PLL_Updata(&SMO->SMO_PLL, -SMO->E_alpha, SMO->E_beta);
+    PLL_Updata(&SMO->SMO_PLL, -SMO->E_alpha, SMO->E_beta, SMO->discrete_time);
 
     return 0;
 }
@@ -111,6 +84,7 @@ void Encode_ABZ_Init(void)
     Encode_ABZ.last_value = 0;
     Encode_ABZ.z_flag = 0;
     Encode_ABZ.num_per_coil = 4000;
+    Encode_ABZ.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
 }
 
 uint16_t read_Encode_ABZ(void)
@@ -176,7 +150,7 @@ void Encode_ABZ_UpDate(void)
 
     if (Encode_ABZ.rpm_filt_cnt >= Encode_ABZ.rpm_filt_RP)
     {
-        Encode_ABZ.speed_rpm = (float32_t)(Encode_ABZ.counter) * 60.0f / ((float)Encode_ABZ.num_per_coil) / (MOTOR_SPEED_LOOP_CYCLE_TIME_S);
+        Encode_ABZ.speed_rpm = (float32_t)(Encode_ABZ.counter) * 60.0f / ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
         Encode_ABZ.speed_we = Encode_ABZ.speed_rpm * 2.0f * PI / 60.0f * MOTOR_POLE_PAIRS;
         Encode_ABZ.counter = 0;
         Encode_ABZ.rpm_filt_cnt = 0;
@@ -188,6 +162,7 @@ struct NonFluxObserver_Parameter NonFlux_OB = {0};
 
 void Nonlinear_FluxObserver_Init(void)
 {
+    NonFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
     NonFlux_OB.Flux_alpha = 0.0f;
     NonFlux_OB.Flux_beta = 0.0f;
     NonFlux_OB.tPLL.PLL_PI.kp = 500.1f / 1.0f;
@@ -196,6 +171,12 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
     NonFlux_OB.gama = 100000.0f;
     NonFlux_OB.pMotor = &PMSM_42JS;
+    NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
+    NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
+    NonFlux_OB.PLL_Kp_Lookup.table_size = 10;
+    NonFlux_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
+    NonFlux_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
+    NonFlux_OB.PLL_Ki_Lookup.table_size = 10;
 }
 
 
@@ -205,15 +186,15 @@ int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32
     NFO->y_alpha_hat = (Ualpha - NFO->pMotor->phase_resistance_ohm * Ialpha);
     NFO->y_beta_hat = (Ubeta - NFO->pMotor->phase_resistance_ohm * Ibeta);
     NFO->x_alpha_hat += ((NFO->y_alpha_hat + NFO->gama * NFO->Eta_alpha * (NFO->pMotor->flux_linkage_wb
-            * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * MOTOR_CURRENT_LOOP_CYCLE_TIME_S);
+            * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);
     NFO->x_beta_hat += ((NFO->y_beta_hat + NFO->gama * NFO->Eta_beta * (NFO->pMotor->flux_linkage_wb 
-            * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * MOTOR_CURRENT_LOOP_CYCLE_TIME_S);    
+            * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);    
     NFO->Eta_alpha = NFO->x_alpha_hat - NFO->pMotor->phase_inductance_s * Ialpha;
     NFO->Eta_beta = NFO->x_beta_hat - NFO->pMotor->phase_inductance_s * Ibeta;    
     NFO->Flux_hat = NFO->Eta_alpha * NFO->Eta_alpha + NFO->Eta_beta * NFO->Eta_beta;
     NFO->Flux_alpha = NFO->Eta_alpha / NFO->pMotor->flux_linkage_wb;
     NFO->Flux_beta = NFO->Eta_beta / NFO->pMotor->flux_linkage_wb; 
-    PLL_Updata(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha); 
+    PLL_Updata(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha, NFO->discrete_time); 
     return 0;
 }
                                               

@@ -6,12 +6,15 @@
 #include "task.h"
 #include "Hal_Math.h"
 #include "FreeRTOS.h"
+#include "Observer.h"
 
 
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
 extern MOTOR_t PMSM_42JS;
+extern struct NonFluxObserver_Parameter NonFlux_OB;
+extern Current_Task_t Current_Task;
 
 float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
 float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755, 
@@ -51,6 +54,9 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI_Kp_Lookup.x_table = Speed_PI_Lookup_Speed_index;
     Speed_Ctrl.Speed_PI_Kp_Lookup.y_table = Speed_PI_Lookup_Kp;
     Speed_Ctrl.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float); 
+
+    Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -8.0f, -5.0f, 500);
+
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -59,6 +65,8 @@ void SPEED_CTRL_OPEN_Task(void);
 void SPEED_CTRL_SWITCH_Task(void);
 void SPEED_CTRL_RUN_Task(void);
 void SPEED_CTRL_WAIT_Task(void);
+void Paramater_update(void);
+void Weak_Control(void);
 
 uint32_t speed_cnt = 0;
 
@@ -100,6 +108,7 @@ void Speed_Ctrl_Task(void)
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
         break;
     }
+    Paramater_update();
 }
 
 void SPEED_CTRL_IDLE_Task(void)
@@ -180,8 +189,6 @@ void SPEED_CTRL_RUN_Task(void)
         Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
 
         /*转速环PI参数查表*/
-        Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Kp_Lookup);
-        Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Ki_Lookup);
 
         Speed_Ctrl.target_iq = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
         if(Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
@@ -192,6 +199,7 @@ void SPEED_CTRL_RUN_Task(void)
         {
             Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         }
+        Weak_Control();
     }
     else if (MOTOR_Run_flag == 0)
     {
@@ -209,4 +217,17 @@ void SPEED_CTRL_WAIT_Task(void)
 {
     vTaskDelay(2000);
     Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
+}
+
+void Paramater_update(void)
+{
+    Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Kp_Lookup);
+    Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Ki_Lookup);
+    NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
+    NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
+}
+
+void Weak_Control(void)
+{
+    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Current_Task.Voltage_err);
 }
