@@ -4,7 +4,7 @@
 #include "Hal_Math.h"
 #include "Motor_parameter.h"
 
-#define SPEED_ADD_STEP (1000 / 1000.0f)
+#define SPEED_ADD_STEP (500 / 1000.0f)
 #define SPEED_SUB_STEP (500 / 1000.0f)
 #define SPEED_ID_ADD_STEP (1.5 / 1000.0f)
 #define SPEED_ID_SUB_STEP (1.5 / 1000.0f)
@@ -38,7 +38,9 @@ typedef struct Speed_Ctrl
     Lookup_Table_t IF_Start_Iq_Lookup;              // 启动Iq查表
     uint32_t Speed_Switch_Cnt;                      // IF模式切换计数器
     uint8_t Speed_Switch_Flag;                      // 速度闭环标志    
+    float Voltage_err;
     Hysteresis_Comp_TypeDef Weak_Control_Hcomp; // 弱磁滞回比较器
+    Hal_PI_t Weak_Pi;                           // 弱磁PI控制器参数
 } Speed_Ctrl_t;
 
 void Speed_Ctrl_Init(void);

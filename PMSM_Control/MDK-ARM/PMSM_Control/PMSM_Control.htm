@@ -3,7 +3,7 @@
 <title>Static Call Graph - [PMSM_Control\PMSM_Control.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image PMSM_Control\PMSM_Control.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Mar 16 21:53:11 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Mar 17 22:30:10 2026
 <BR><P>
 <H3>Maximum Stack Usage =        312 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -128,8 +128,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[5f]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
-<LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<BR><BR>[Calls]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
 </UL>
 
 <P><STRONG><a name="[60]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
@@ -219,8 +219,8 @@ Global Symbols
 <P><STRONG><a name="[1c4]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000E))
 
 <P><STRONG><a name="[61]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry.o(.ARM.Collect$$rtentry$$00000000))
-<BR><BR>[Called By]<UL><LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<BR><BR>[Called By]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
 </UL>
 
 <P><STRONG><a name="[1c5]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
@@ -604,7 +604,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1e]"></a>ADC1_2_IRQHandler</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, stm32g4xx_it.o(i.ADC1_2_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = ADC1_2_IRQHandler &rArr; HAL_ADC_IRQHandler &rArr; HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = ADC1_2_IRQHandler &rArr; HAL_ADC_IRQHandler &rArr; HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_IRQHandler
 </UL>
@@ -694,8 +694,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 </UL>
 
-<P><STRONG><a name="[93]"></a>Current_Task_Run</STRONG> (Thumb, 516 bytes, Stack size 40 bytes, current_task.o(i.Current_Task_Run))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<P><STRONG><a name="[93]"></a>Current_Task_Run</STRONG> (Thumb, 512 bytes, Stack size 32 bytes, current_task.o(i.Current_Task_Run))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_cos_f32
@@ -711,7 +711,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[9d]"></a>Current_Task_Switch</STRONG> (Thumb, 150 bytes, Stack size 8 bytes, current_task.o(i.Current_Task_Switch))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Transmit_DMA
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTOR_RUN_TASK
@@ -830,7 +830,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[b0]"></a>HAL_ADCEx_InjectedConvCpltCallback</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, current_task.o(i.HAL_ADCEx_InjectedConvCpltCallback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADCEx_InjectedGetValue
 <LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_Task_Switch
@@ -900,7 +900,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[7a]"></a>HAL_ADC_IRQHandler</STRONG> (Thumb, 612 bytes, Stack size 40 bytes, stm32g4xx_hal_adc.o(i.HAL_ADC_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = HAL_ADC_IRQHandler &rArr; HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = HAL_ADC_IRQHandler &rArr; HAL_ADCEx_InjectedConvCpltCallback &rArr; Current_Task_Switch &rArr; MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_LevelOutOfWindowCallback
 <LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_ADC_ErrorCallback
@@ -1695,7 +1695,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a1]"></a>MOTOR_RUN_TASK</STRONG> (Thumb, 184 bytes, Stack size 8 bytes, current_task.o(i.MOTOR_RUN_TASK))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = MOTOR_RUN_TASK &rArr; Current_Task_Run &rArr; SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_Task_Run
 </UL>
@@ -1908,7 +1908,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_Task_Run
 </UL>
 
-<P><STRONG><a name="[97]"></a>SMO_Observer</STRONG> (Thumb, 272 bytes, Stack size 8 bytes, observer.o(i.SMO_Observer))
+<P><STRONG><a name="[97]"></a>SMO_Observer</STRONG> (Thumb, 268 bytes, Stack size 8 bytes, observer.o(i.SMO_Observer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = SMO_Observer &rArr; PLL_Updata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PLL_Updata
@@ -1937,7 +1937,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Speed_Ctrl_Task
 </UL>
 
-<P><STRONG><a name="[147]"></a>SPEED_CTRL_RUN_Task</STRONG> (Thumb, 226 bytes, Stack size 24 bytes, speed_ctrl.o(i.SPEED_CTRL_RUN_Task))
+<P><STRONG><a name="[147]"></a>SPEED_CTRL_RUN_Task</STRONG> (Thumb, 274 bytes, Stack size 24 bytes, speed_ctrl.o(i.SPEED_CTRL_RUN_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = SPEED_CTRL_RUN_Task
 </UL>
 <BR>[Calls]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Oblique_Wave
@@ -1965,8 +1965,10 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_Task_Run
 </UL>
 
-<P><STRONG><a name="[134]"></a>Speed_Ctrl_Init</STRONG> (Thumb, 116 bytes, Stack size 0 bytes, speed_ctrl.o(i.Speed_Ctrl_Init))
-<BR><BR>[Calls]<UL><LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Hysteresis_Comp_Init
+<P><STRONG><a name="[134]"></a>Speed_Ctrl_Init</STRONG> (Thumb, 156 bytes, Stack size 16 bytes, speed_ctrl.o(i.Speed_Ctrl_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Speed_Ctrl_Init
+</UL>
+<BR>[Calls]<UL><LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Hysteresis_Comp_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 </UL>

@@ -17,11 +17,11 @@ void SMO_Observer_Init(void)
     SMO_OB.pMotor = &PMSM_42JS;
     SMO_OB.E_LPF_Coff = 0.1;
     SMO_OB.Gain_Min = 2.0f;
-    SMO_OB.Gain_Add = 5.0f;
-    SMO_OB.SMO_PLL.PLL_PI.kp = 50.1f;
-    SMO_OB.SMO_PLL.PLL_PI.ki = 10.1f / 1.0f;
-    SMO_OB.SMO_PLL.PLL_PI.out_max = 10000.0f;
-    SMO_OB.SMO_PLL.PLL_PI.out_min = -10000.0f;
+    SMO_OB.Gain_Add = 8.0f;
+    SMO_OB.tPLL.PLL_PI.kp = 50.1f;
+    SMO_OB.tPLL.PLL_PI.ki = 5.1f / 10.0f;
+    SMO_OB.tPLL.PLL_PI.out_max = 10000.0f;
+    SMO_OB.tPLL.PLL_PI.out_min = -10000.0f;
     SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
 }
 
@@ -29,7 +29,7 @@ int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
                  float32_t Ialpha, float32_t Ibeta)
 {
     float Est_a, Est_b;
-    SMO->we_lpf = SMO->SMO_PLL.we * 0.001f + SMO->we_lpf * 0.999f;
+    SMO->we_lpf = SMO->tPLL.we * 0.5f + SMO->we_lpf * 0.5f;
     if (SMO->ia_mat_k > Ialpha)
     {
         Est_a = SMO->Gain_Min + SMO->Gain_Add;
@@ -61,7 +61,7 @@ int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
     /*保留这一拍的数据*/
     SMO->ia_mat_k = SMO->ia_mat_k1;
     SMO->ib_mat_k = SMO->ib_mat_k1;
-    PLL_Updata(&SMO->SMO_PLL, -SMO->E_alpha, SMO->E_beta, SMO->discrete_time);
+    PLL_Updata(&SMO->tPLL, -SMO->E_alpha, SMO->E_beta, SMO->discrete_time);
 
     return 0;
 }

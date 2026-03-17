@@ -43,7 +43,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 10.0f;
+    float lp = 50.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -156,15 +156,15 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
 
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
 {
-    if (Current_Task.avg_count >= (Current_Task.FREQ_HZ / Speed_Ctrl.FREQ_Hz))
-    {
-        Current_Task.avg_count = 0;
-        Speed_Ctrl.Speed_Fb = Current_Task.Speed_fb_1ms / 2 / PI / Current_Task.pMotor->pole_pairs * 60 / 20.0f;
-        Current_Task.Speed_fb_1ms = 0;
-    }
-    Current_Task.avg_count++;
-    Current_Task.Speed_fb_1ms += NonFlux_OB.tPLL.we;
-    // Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
+    // if (Current_Task.avg_count >= (Current_Task.FREQ_HZ / Speed_Ctrl.FREQ_Hz))
+    // {
+    //     Current_Task.avg_count = 0;
+    //     Speed_Ctrl.Speed_Fb = Current_Task.Speed_fb_1ms / 2 / PI / Current_Task.pMotor->pole_pairs * 60 / 20.0f;
+    //     Current_Task.Speed_fb_1ms = 0;
+    // }
+    // Current_Task.avg_count++;
+    // Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
+    Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
@@ -184,9 +184,15 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
                      &Current_Task.Ubeta_Ref, Current_Task.sinVal, Current_Task.cosVal);
     SVPWM_Calculate(PWM_MAX_DUTY, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, &Current_Task.sector);
-    Current_Task.Voltage_err = arm_sqrt_f32((Current_Task.Ualpha_Ref * Current_Task.Ualpha_Ref
-                             + Current_Task.Ubeta_Ref * Current_Task.Ubeta_Ref) - Udc / WEAK_VOLTAGE_COMPENSATION, 
-                                &Current_Task.Voltage_err);          
+
+    arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Current_Task.Vs);
+    Current_Task.Voltage_err = Current_Task.Vs - Udc * WEAK_VOLTAGE_COMPENSATION;
+    
+    Current_Task.Id_PI.out_max = Udc * WEAK_VOLTAGE_COMPENSATION * 1.02f;
+    Current_Task.Id_PI.out_min = -Current_Task.Id_PI.out_max;
+    arm_sqrt_f32(Current_Task.Id_PI.out_max * Current_Task.Id_PI.out_max - Current_Task.Ud_Target * Current_Task.Ud_Target, 
+                &Current_Task.Iq_PI.out_max);
+    Current_Task.Iq_PI.out_min = -Current_Task.Iq_PI.out_max;
 }
 
 void Current_PWM_Switch(uint8_t PWM_Flag)
@@ -335,8 +341,8 @@ void Current_Task_Switch(void)
     vofa_buffer.data[3] = (float32_t)(Current_Task.Iq_fb);
     vofa_buffer.data[4] = (float32_t)(Current_Task.Voltage_err);
     vofa_buffer.data[5] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
-    vofa_buffer.data[6] = (float32_t)(Current_Task.Ib_fb);
-    vofa_buffer.data[7] = (float32_t)(Current_Task.Ic_fb);
+    vofa_buffer.data[6] = (float32_t)(Current_Task.Id_Ref);
+    vofa_buffer.data[7] = (float32_t)(Current_Task.Iq_Ref);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }
 

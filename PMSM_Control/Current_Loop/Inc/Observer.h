@@ -18,7 +18,7 @@ struct SMO_Parameter
     float E_Peak;
     float E_LPF_Coff;
     float we_lpf;
-    struct PLL SMO_PLL;
+    struct PLL tPLL;
     MOTOR_t *pMotor;
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;

@@ -8,8 +8,6 @@
 #include "FreeRTOS.h"
 #include "Observer.h"
 
-
-
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
 extern MOTOR_t PMSM_42JS;
@@ -17,16 +15,20 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Current_Task_t Current_Task;
 
 float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
-float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755, 
-                                0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
-float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
-                                0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
+// float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755,
+//                                 0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
+// float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
+//                                 0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
+
+float Speed_PI_Lookup_Kp[10] = {5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04,
+                                5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04};
+float Speed_PI_Lookup_Ki[10] = {5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05,
+                                5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05};
 
 Speed_Ctrl_t Speed_Ctrl = {
     .FREQ_Hz = 1000,
     .IF_Start_Speed_Lookup = {0},
-    .IF_Start_Iq_Lookup = {0}
-};
+    .IF_Start_Iq_Lookup = {0}};
 
 uint8_t align_done = 0;
 
@@ -39,7 +41,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 2500.0f;
+    Speed_Command = 4000.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -53,10 +55,14 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI_Ki_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
     Speed_Ctrl.Speed_PI_Kp_Lookup.x_table = Speed_PI_Lookup_Speed_index;
     Speed_Ctrl.Speed_PI_Kp_Lookup.y_table = Speed_PI_Lookup_Kp;
-    Speed_Ctrl.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float); 
+    Speed_Ctrl.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
 
-    Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -8.0f, -5.0f, 500);
-
+    Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -2.0f, 100);
+    Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
+    Speed_Ctrl.Weak_Pi.kp = 0.1f;
+    Speed_Ctrl.Weak_Pi.ki = 0.1f;
+    Speed_Ctrl.Weak_Pi.out_max = 0.0f;
+    Speed_Ctrl.Weak_Pi.out_min = -5.0f;
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -135,8 +141,8 @@ void SPEED_CTRL_ALIGN_Task()
     // Speed_Ctrl.target_id = 1.0f;
     // Speed_Ctrl.target_iq = 0;
     // Speed_Ctrl.Speed_Ref = 0;
-    // // theta = 0; // Align to d-axis
-    // vTaskDelay(100);
+    // theta = 0; // Align to d-axis
+    // vTaskDelay(500);
     // align_done = 1;
     // vTaskDelay(100);
     // Speed_Ctrl.target_id = 0.0f;
@@ -157,7 +163,7 @@ void SPEED_CTRL_OPEN_Task(void)
     Speed_Ctrl.Speed_Ref = Lookup_Table_Linear(tick_count, &Speed_Ctrl.IF_Start_Speed_Lookup);
     Speed_Ctrl.target_iq = Lookup_Table_Linear(tick_count, &Speed_Ctrl.IF_Start_Iq_Lookup);
     Speed_Ctrl.target_id = 0;
-    if(Speed_Ctrl.Speed_Ref >= 600)
+    if (Speed_Ctrl.Speed_Ref >= 600)
     {
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_SWITCH;
     }
@@ -180,37 +186,44 @@ void SPEED_CTRL_SWITCH_Task(void)
     }
 }
 
-
 void SPEED_CTRL_RUN_Task(void)
 {
     if (MOTOR_Run_flag == 1)
     {
         Speed_Ctrl.Speed_Command = Speed_Command;
         Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-
-        /*转速环PI参数查表*/
-
-        Speed_Ctrl.target_iq = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
-        if(Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
-        {
-            Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-        }
-        else
-        {
-            Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-        }
-        Weak_Control();
     }
     else if (MOTOR_Run_flag == 0)
     {
         Speed_Ctrl.Speed_Ref = Oblique_Wave(0.0f, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-        Speed_Ctrl.target_iq = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
-        Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         if (Speed_Ctrl.Speed_Ref < 600)
         {
             Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_WAIT;
         }
     }
+    Weak_Control();
+
+    Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
+    if (Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
+    {
+        Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    }
+    else
+    {
+
+        if (Speed_Ctrl.Weak_Control_Hcomp.comp_out == 1)
+        {
+            Speed_Ctrl.Voltage_err = 0.1f * Speed_Ctrl.Voltage_err + 0.9f * Current_Task.Voltage_err;
+            Speed_Ctrl.target_id = Hal_PI_f32(&Speed_Ctrl.Weak_Pi, (-0.0f - Speed_Ctrl.Voltage_err));
+        }
+        else
+        {
+            Speed_Ctrl.Weak_Pi.integral = 0;
+            Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        }
+    }
+    arm_sqrt_f32(Speed_Ctrl.target_is * Speed_Ctrl.target_is - Speed_Ctrl.target_id * Speed_Ctrl.target_id,
+                 &Speed_Ctrl.target_iq);
 }
 
 void SPEED_CTRL_WAIT_Task(void)
