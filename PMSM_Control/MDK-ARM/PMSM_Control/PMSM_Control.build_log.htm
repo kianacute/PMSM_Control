@@ -27,22 +27,16 @@ Project File Date:  03/15/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil\ARM\ARMCC\Bin'
 Build target 'PMSM_Control'
-compiling Current_Task.c...
-../Current_Loop/inc/Current_Task.h(63): warning:  #1-D: last line of file ends without a newline
-  #endif // SVPWM_H
-../Current_Loop/inc/SVPWM.h(10): warning:  #1-D: last line of file ends without a newline
-  #endif // SVPWM_H
+compiling Observer.c...
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-..\Current_Loop\src\Current_Task.c(94): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          if (my_abs(NonFlux_OB.tPLL.theta - Current_Task.theta) < 0.10)
-..\Current_Loop\src\Current_Task.c(110): warning:  #127-D: expected a statement
-      }
-..\Current_Loop\src\Current_Task.c: 5 warnings, 0 errors
+..\Current_Loop\Src\Observer.c(106): warning:  #186-D: pointless comparison of unsigned integer with zero
+      if (Encode_ABZ.value < 0)
+..\Current_Loop\Src\Observer.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=38128 RO-data=2812 RW-data=952 ZI-data=9640  
+Program Size: Code=38464 RO-data=2812 RW-data=1040 ZI-data=9640  
 FromELF: creating hex file...
-"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 5 Warning(s).
+"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 

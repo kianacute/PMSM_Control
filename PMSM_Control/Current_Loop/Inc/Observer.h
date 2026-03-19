@@ -62,6 +62,23 @@ struct NonFluxObserver_Parameter
     Lookup_Table_t PLL_Ki_Lookup;
 };
 
+struct HFSWInjection_Parameter
+{
+    float U_hfj;
+    float discrete_time;
+    uint32_t PSR;
+    uint32_t hfj_cnt;
+    float Ialpha_hfj;
+    float Ibeta_hfj;
+    float Ialpha_hfj_last;
+    float Ibeta_hfj_last;
+    struct PLL tPLL;
+    float Ialpha_last;
+    float Ibeta_last;
+    float Ialpha_last_last;
+    float Ibeta_last_last;
+};
+
 void SMO_Observer_Init(void);
 int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
                  float32_t Ialpha, float32_t Ibeta);
@@ -73,5 +90,11 @@ void Encode_ABZ_UpDate(void);
 void Nonlinear_FluxObserver_Init(void);
 int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
                                 float32_t Ialpha, float32_t Ibeta);
+
+
+void HFSWInjection_Init(void);
+void HFSWInjection_Update(struct HFSWInjection_Parameter *HFSW, float Ialpha, float Ibeta, float U_hfj);
+
+                                
 
 #endif // __EST_H__

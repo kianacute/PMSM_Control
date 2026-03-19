@@ -41,7 +41,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 4000.0f;
+    Speed_Command = 200.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -138,15 +138,15 @@ extern float theta;
 void SPEED_CTRL_ALIGN_Task()
 {
     // Alignment logic can be implemented here if needed
-    // Speed_Ctrl.target_id = 1.0f;
-    // Speed_Ctrl.target_iq = 0;
-    // Speed_Ctrl.Speed_Ref = 0;
-    // theta = 0; // Align to d-axis
-    // vTaskDelay(500);
-    // align_done = 1;
-    // vTaskDelay(100);
-    // Speed_Ctrl.target_id = 0.0f;
-    // vTaskDelay(100);
+    Speed_Ctrl.target_id = 1.0f;
+    Speed_Ctrl.target_iq = 0;
+    Speed_Ctrl.Speed_Ref = 0;
+    Current_Task.theta = 0; // Align to d-axis
+    vTaskDelay(500);
+    align_done = 1;
+    vTaskDelay(100);
+    Speed_Ctrl.target_id = 0.0f;
+    vTaskDelay(100);
     // vTaskDelay(1000);
     // theta = 0.17*6;
     // vTaskDelay(5000);
@@ -210,7 +210,6 @@ void SPEED_CTRL_RUN_Task(void)
     }
     else
     {
-
         if (Speed_Ctrl.Weak_Control_Hcomp.comp_out == 1)
         {
             Speed_Ctrl.Voltage_err = 0.1f * Speed_Ctrl.Voltage_err + 0.9f * Current_Task.Voltage_err;

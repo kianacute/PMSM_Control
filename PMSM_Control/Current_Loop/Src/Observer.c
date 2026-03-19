@@ -197,4 +197,40 @@ int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32
     PLL_Updata(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha, NFO->discrete_time); 
     return 0;
 }
-                                              
+
+
+struct HFSWInjection_Parameter HFSW_OB = 
+{
+    .discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S,
+    .PSR = 2,
+    .U_hfj = 2.4f,
+    .hfj_cnt = 0,
+};
+
+
+void HFSWInjection_Init(void)
+{
+    HFSW_OB.U_hfj = 2.4f;
+    HFSW_OB.hfj_cnt = 0;
+    HFSW_OB.tPLL.PLL_PI.kp = 500.1f / 1.0f;
+    HFSW_OB.tPLL.PLL_PI.ki = 16.1f / 40.0f;
+    HFSW_OB.tPLL.PLL_PI.out_max = 10000.0f;
+    HFSW_OB.tPLL.PLL_PI.out_min = -10000.0f;
+}
+
+void HFSWInjection_Update(struct HFSWInjection_Parameter *HFSW, float Ialpha, float Ibeta, float U_hfj)
+{
+    if(U_hfj > 0.0f)
+    {
+        HFSW->Ialpha_hfj = (Ialpha - HFSW->Ialpha_last * 2 + HFSW->Ialpha_last_last)  / 4.0f - HFSW->Ialpha_hfj_last;
+        HFSW->Ibeta_hfj = (Ibeta - HFSW->Ibeta_last * 2 + HFSW->Ibeta_last_last)  / 4.0f - HFSW->Ibeta_hfj_last;
+    }
+    else
+    {
+        HFSW->Ialpha_hfj = -((Ialpha - HFSW->Ialpha_last * 2 + HFSW->Ialpha_last_last)  / 4.0f - HFSW->Ialpha_hfj_last);
+        HFSW->Ibeta_hfj = -((Ibeta - HFSW->Ibeta_last * 2 + HFSW->Ibeta_last_last)  / 4.0f - HFSW->Ibeta_hfj_last);
+    }
+    PLL_Updata(&HFSW->tPLL, -HFSW->Ialpha_hfj, HFSW->Ibeta_hfj, HFSW->discrete_time); 
+}
+
+

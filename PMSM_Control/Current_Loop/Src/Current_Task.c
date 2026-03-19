@@ -13,6 +13,7 @@ extern MOTOR_t PMSM_42JS;
 extern struct SMO_Parameter SMO_OB;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern struct Encoder_Parameter Encode_ABZ;
+extern struct HFSWInjection_Parameter HFSW_OB;
 extern Speed_Ctrl_t Speed_Ctrl;
 extern float Udc_1ms;
 
@@ -43,7 +44,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 50.0f;
+    float lp = 10.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -54,6 +55,7 @@ void Current_Task_Init(void)
     SMO_Observer_Init();
     Encode_ABZ_Init();
     Nonlinear_FluxObserver_Init();
+    HFSWInjection_Init();
 }
 
 inline float my_abs(float num)
@@ -165,20 +167,32 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     // Current_Task.avg_count++;
     // Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
     Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
-    Encode_ABZ_UpDate();
+    // Encode_ABZ_UpDate();
+
+    if((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
+    {
+        HFSW_OB.U_hfj = 2.4f;
+    }
+    else
+    {
+        HFSW_OB.U_hfj = -2.4f;
+    }
+    HFSW_OB.hfj_cnt ++;
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
     SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
     Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                                   Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    
+    HFSWInjection_Update(&HFSW_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, HFSW_OB.U_hfj);
     Current_Task.sinVal = arm_sin_f32(Current_Task.theta);
     Current_Task.cosVal = arm_cos_f32(Current_Task.theta);
     arm_park_f32(Current_Task.ialpha_fb, Current_Task.ibeta_fb, &Current_Task.Id_fb,
                  &Current_Task.Iq_fb, Current_Task.sinVal, Current_Task.cosVal);
     Current_Task.Id_Ref = Speed_Ctrl.target_id;
     Current_Task.Iq_Ref = Speed_Ctrl.target_iq;
-    Current_Task.Ud_Target = Hal_PI_f32(&Current_Task.Id_PI, Current_Task.Id_Ref - Current_Task.Id_fb);
+    Current_Task.Ud_Target = Hal_PI_f32(&Current_Task.Id_PI, Current_Task.Id_Ref - Current_Task.Id_fb) + HFSW_OB.U_hfj;
     Current_Task.Uq_Target = Hal_PI_f32(&Current_Task.Iq_PI, Current_Task.Iq_Ref - Current_Task.Iq_fb);
     arm_inv_park_f32(Current_Task.Ud_Target, Current_Task.Uq_Target, &Current_Task.Ualpha_Ref,
                      &Current_Task.Ubeta_Ref, Current_Task.sinVal, Current_Task.cosVal);
@@ -332,6 +346,7 @@ void Current_Task_Switch(void)
     default:
         break;
     }
+    Encode_ABZ_UpDate();
     Current_Task.count++;
     extern vofa_buffer_t vofa_buffer;
     extern float Udc_1ms;
@@ -339,10 +354,10 @@ void Current_Task_Switch(void)
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
     vofa_buffer.data[2] = (float32_t)(Current_Task.Id_fb);
     vofa_buffer.data[3] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[4] = (float32_t)(Current_Task.Voltage_err);
-    vofa_buffer.data[5] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
-    vofa_buffer.data[6] = (float32_t)(Current_Task.Id_Ref);
-    vofa_buffer.data[7] = (float32_t)(Current_Task.Iq_Ref);
+    vofa_buffer.data[4] = (float32_t)(HFSW_OB.U_hfj);
+    vofa_buffer.data[5] = (float32_t)(HFSW_OB.tPLL.theta);
+    vofa_buffer.data[6] = (float32_t)(HFSW_OB.tPLL.we);
+    vofa_buffer.data[7] = (float32_t)(Current_Task.theta);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }
 
