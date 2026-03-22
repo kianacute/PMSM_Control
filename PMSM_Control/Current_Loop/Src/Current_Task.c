@@ -82,6 +82,7 @@ void Speed_Switch(void)
         {
             Encode_ABZ_Get_Offset();
         }
+        // Current_Task.theta = Limit_2PI(HFSW_OB.tPLL.theta);
     }
     case SPEED_CTRL_OPEN:
     {
@@ -99,7 +100,7 @@ void Speed_Switch(void)
             if (Speed_Ctrl.Speed_Switch_Cnt > 10)
             {
                 Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta = NonFlux_OB.tPLL.theta;
+                Current_Task.theta =NonFlux_OB.tPLL.theta;
             }
         }
         break;
@@ -181,19 +182,23 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
-    SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    // SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
     Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                                   Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+
+    //HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
+    //HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
     
-    HFSWInjection_Update(&HFSW_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, HFSW_OB.U_hfj);
     Current_Task.sinVal = arm_sin_f32(Current_Task.theta);
     Current_Task.cosVal = arm_cos_f32(Current_Task.theta);
     arm_park_f32(Current_Task.ialpha_fb, Current_Task.ibeta_fb, &Current_Task.Id_fb,
                  &Current_Task.Iq_fb, Current_Task.sinVal, Current_Task.cosVal);
+    
     Current_Task.Id_Ref = Speed_Ctrl.target_id;
     Current_Task.Iq_Ref = Speed_Ctrl.target_iq;
-    Current_Task.Ud_Target = Hal_PI_f32(&Current_Task.Id_PI, Current_Task.Id_Ref - Current_Task.Id_fb) + HFSW_OB.U_hfj;
+    Current_Task.Ud_Target = Hal_PI_f32(&Current_Task.Id_PI, Current_Task.Id_Ref - Current_Task.Id_fb);
     Current_Task.Uq_Target = Hal_PI_f32(&Current_Task.Iq_PI, Current_Task.Iq_Ref - Current_Task.Iq_fb);
+
     arm_inv_park_f32(Current_Task.Ud_Target, Current_Task.Uq_Target, &Current_Task.Ualpha_Ref,
                      &Current_Task.Ubeta_Ref, Current_Task.sinVal, Current_Task.cosVal);
     SVPWM_Calculate(PWM_MAX_DUTY, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
@@ -352,12 +357,12 @@ void Current_Task_Switch(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Current_Task.Id_fb);
-    vofa_buffer.data[3] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[4] = (float32_t)(HFSW_OB.U_hfj);
-    vofa_buffer.data[5] = (float32_t)(HFSW_OB.tPLL.theta);
-    vofa_buffer.data[6] = (float32_t)(HFSW_OB.tPLL.we);
-    vofa_buffer.data[7] = (float32_t)(Current_Task.theta);
+    vofa_buffer.data[2] = (float32_t)(Current_Task.Ia_fb);
+    vofa_buffer.data[3] = (float32_t)(Current_Task.Ib_fb);
+    vofa_buffer.data[4] = (float32_t)(HFSW_OB.Ialpha_hfj);
+    vofa_buffer.data[5] = (float32_t)(HFSW_OB.Ibeta_hfj); 
+    vofa_buffer.data[6] = (float32_t)(HFSW_OB.tPLL.theta);
+    vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }
 

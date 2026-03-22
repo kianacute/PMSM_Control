@@ -135,7 +135,7 @@ float Oblique_Wave(float end_value, float cur_value, float Add_Step, float Sub_S
 /// @param alpha 正弦信号
 /// @param beta 余弦信号
 /// @param Discrete_time 离散积分时间,单位为秒
-void PLL_Updata(struct PLL *pPLL, float alpha, float beta, float Discrete_time)
+void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time)
 {
      float deta = alpha * arm_cos_f32(pPLL->theta) - beta * arm_sin_f32(pPLL->theta);
      pPLL->we = Hal_PI_f32(&pPLL->PLL_PI, deta);

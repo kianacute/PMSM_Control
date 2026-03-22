@@ -41,7 +41,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 200.0f;
+    Speed_Command = 300.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -137,17 +137,20 @@ extern float theta;
 
 void SPEED_CTRL_ALIGN_Task()
 {
-    // Alignment logic can be implemented here if needed
-    Speed_Ctrl.target_id = 1.0f;
-    Speed_Ctrl.target_iq = 0;
-    Speed_Ctrl.Speed_Ref = 0;
-    Current_Task.theta = 0; // Align to d-axis
-    vTaskDelay(500);
-    align_done = 1;
-    vTaskDelay(100);
-    Speed_Ctrl.target_id = 0.0f;
-    vTaskDelay(100);
-    // vTaskDelay(1000);
+    // vTaskDelay(100);
+    // // Alignment logic can be implemented here if needed
+    // Speed_Ctrl.target_id = 0.0f;
+    // Speed_Ctrl.target_iq = 0;
+    // Speed_Ctrl.Speed_Ref = 0;
+    // Current_Task.theta = 0; // Align to d-axis
+    // vTaskDelay(100);
+    // Speed_Ctrl.target_id = 0.0f;
+    // // align_done = 1;
+    // vTaskDelay(100);
+    // Speed_Ctrl.target_id = -1.0f;
+    // vTaskDelay(10);
+    // Speed_Ctrl.target_id = 0.0f;
+    // vTaskDelay(100);
     // theta = 0.17*6;
     // vTaskDelay(5000);
     // theta = 0.17*12;
@@ -205,7 +208,7 @@ void SPEED_CTRL_RUN_Task(void)
 
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
-    {
+    {    
         Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
@@ -223,6 +226,8 @@ void SPEED_CTRL_RUN_Task(void)
     }
     arm_sqrt_f32(Speed_Ctrl.target_is * Speed_Ctrl.target_is - Speed_Ctrl.target_id * Speed_Ctrl.target_id,
                  &Speed_Ctrl.target_iq);
+
+
 }
 
 void SPEED_CTRL_WAIT_Task(void)

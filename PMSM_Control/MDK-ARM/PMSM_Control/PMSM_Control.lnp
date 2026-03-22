@@ -46,7 +46,6 @@
 "pmsm_control\cmsis_os2.o"
 "pmsm_control\heap_4.o"
 "pmsm_control\port.o"
-"../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4lf_math.lib"
 "pmsm_control\current_task.o"
 "pmsm_control\svpwm.o"
 "pmsm_control\observer.o"
@@ -56,6 +55,7 @@
 "pmsm_control\hal_math.o"
 "pmsm_control\can.o"
 "pmsm_control\can_dbc_messages.o"
+"../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4lf_math.lib"
 --strict --scatter "PMSM_Control\PMSM_Control.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

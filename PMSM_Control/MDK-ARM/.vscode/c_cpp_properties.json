@@ -23,12 +23,12 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Drivers\\STM32G4xx_HAL_Driver\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Middlewares\\Third_Party\\FreeRTOS\\Source",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Middlewares\\ST\\ARM\\DSP\\Lib",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Current_Loop\\src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Current_Loop\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Speed_Loop\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Motor\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Command_Task\\Src"
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Command_Task\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control\\Middlewares\\ST\\ARM\\DSP\\Lib"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

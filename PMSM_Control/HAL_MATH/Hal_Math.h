@@ -57,7 +57,7 @@ float Limit_2PI(float theta);
 
 float Oblique_Wave(float end_value, float cur_value, float Sub_Step, float Add_Step);
 
-void PLL_Updata(struct PLL *pPLL, float alpha, float beta, float Discrete_time);
+void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time);
 
 void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l, uint32_t delay);
 
