@@ -143,8 +143,10 @@ void Encode_ABZ_UpDate(void)
 
     if (Encode_ABZ.rpm_filt_cnt >= Encode_ABZ.rpm_filt_RP)
     {
-        Encode_ABZ.speed_rpm = (float32_t)(Encode_ABZ.counter) * 60.0f / ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
-        Encode_ABZ.speed_we = Encode_ABZ.speed_rpm * 2.0f * PI / 60.0f * MOTOR_POLE_PAIRS;
+        Encode_ABZ.rpm = Encode_ABZ.rpm_last *0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f / 
+                ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
+        Encode_ABZ.we = Encode_ABZ.rpm * 2.0f * PI / 60.0f * MOTOR_POLE_PAIRS;
+        Encode_ABZ.rpm_last = Encode_ABZ.rpm;
         Encode_ABZ.counter = 0;
         Encode_ABZ.rpm_filt_cnt = 0;
     }
@@ -159,7 +161,7 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.Flux_alpha = 0.0f;
     NonFlux_OB.Flux_beta = 0.0f;
     NonFlux_OB.tPLL.PLL_PI.kp = 500.1f / 1.0f;
-    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 40.0f;
+    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 4.0f;
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
     NonFlux_OB.gama = 100000.0f;

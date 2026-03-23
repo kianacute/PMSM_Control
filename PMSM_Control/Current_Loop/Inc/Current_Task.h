@@ -37,6 +37,7 @@ typedef struct Current_Task
     float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
     float Ia_fb, Ib_fb, Ic_fb;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
+    float PWM_Duty_A_Comp, PWM_Duty_B_Comp, PWM_Duty_C_Comp;
     float Vs;
     float Voltage_err;
     uint8_t sector;

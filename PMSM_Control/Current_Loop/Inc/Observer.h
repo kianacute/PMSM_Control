@@ -28,8 +28,9 @@ struct Encoder_Parameter
 {
     float discrete_time;
     float theta;          /*电角度*/
-    float speed_we;       /*电角速度*/
-    float speed_rpm;      /*机械转速*/
+    float we;       /*电角速度*/
+    float rpm;      /*机械转速*/
+    float rpm_last;
     int16_t offset;       /*0电角度偏移*/
     uint32_t rpm_filt_RP; /**/
     uint32_t rpm_filt_cnt;

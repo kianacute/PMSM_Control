@@ -100,7 +100,7 @@ void Speed_Switch(void)
             if (Speed_Ctrl.Speed_Switch_Cnt > 10)
             {
                 Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta =NonFlux_OB.tPLL.theta;
+                Current_Task.theta = NonFlux_OB.tPLL.theta;
             }
         }
         break;
@@ -157,6 +157,63 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
     return;
 }
 
+float Ia_pre, Ib_pre, Ic_pre;
+/// @brief
+/// @param Id
+/// @param Iq
+/// @param we
+/// @param theta
+/// @param Duty_A_Raw
+/// @param Duty_B_Raw
+/// @param Duty_C_Raw
+/// @param Duty_A_Comp
+/// @param Duty_B_Comp
+/// @param Duty_C_Comp
+void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
+                            float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
+                            float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp)
+{
+    float Ialpha_tmp, Ibeta_tmp;
+    float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * 0.0f;
+    arm_inv_park_f32(Id, Iq, &Ialpha_tmp, &Ibeta_tmp, arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
+    // float Ia_pre, Ib_pre, Ic_pre;
+    arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
+    if (we > 50)
+    {
+        if (Ia_pre > 0)
+        {
+            *Duty_A_Comp = Duty_A_Raw + Dead_TIME_DUTY;
+        }
+        else
+        {
+            *Duty_A_Comp = Duty_A_Raw - Dead_TIME_DUTY;
+        }
+        if (Ib_pre > 0)
+        {
+            *Duty_B_Comp = Duty_B_Raw + Dead_TIME_DUTY;
+        }
+        else
+        {
+            *Duty_B_Comp = Duty_B_Raw - Dead_TIME_DUTY;
+        }
+        if (Ic_pre > 0)
+        {
+            *Duty_C_Comp = Duty_C_Raw + Dead_TIME_DUTY;
+        }
+        else
+        {
+            *Duty_C_Comp = Duty_C_Raw - Dead_TIME_DUTY;
+        }
+    }
+    else
+    {
+        *Duty_A_Comp = Duty_A_Raw;
+        *Duty_B_Comp = Duty_B_Raw;
+        *Duty_C_Comp = Duty_C_Raw;
+    }
+    return;
+}
+
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
 {
     // if (Current_Task.avg_count >= (Current_Task.FREQ_HZ / Speed_Ctrl.FREQ_Hz))
@@ -168,9 +225,9 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     // Current_Task.avg_count++;
     // Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
     Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
-    // Encode_ABZ_UpDate();
+    Encode_ABZ_UpDate();
 
-    if((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
+    if ((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
     {
         HFSW_OB.U_hfj = 2.4f;
     }
@@ -178,7 +235,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     {
         HFSW_OB.U_hfj = -2.4f;
     }
-    HFSW_OB.hfj_cnt ++;
+    HFSW_OB.hfj_cnt++;
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
@@ -186,14 +243,14 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                                   Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
-    //HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
-    //HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
-    
+    // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
+    // HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
+
     Current_Task.sinVal = arm_sin_f32(Current_Task.theta);
     Current_Task.cosVal = arm_cos_f32(Current_Task.theta);
     arm_park_f32(Current_Task.ialpha_fb, Current_Task.ibeta_fb, &Current_Task.Id_fb,
                  &Current_Task.Iq_fb, Current_Task.sinVal, Current_Task.cosVal);
-    
+
     Current_Task.Id_Ref = Speed_Ctrl.target_id;
     Current_Task.Iq_Ref = Speed_Ctrl.target_iq;
     Current_Task.Ud_Target = Hal_PI_f32(&Current_Task.Id_PI, Current_Task.Id_Ref - Current_Task.Id_fb);
@@ -201,17 +258,23 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
 
     arm_inv_park_f32(Current_Task.Ud_Target, Current_Task.Uq_Target, &Current_Task.Ualpha_Ref,
                      &Current_Task.Ubeta_Ref, Current_Task.sinVal, Current_Task.cosVal);
-    SVPWM_Calculate(PWM_MAX_DUTY, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
+    SVPWM_Calculate(1, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, &Current_Task.sector);
 
     arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Current_Task.Vs);
     Current_Task.Voltage_err = Current_Task.Vs - Udc * WEAK_VOLTAGE_COMPENSATION;
-    
+
     Current_Task.Id_PI.out_max = Udc * WEAK_VOLTAGE_COMPENSATION * 1.02f;
     Current_Task.Id_PI.out_min = -Current_Task.Id_PI.out_max;
-    arm_sqrt_f32(Current_Task.Id_PI.out_max * Current_Task.Id_PI.out_max - Current_Task.Ud_Target * Current_Task.Ud_Target, 
-                &Current_Task.Iq_PI.out_max);
+    arm_sqrt_f32(Current_Task.Id_PI.out_max * Current_Task.Id_PI.out_max - Current_Task.Ud_Target * Current_Task.Ud_Target,
+                 &Current_Task.Iq_PI.out_max);
     Current_Task.Iq_PI.out_min = -Current_Task.Iq_PI.out_max;
+    Dead_Zone_Compensation(-Current_Task.Id_fb, -Current_Task.Iq_fb, NonFlux_OB.tPLL.we, NonFlux_OB.tPLL.theta,
+                           Current_Task.PWM_duty_a, Current_Task.PWM_duty_b, Current_Task.PWM_duty_c,
+                           &Current_Task.PWM_Duty_A_Comp, &Current_Task.PWM_Duty_B_Comp, &Current_Task.PWM_Duty_C_Comp);
+    Current_Task.PWM_Duty_A_Comp *= PWM_MAX_DUTY;
+    Current_Task.PWM_Duty_B_Comp *= PWM_MAX_DUTY;
+    Current_Task.PWM_Duty_C_Comp *= PWM_MAX_DUTY;
 }
 
 void Current_PWM_Switch(uint8_t PWM_Flag)
@@ -313,9 +376,9 @@ int32_t MOTOR_RUN_TASK(void)
     }
     else
     {
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Task.PWM_duty_a); // Set PWM duty cycle for Channel 1
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Task.PWM_duty_b); // Set PWM duty cycle for Channel 2
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Task.PWM_duty_c); // Set PWM duty cycle for Channel 3
+        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Task.PWM_Duty_A_Comp); // Set PWM duty cycle for Channel 1
+        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Task.PWM_Duty_B_Comp); // Set PWM duty cycle for Channel 2
+        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Task.PWM_Duty_C_Comp); // Set PWM duty cycle for Channel 3
     }
 
     return 0;
@@ -359,9 +422,9 @@ void Current_Task_Switch(void)
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
     vofa_buffer.data[2] = (float32_t)(Current_Task.Ia_fb);
     vofa_buffer.data[3] = (float32_t)(Current_Task.Ib_fb);
-    vofa_buffer.data[4] = (float32_t)(HFSW_OB.Ialpha_hfj);
-    vofa_buffer.data[5] = (float32_t)(HFSW_OB.Ibeta_hfj); 
-    vofa_buffer.data[6] = (float32_t)(HFSW_OB.tPLL.theta);
+    vofa_buffer.data[4] = (float32_t)(Current_Task.PWM_duty_a);
+    vofa_buffer.data[5] = (float32_t)(Current_Task.PWM_Duty_A_Comp);
+    vofa_buffer.data[6] = (float32_t)(Encode_ABZ.theta);
     vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }

@@ -139,14 +139,14 @@ void SPEED_CTRL_ALIGN_Task()
 {
     // vTaskDelay(100);
     // // Alignment logic can be implemented here if needed
-    // Speed_Ctrl.target_id = 0.0f;
-    // Speed_Ctrl.target_iq = 0;
-    // Speed_Ctrl.Speed_Ref = 0;
-    // Current_Task.theta = 0; // Align to d-axis
-    // vTaskDelay(100);
-    // Speed_Ctrl.target_id = 0.0f;
-    // // align_done = 1;
-    // vTaskDelay(100);
+    Speed_Ctrl.target_id = 1.0f;
+    Speed_Ctrl.target_iq = 0;
+    Speed_Ctrl.Speed_Ref = 0;
+    Current_Task.theta = 0; // Align to d-axis
+    vTaskDelay(500);
+    Speed_Ctrl.target_id = 1.0f;
+    align_done = 1;
+    vTaskDelay(100);
     // Speed_Ctrl.target_id = -1.0f;
     // vTaskDelay(10);
     // Speed_Ctrl.target_id = 0.0f;
