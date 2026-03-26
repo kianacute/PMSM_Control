@@ -1,0 +1,10 @@
+pmsm_control\est.o: ..\Current_Loop\src\EST.c
+pmsm_control\est.o: ../Current_Loop/inc/EST.h
+pmsm_control\est.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdint.h
+pmsm_control\est.o: ../Middlewares/ST/ARM/DSP/Inc/arm_math.h
+pmsm_control\est.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
+pmsm_control\est.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
+pmsm_control\est.o: D:\Keil\ARM\ARMCC\Bin\..\include\string.h
+pmsm_control\est.o: D:\Keil\ARM\ARMCC\Bin\..\include\math.h
+pmsm_control\est.o: D:\Keil\ARM\ARMCC\Bin\..\include\float.h
+pmsm_control\est.o: D:\Keil\ARM\ARMCC\Bin\..\include\limits.h

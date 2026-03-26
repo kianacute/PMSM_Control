@@ -1,8 +1,8 @@
 #include "Motor_parameter.h"
 
 const float PMSM_42JS_IF_Start_Ramp_Sec[10] = {0.0f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f, 5.0f};
-const float PMSM_42JS_IF_Start_Iq_A[10] = {0.0f, 0.1f, 0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
-const float PMSM_42JS_IF_Start_Speed_RPM[10] = {0.0f, 20.0f, 50.0f, 100.0f, 250.0f, 500.0f, 600.0f, 600.0f, 600.0f, 600.0f}; 
+const float PMSM_42JS_IF_Start_Iq_A[10] = {0.0f, 0.1f, 0.5f, 1.0f, 1.5f, 2.0f, 3.0f, 3.0f, 3.0f, 3.0f};
+const float PMSM_42JS_IF_Start_Speed_RPM[10] = {0.0f, 20.0f, 50.0f, 100.0f, 250.0f, 400.0f, 600.0f, 600.0f, 600.0f, 600.0f}; 
 
 MOTOR_t PMSM_42JS = {
     .pole_pairs = MOTOR_POLE_PAIRS,

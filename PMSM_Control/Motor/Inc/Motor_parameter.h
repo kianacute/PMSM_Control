@@ -5,15 +5,15 @@
 #include <stdint.h>
 
 
-#define MOTOR_POLE_PAIRS       4U
+#define MOTOR_POLE_PAIRS       2U
 #define MOTOR_MAX_RPM          6000.0f
 #define MOTOR_MAX_CURRENT_A    30.0f
 #define MOTOR_VOLTAGE_LIMIT_V  48.0f
 #define MOTOR_KV_RPM_PER_V     120.0f
 #define MOTOR_PHASE_RESISTANCE_OHM  0.2f    
-#define MOTOR_PHASE_INDUCTANCE_D_H    0.00050f
-#define MOTOR_PHASE_INDUCTANCE_Q_H    0.00059f
-#define MOTOR_FLUX_RPM_per_V      4.3f
+#define MOTOR_PHASE_INDUCTANCE_D_H    0.00041f
+#define MOTOR_PHASE_INDUCTANCE_Q_H    0.00064f
+#define MOTOR_FLUX_RPM_per_V      2.0f
 #define MOTOR_FLUX_LINKAGE_Wb      (MOTOR_FLUX_RPM_per_V / MOTOR_POLE_PAIRS / 1000.0f * 7.79f * 1.414f)
 
 

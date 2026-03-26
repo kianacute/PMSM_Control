@@ -41,7 +41,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 300.0f;
+    Speed_Command = 1000.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -139,13 +139,13 @@ void SPEED_CTRL_ALIGN_Task()
 {
     // vTaskDelay(100);
     // // Alignment logic can be implemented here if needed
-    Speed_Ctrl.target_id = 1.0f;
+    Speed_Ctrl.target_id = 0.0f;
     Speed_Ctrl.target_iq = 0;
     Speed_Ctrl.Speed_Ref = 0;
     Current_Task.theta = 0; // Align to d-axis
-    vTaskDelay(500);
-    Speed_Ctrl.target_id = 1.0f;
-    align_done = 1;
+    // vTaskDelay(500);
+    // Speed_Ctrl.target_id = 1.0f;
+    // align_done = 1;
     vTaskDelay(100);
     // Speed_Ctrl.target_id = -1.0f;
     // vTaskDelay(10);
@@ -157,7 +157,7 @@ void SPEED_CTRL_ALIGN_Task()
     // vTaskDelay(5000);
     // theta = 0.17*18;
     // vTaskDelay(5000);
-    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_OPEN;
 }
 
 void SPEED_CTRL_OPEN_Task(void)
@@ -209,7 +209,7 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
     {    
-        Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
     {

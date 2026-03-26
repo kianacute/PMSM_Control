@@ -44,7 +44,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 10.0f;
+    float lp = 50.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -94,20 +94,20 @@ void Speed_Switch(void)
     {
         Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
         Current_Task.theta = Limit_2PI(Current_Task.theta);
-        if (my_abs(NonFlux_OB.tPLL.theta - Current_Task.theta) < 0.10)
+        if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
         {
             Speed_Ctrl.Speed_Switch_Cnt++;
             if (Speed_Ctrl.Speed_Switch_Cnt > 10)
             {
                 Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta = NonFlux_OB.tPLL.theta;
+                Current_Task.theta = SMO_OB.tPLL.theta;
             }
         }
         break;
     }
     case SPEED_CTRL_RUN:
     {
-        Current_Task.theta = Limit_2PI(NonFlux_OB.tPLL.theta);
+        Current_Task.theta = Limit_2PI(SMO_OB.tPLL.theta);
     }
     default:
     }
@@ -178,7 +178,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
     arm_inv_park_f32(Id, Iq, &Ialpha_tmp, &Ibeta_tmp, arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
     // float Ia_pre, Ib_pre, Ic_pre;
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
-    if (we > 50)
+    if (we > 5000000)
     {
         if (Ia_pre > 0)
         {
@@ -224,7 +224,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     // }
     // Current_Task.avg_count++;
     // Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
-    Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
+    Speed_Ctrl.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
 
     if ((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
@@ -239,9 +239,9 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
-    // SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
-    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
-                                  Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    //Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
+    //                              Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
     // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
     // HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
@@ -420,10 +420,10 @@ void Current_Task_Switch(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Current_Task.Ia_fb);
-    vofa_buffer.data[3] = (float32_t)(Current_Task.Ib_fb);
-    vofa_buffer.data[4] = (float32_t)(Current_Task.PWM_duty_a);
-    vofa_buffer.data[5] = (float32_t)(Current_Task.PWM_Duty_A_Comp);
+    vofa_buffer.data[2] = (float32_t)(Current_Task.Id_fb);
+    vofa_buffer.data[3] = (float32_t)(Current_Task.Iq_fb);
+    vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
+    vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
     vofa_buffer.data[6] = (float32_t)(Encode_ABZ.theta);
     vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));

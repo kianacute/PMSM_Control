@@ -17,8 +17,8 @@ void SMO_Observer_Init(void)
     SMO_OB.pMotor = &PMSM_42JS;
     SMO_OB.E_LPF_Coff = 0.1;
     SMO_OB.Gain_Min = 2.0f;
-    SMO_OB.Gain_Add = 8.0f;
-    SMO_OB.tPLL.PLL_PI.kp = 50.1f;
+    SMO_OB.Gain_Add = 12.0f;
+    SMO_OB.tPLL.PLL_PI.kp = 100.1f;
     SMO_OB.tPLL.PLL_PI.ki = 5.1f / 10.0f;
     SMO_OB.tPLL.PLL_PI.out_max = 10000.0f;
     SMO_OB.tPLL.PLL_PI.out_min = -10000.0f;
@@ -47,8 +47,17 @@ int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
     {
         Est_b = -(SMO->Gain_Min + SMO->Gain_Add);
     }
-    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s * SMO->ia_mat_k + Ualpha / SMO->pMotor->phase_inductance_s - Est_a / SMO->pMotor->phase_inductance_s) * SMO->discrete_time;
-    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s * SMO->ib_mat_k + Ubeta / SMO->pMotor->phase_inductance_s - Est_b / SMO->pMotor->phase_inductance_s) * SMO->discrete_time;
+    float Ld_Lq_Ld = (SMO->pMotor->phase_inductance_d - SMO->pMotor->phase_inductance_q) / SMO->pMotor->phase_inductance_d;
+
+    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_d * SMO->ia_mat_k + 
+                        Ualpha / SMO->pMotor->phase_inductance_d -
+                        Est_a / SMO->pMotor->phase_inductance_d - 
+                        SMO->tPLL.we * Ld_Lq_Ld * Est_b)* SMO->discrete_time;
+
+    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_d * SMO->ib_mat_k + 
+                        Ubeta / SMO->pMotor->phase_inductance_d +
+                        Est_b / SMO->pMotor->phase_inductance_d + 
+                        SMO->tPLL.we * Ld_Lq_Ld * Est_a) * SMO->discrete_time;
 
     /*观测到的反电动势必须滤波*/
     SMO->E_alpha = Est_a * SMO->E_LPF_Coff + SMO->E_alpha * (1 - SMO->E_LPF_Coff);
@@ -161,10 +170,10 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.Flux_alpha = 0.0f;
     NonFlux_OB.Flux_beta = 0.0f;
     NonFlux_OB.tPLL.PLL_PI.kp = 500.1f / 1.0f;
-    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 4.0f;
+    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 400.0f;
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
-    NonFlux_OB.gama = 100000.0f;
+    NonFlux_OB.gama = 10000.0f;
     NonFlux_OB.pMotor = &PMSM_42JS;
     NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
@@ -203,7 +212,7 @@ void HFSWInjection_Init(void)
     HFSW_OB.U_hfj = 2.4f;
     HFSW_OB.hfj_cnt = 0;
     HFSW_OB.tPLL.PLL_PI.kp = 800.1f / 1.0f;
-    HFSW_OB.tPLL.PLL_PI.ki = 16.1f / 40.0f;
+    HFSW_OB.tPLL.PLL_PI.ki = 16.1f / 400.0f;
     HFSW_OB.tPLL.PLL_PI.out_max = 10000.0f;
     HFSW_OB.tPLL.PLL_PI.out_min = -10000.0f;
 }
