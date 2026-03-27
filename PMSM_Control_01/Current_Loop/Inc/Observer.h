@@ -22,6 +22,8 @@ struct SMO_Parameter
     MOTOR_t *pMotor;
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;
+    Lookup_Table_t LPF;
+    Lookup_Table_t GAIN_LOOKUP;
 };
 
 struct Encoder_Parameter

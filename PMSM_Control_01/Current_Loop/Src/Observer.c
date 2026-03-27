@@ -7,22 +7,33 @@ struct SMO_Parameter SMO_OB = {0};
 extern MOTOR_t PMSM_42JS;
 
 float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
-float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
+float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
+                                         2500, 3000, 3500, 4000, 5000};
 float Observer_PLL_Kp[10] = {500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f};
 float Observer_PLL_Ki[10] = {0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f};
+float LPK_KP[10] =             {0.1f, 0.1f, 0.1f, 0.10f, 0.1f,
+                                0.2f, 0.3f, 0.3f, 0.5f, 0.5f};                                
+float GAIN_LOOK[10] =              {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
+                                15.0f, 20.0f, 20.0f, 20.0f, 20.0f}; 
 
 void SMO_Observer_Init(void)
 {
     // memset(&SMO, 0, sizeof(SMO));
     SMO_OB.pMotor = &PMSM_42JS;
-    SMO_OB.E_LPF_Coff = 0.2f;
+    SMO_OB.E_LPF_Coff = 0.3f;
     SMO_OB.Gain_Min = 2.0f;
-    SMO_OB.Gain_Add = 4.0f;
+    SMO_OB.Gain_Add = 20.0f;
     SMO_OB.tPLL.PLL_PI.kp = 40.1f;
     SMO_OB.tPLL.PLL_PI.ki = 5.1f / 100.0f;
     SMO_OB.tPLL.PLL_PI.out_max = 10000.0f;
     SMO_OB.tPLL.PLL_PI.out_min = -10000.0f;
     SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+    SMO_OB.LPF.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.LPF.y_table = LPK_KP;
+    SMO_OB.LPF.table_size = sizeof(Observer_Lookup_Speed_index)/sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.GAIN_LOOKUP.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.GAIN_LOOKUP.y_table = GAIN_LOOK;
+    SMO_OB.GAIN_LOOKUP.table_size = sizeof(Observer_Lookup_Speed_index)/sizeof(Observer_Lookup_Speed_index[0]);
 }
 
 int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
@@ -164,7 +175,7 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 4.0f;
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
-    NonFlux_OB.gama = 100000.0f;
+    NonFlux_OB.gama = 1000000.0f;
     NonFlux_OB.pMotor = &PMSM_42JS;
     NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;

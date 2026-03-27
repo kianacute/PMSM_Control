@@ -14,7 +14,8 @@ extern MOTOR_t PMSM_42JS;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Current_Task_t Current_Task;
 
-float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000};
+float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 
+                                        2500, 3000, 3500, 4000, 5000};
 // float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755,
 //                                 0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
 // float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
@@ -24,7 +25,6 @@ float Speed_PI_Lookup_Kp[10] = {5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 
                                 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04};
 float Speed_PI_Lookup_Ki[10] = {5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05,
                                 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05};
-
 Speed_Ctrl_t Speed_Ctrl = {
     .FREQ_Hz = 1000,
     .IF_Start_Speed_Lookup = {0},
@@ -41,7 +41,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 4000.0f;
+    Speed_Command = 4500.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -57,7 +57,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI_Kp_Lookup.y_table = Speed_PI_Lookup_Kp;
     Speed_Ctrl.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
 
-    Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -2.0f, -4.0f, 100);
+    Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
     Speed_Ctrl.Weak_Pi.kp = 0.1f;
     Speed_Ctrl.Weak_Pi.ki = 0.1f;
@@ -212,13 +212,13 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
     {    
-        Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
     {
+        Speed_Ctrl.Voltage_err = 0.1f * Speed_Ctrl.Voltage_err + 0.9f * Current_Task.Voltage_err;
         if (Speed_Ctrl.Weak_Control_Hcomp.comp_out == 1)
         {
-            Speed_Ctrl.Voltage_err = 0.1f * Speed_Ctrl.Voltage_err + 0.9f * Current_Task.Voltage_err;
             Speed_Ctrl.target_id = Hal_PI_f32(&Speed_Ctrl.Weak_Pi, (Speed_Ctrl.Weak_Control_Hcomp.threshold_high - Speed_Ctrl.Voltage_err));
         }
         else
@@ -239,12 +239,16 @@ void SPEED_CTRL_WAIT_Task(void)
     Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
 }
 
+extern struct SMO_Parameter SMO_OB;
+
 void Paramater_update(void)
 {
     Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Kp_Lookup);
     Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Ki_Lookup);
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
+    SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
+    SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
 }
 
 void Weak_Control(void)

@@ -94,20 +94,20 @@ void Speed_Switch(void)
     {
         Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
         Current_Task.theta = Limit_2PI(Current_Task.theta);
-        if (my_abs(NonFlux_OB.tPLL.theta - Current_Task.theta) < 0.10)
+        if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
         {
             Speed_Ctrl.Speed_Switch_Cnt++;
             if (Speed_Ctrl.Speed_Switch_Cnt > 10)
             {
                 Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta = NonFlux_OB.tPLL.theta;
+                Current_Task.theta = SMO_OB.tPLL.theta;
             }
         }
         break;
     }
     case SPEED_CTRL_RUN:
     {
-        Current_Task.theta = Limit_2PI(NonFlux_OB.tPLL.theta);
+        Current_Task.theta = Limit_2PI(SMO_OB.tPLL.theta);
     }
     default:
     }
@@ -179,7 +179,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
     float Ia_pre, Ib_pre, Ic_pre;
 
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
-    if (we > 25000000)
+    if (we > (200/60*6.24f*4))
     {
         if (Ia_pre > 0.1f)
         {
@@ -253,15 +253,15 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
 
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
 {
-    // if (Current_Task.avg_count >= (Current_Task.FREQ_HZ / Speed_Ctrl.FREQ_Hz))
-    // {
-    //     Current_Task.avg_count = 0;
-    //     Speed_Ctrl.Speed_Fb = Current_Task.Speed_fb_1ms / 2 / PI / Current_Task.pMotor->pole_pairs * 60 / 20.0f;
-    //     Current_Task.Speed_fb_1ms = 0;
-    // }
-    // Current_Task.avg_count++;
-    // Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
-    Speed_Ctrl.Speed_Fb = NonFlux_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
+    if (Current_Task.avg_count >= (Current_Task.FREQ_HZ / Speed_Ctrl.FREQ_Hz))
+    {
+        Current_Task.avg_count = 0;
+        Speed_Ctrl.Speed_Fb = Current_Task.Speed_fb_1ms / 2 / PI / Current_Task.pMotor->pole_pairs * 60 / 20.0f;
+        Current_Task.Speed_fb_1ms = 0;
+    }
+    Current_Task.avg_count++;
+    Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
+    // Speed_Ctrl.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
 
     // if ((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
@@ -456,12 +456,12 @@ void Current_Task_Switch(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Current_Task.Voltage_err);
+    vofa_buffer.data[2] = (float32_t)(Speed_Ctrl.Voltage_err);
     vofa_buffer.data[3] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
-    vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
-    vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[6] = (float32_t)(Encode_ABZ.theta);
-    vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
+    vofa_buffer.data[4] = (float32_t)(SMO_OB.Gain_Add);
+    vofa_buffer.data[5] = (float32_t)(SMO_OB.E_LPF_Coff);
+    vofa_buffer.data[6] = (float32_t)(NonFlux_OB.Flux_alpha);
+    vofa_buffer.data[7] = (float32_t)(SMO_OB.E_alpha);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }
 
