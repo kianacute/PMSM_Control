@@ -7,10 +7,10 @@
 /// @return 输出
 float32_t Hal_PI_f32(Hal_PI_t *controller, float error)
 {
-     controller->integral += error;
+     controller->integral += controller->ki * error - 
+                             controller->Kd * (controller->output_raw - controller->output); // 抗饱和项
      controller->output_raw = controller->kp * error +                               // 比例项
-                              controller->ki * controller->integral -                // 积分项
-                              0.01f * (controller->output_raw - controller->output); // 抗饱和项
+                              controller->integral;                                 
 
      // Clamp output to min/max limits
      if (controller->output_raw > controller->out_max)

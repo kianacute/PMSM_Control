@@ -8,6 +8,7 @@ typedef struct Hal_PI_f32
 {
     float32_t kp;        // Proportional gain
     float32_t ki;        // Integral gain
+    float32_t Kd;        // 抗饱和 gain
     float32_t integral;  // Integral term
     float32_t prev_error; // Previous error term
     float32_t out_min;   // Minimum output limit

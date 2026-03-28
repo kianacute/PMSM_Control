@@ -98,7 +98,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/app_freertos.c)(0x69BFA03E)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\app_freertos.o --omf_browse pmsm_control\app_freertos.crf --depend pmsm_control\app_freertos.d)
+F (../Core/Src/app_freertos.c)(0x69C76911)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\app_freertos.o --omf_browse pmsm_control\app_freertos.crf --depend pmsm_control\app_freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
 I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
@@ -157,11 +157,11 @@ I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
 I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (../Current_Loop/inc/Current_Task.h)(0x69C1372A)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+I (../Current_Loop/inc/Current_Task.h)(0x69C75C22)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
 I (../Core/Inc/adc.h)(0x694C03B0)
-I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C68289)
+I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C75C30)
 I (../Core/Inc/opamp.h)(0x694C03B1)
 I (../Current_Loop/inc/Observer.h)(0x69C68695)
 I (../Command_Task/Inc/Can.h)(0x6989E0E2)
@@ -1578,7 +1578,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-F (..\Current_Loop\src\Current_Task.c)(0x69C68CD5)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\current_task.o --omf_browse pmsm_control\current_task.crf --depend pmsm_control\current_task.d)
+F (..\Current_Loop\src\Current_Task.c)(0x69C7A3E1)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\current_task.o --omf_browse pmsm_control\current_task.crf --depend pmsm_control\current_task.d)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
@@ -1587,8 +1587,8 @@ I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
 I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (../Current_Loop/inc/Current_Task.h)(0x69C1372A)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+I (../Current_Loop/inc/Current_Task.h)(0x69C75C22)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
 I (../Current_Loop/inc/SVPWM.h)(0x69B40C2E)
 I (../Core/Inc/adc.h)(0x694C03B0)
@@ -1630,15 +1630,15 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
 I (../Core/Inc/tim.h)(0x697B3E70)
 I (../Current_Loop/inc/Observer.h)(0x69C68695)
 I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C68289)
+I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C75C30)
 F (..\Current_Loop\src\SVPWM.c)(0x69B40C22)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\svpwm.o --omf_browse pmsm_control\svpwm.crf --depend pmsm_control\svpwm.d)
 I (../Current_Loop/inc/SVPWM.h)(0x69B40C2E)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-F (..\Current_Loop\Src\Observer.c)(0x69C691F8)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\observer.o --omf_browse pmsm_control\observer.crf --depend pmsm_control\observer.d)
+F (..\Current_Loop\Src\Observer.c)(0x69C765E8)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\observer.o --omf_browse pmsm_control\observer.crf --depend pmsm_control\observer.d)
 I (../Current_Loop/inc/Observer.h)(0x69C68695)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
 I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
@@ -1727,15 +1727,15 @@ I (../Core/Inc/tim.h)(0x697B3E70)
 I (D:\Keil\ARM\ARMCC\include\stdio.h)(0x5F63877C)
 I (../Current_Loop/inc/Observer.h)(0x69C68695)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
 I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-F (..\Speed_Loop\Src\speed_ctrl.c)(0x69C691D7)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\speed_ctrl.o --omf_browse pmsm_control\speed_ctrl.crf --depend pmsm_control\speed_ctrl.d)
-I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C68289)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+F (..\Speed_Loop\Src\speed_ctrl.c)(0x69C79BDD)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\speed_ctrl.o --omf_browse pmsm_control\speed_ctrl.crf --depend pmsm_control\speed_ctrl.d)
+I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C75C30)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
@@ -1745,7 +1745,7 @@ I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
-I (../Current_Loop/inc/Current_Task.h)(0x69C1372A)
+I (../Current_Loop/inc/Current_Task.h)(0x69C75C22)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
 I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
 I (../Core/Inc/FreeRTOSConfig.h)(0x6947FC33)
@@ -1760,7 +1760,7 @@ I (../Current_Loop/inc/Observer.h)(0x69C68695)
 F (..\Motor\Src\Motor_Parameter.c)(0x69C52ABE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\motor_parameter.o --omf_browse pmsm_control\motor_parameter.crf --depend pmsm_control\motor_parameter.d)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-F (..\HAL_MATH\Hal_Math.c)(0x69BF7CE6)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\hal_math.o --omf_browse pmsm_control\hal_math.crf --depend pmsm_control\hal_math.d)
+F (..\HAL_MATH\Hal_Math.c)(0x69C79BD4)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\hal_math.o --omf_browse pmsm_control\hal_math.crf --depend pmsm_control\hal_math.d)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
@@ -1769,7 +1769,7 @@ I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
 I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\HAL_MATH\Hal_Math.h)(0x69BF7CF4)
+I (..\HAL_MATH\Hal_Math.h)(0x69C7978F)
 F (..\Command_Task\Src\Can.c)(0x69B64C9A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\can.o --omf_browse pmsm_control\can.crf --depend pmsm_control\can.d)
 I (../Command_Task/Inc/Can.h)(0x6989E0E2)
 I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
@@ -1813,14 +1813,14 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
 I (../Command_Task/Inc/CAN_DBC_Messages.h)(0x69A3D9DD)
 I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C68289)
-I (../HAL_MATH/Hal_Math.h)(0x69BF7CF4)
+I (../Speed_Loop/Inc/speed_ctrl.h)(0x69C75C30)
+I (../HAL_MATH/Hal_Math.h)(0x69C7978F)
 I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
 I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
 I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
 I (../Motor/Inc/Motor_parameter.h)(0x69C13CA5)
-I (../Current_Loop/inc/Current_Task.h)(0x69C1372A)
+I (../Current_Loop/inc/Current_Task.h)(0x69C75C22)
 I (../Current_Loop/inc/Observer.h)(0x69C68695)
 F (..\Command_Task\Src\CAN_DBC_Messages.c)(0x69A592A7)(--c99 -c --cpu Cortex-M4.fp.sp -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Current_Loop/inc -I ../UDS/uds_c/inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../HAL_MATH -I ../Speed_Loop/Inc -I ../Motor/Inc -I ../Command_Task/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\can_dbc_messages.o --omf_browse pmsm_control\can_dbc_messages.crf --depend pmsm_control\can_dbc_messages.d)
 I (../Command_Task/Inc/CAN_DBC_Messages.h)(0x69A3D9DD)

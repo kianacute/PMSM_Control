@@ -27,20 +27,42 @@ Project File Date:  03/23/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil\ARM\ARMCC\Bin'
 Build target 'PMSM_Control'
-compiling Observer.c...
+compiling Current_Task.c...
+../Current_Loop/inc/Current_Task.h(62): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
+../Current_Loop/inc/SVPWM.h(10): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-..\Current_Loop\Src\Observer.c(113): warning:  #186-D: pointless comparison of unsigned integer with zero
-      if (Encode_ABZ.value < 0)
-..\Current_Loop\Src\Observer.c(157): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          Encode_ABZ.rpm = Encode_ABZ.rpm_last *0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f / 
-..\Current_Loop\Src\Observer.c(157): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          Encode_ABZ.rpm = Encode_ABZ.rpm_last *0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f / 
-..\Current_Loop\Src\Observer.c: 4 warnings, 0 errors
+..\Current_Loop\src\Current_Task.c(99): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
+..\Current_Loop\src\Current_Task.c(115): warning:  #127-D: expected a statement
+      }
+..\Current_Loop\src\Current_Task.c(191): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_A_Comp = Duty_A_Raw + Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_A_Comp = Duty_A_Raw - Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(214): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_B_Comp = Duty_B_Raw + Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(223): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_B_Comp = Duty_B_Raw - Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(237): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_C_Comp = Duty_C_Raw + Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(246): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+              *Duty_C_Comp = Duty_C_Raw - Dead_TIME_DUTY;
+..\Current_Loop\src\Current_Task.c(265): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Ualpha_comp = 2 / 3 * (sign_a - sign_b / 2 - sign_c / 2) * Dead_TIME_DUTY * 16.0f;
+..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
+..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
+..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
+..\Current_Loop\src\Current_Task.c: 15 warnings, 0 errors
 linking...
-Program Size: Code=40092 RO-data=2812 RW-data=1160 ZI-data=9664  
+Program Size: Code=40200 RO-data=2812 RW-data=1200 ZI-data=9680  
 FromELF: creating hex file...
-"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 4 Warning(s).
+"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 15 Warning(s).
 
 <h2>Software Packages used:</h2>
 

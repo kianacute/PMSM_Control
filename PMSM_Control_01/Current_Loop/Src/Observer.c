@@ -175,7 +175,7 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 4.0f;
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
-    NonFlux_OB.gama = 1000000.0f;
+    NonFlux_OB.gama = 100000.0f;
     NonFlux_OB.pMotor = &PMSM_42JS;
     NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;

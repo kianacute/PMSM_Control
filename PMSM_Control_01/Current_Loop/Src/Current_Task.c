@@ -44,12 +44,14 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 50.0f;
+    float lp = 30.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Id_PI.ki = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
     Current_Task.Iq_PI.ki = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
+    Current_Task.Id_PI.Kd = 0.1f;
+    Current_Task.Iq_PI.Kd = 0.1f;
     Speed_Ctrl.Speed_Switch_Cnt = 0;
     Speed_Ctrl.Speed_Switch_Flag = 0;
     SMO_Observer_Init();
@@ -157,29 +159,32 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
     return;
 }
 
+float sign_a, sign_b, sign_c;
+float Ualpha_comp, Ubeta_comp;
 
-/// @brief
-/// @param Id
-/// @param Iq
-/// @param we
-/// @param theta
-/// @param Duty_A_Raw
-/// @param Duty_B_Raw
-/// @param Duty_C_Raw
-/// @param Duty_A_Comp
-/// @param Duty_B_Comp
-/// @param Duty_C_Comp
+
+/// @brief 这种死区补偿方式会引入错误，总之就是更加不稳定
+/// @param Id   
+/// @param Iq   
+/// @param we   
+/// @param theta    
+/// @param Duty_A_Raw   
+/// @param Duty_B_Raw   
+/// @param Duty_C_Raw   
+/// @param Duty_A_Comp  
+/// @param Duty_B_Comp  
+/// @param Duty_C_Comp  
 void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                             float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
                             float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp)
 {
     float Ialpha_tmp, Ibeta_tmp;
-    float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * 0.0f;
+    float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * (2.0f);
     arm_inv_park_f32(Id, Iq, &Ialpha_tmp, &Ibeta_tmp, arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
     float Ia_pre, Ib_pre, Ic_pre;
 
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
-    if (we > (200/60*6.24f*4))
+    if (we > (2000000/60*6.24f*4))
     {
         if (Ia_pre > 0.1f)
         {
@@ -188,6 +193,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_A_Comp = 1;
             }
+            sign_a = 1;
         }
         else if (Ia_pre < -0.1f)
         {
@@ -196,10 +202,12 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_A_Comp = 0;
             }
+            sign_a = 1;
         }
         else
         {
             *Duty_A_Comp = Duty_A_Raw;
+            sign_a = 0;
         }
         if (Ib_pre > 0.1f)
         {
@@ -208,6 +216,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_B_Comp = 1;
             }
+            sign_b = 1;
         }
         else if (Ib_pre < -0.1f)
         {
@@ -216,10 +225,12 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_B_Comp = 0;
             }
+            sign_b = -1;
         }
         else 
         {
             *Duty_B_Comp = Duty_B_Raw;
+            sign_b = 0;
         }
         if (Ic_pre > 0.1f)
         {
@@ -228,6 +239,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_C_Comp = 1;
             }
+            sign_c = 1;
         }
         else if (Ic_pre < -0.1f)
         {
@@ -236,10 +248,12 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_C_Comp = 0;
             }
+            sign_c = -1;
         }
         else 
         {
             *Duty_C_Comp = Duty_C_Raw;
+            sign_c = 0;
         }
     }
     else
@@ -248,6 +262,8 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
         *Duty_B_Comp = Duty_B_Raw;
         *Duty_C_Comp = Duty_C_Raw;
     }
+    Ualpha_comp = 2 / 3 * (sign_a - sign_b / 2 - sign_c / 2) * Dead_TIME_DUTY * 16.0f;
+    Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
     return;
 }
 
@@ -277,7 +293,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
     SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
-    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
+    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref + Ualpha_comp, Current_Task.Ubeta_Ref +- Ubeta_comp,
                                   Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
     // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
@@ -298,15 +314,12 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     SVPWM_Calculate(1, Udc, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, &Current_Task.sector);
 
-    arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Current_Task.Vs);
-    Current_Task.Voltage_err = Current_Task.Vs - Udc * WEAK_VOLTAGE_COMPENSATION;
-
     Current_Task.Id_PI.out_max = Udc * WEAK_VOLTAGE_COMPENSATION * 1.02f;
     Current_Task.Id_PI.out_min = -Current_Task.Id_PI.out_max;
     arm_sqrt_f32(Current_Task.Id_PI.out_max * Current_Task.Id_PI.out_max - Current_Task.Ud_Target * Current_Task.Ud_Target,
                  &Current_Task.Iq_PI.out_max);
     Current_Task.Iq_PI.out_min = -Current_Task.Iq_PI.out_max;
-    Dead_Zone_Compensation(-Current_Task.Id_fb, -Current_Task.Iq_fb, SMO_OB.tPLL.we, SMO_OB.tPLL.theta,
+    Dead_Zone_Compensation(Current_Task.Id_fb, Current_Task.Iq_fb, SMO_OB.tPLL.we, SMO_OB.tPLL.theta,
                            Current_Task.PWM_duty_a, Current_Task.PWM_duty_b, Current_Task.PWM_duty_c,
                            &Current_Task.PWM_Duty_A_Comp, &Current_Task.PWM_Duty_B_Comp, &Current_Task.PWM_Duty_C_Comp);
     Current_Task.PWM_Duty_A_Comp *= PWM_MAX_DUTY;
@@ -347,6 +360,7 @@ int32_t MOTOR_IDLE_TASK(void)
     if (MOTOR_Run_flag == 1)
     {
         Current_Task.Motor_State = MOTOR_READY;
+        SMO_OB.tPLL.PLL_PI.integral = 0;
     }
     else
     {
@@ -458,9 +472,9 @@ void Current_Task_Switch(void)
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
     vofa_buffer.data[2] = (float32_t)(Speed_Ctrl.Voltage_err);
     vofa_buffer.data[3] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
-    vofa_buffer.data[4] = (float32_t)(SMO_OB.Gain_Add);
-    vofa_buffer.data[5] = (float32_t)(SMO_OB.E_LPF_Coff);
-    vofa_buffer.data[6] = (float32_t)(NonFlux_OB.Flux_alpha);
+    vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
+    vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
+    vofa_buffer.data[6] = (float32_t)(NonFlux_OB.Flux_beta);
     vofa_buffer.data[7] = (float32_t)(SMO_OB.E_alpha);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }

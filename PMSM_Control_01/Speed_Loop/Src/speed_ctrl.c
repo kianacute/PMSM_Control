@@ -39,9 +39,10 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.pMotor = &PMSM_42JS;
     Speed_Ctrl.Speed_PI.kp = 5.1755e-04;
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
+    Speed_Ctrl.Speed_PI.Kd = 0.1f;
     Speed_Ctrl.Speed_PI.out_max = 5.0f;
     Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 4500.0f;
+    Speed_Command = 600.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -59,8 +60,9 @@ void Speed_Ctrl_Init(void)
 
     Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
-    Speed_Ctrl.Weak_Pi.kp = 0.1f;
-    Speed_Ctrl.Weak_Pi.ki = 0.1f;
+    Speed_Ctrl.Weak_Pi.kp = 0.01f;
+    Speed_Ctrl.Weak_Pi.ki = 0.01f;
+    Speed_Ctrl.Weak_Pi.Kd = 0.1f;
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
     Speed_Ctrl.Weak_Pi.out_max = 0.0f;
@@ -192,6 +194,8 @@ void SPEED_CTRL_SWITCH_Task(void)
     }
 }
 
+extern float Udc_1ms;
+
 void SPEED_CTRL_RUN_Task(void)
 {
     if (MOTOR_Run_flag == 1)
@@ -216,7 +220,8 @@ void SPEED_CTRL_RUN_Task(void)
     }
     else
     {
-        Speed_Ctrl.Voltage_err = 0.1f * Speed_Ctrl.Voltage_err + 0.9f * Current_Task.Voltage_err;
+        arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Speed_Ctrl.Vs);
+        Speed_Ctrl.Voltage_err = Speed_Ctrl.Vs - Udc_1ms * WEAK_VOLTAGE_COMPENSATION;
         if (Speed_Ctrl.Weak_Control_Hcomp.comp_out == 1)
         {
             Speed_Ctrl.target_id = Hal_PI_f32(&Speed_Ctrl.Weak_Pi, (Speed_Ctrl.Weak_Control_Hcomp.threshold_high - Speed_Ctrl.Voltage_err));
@@ -253,5 +258,5 @@ void Paramater_update(void)
 
 void Weak_Control(void)
 {
-    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Current_Task.Voltage_err);
+    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
 }

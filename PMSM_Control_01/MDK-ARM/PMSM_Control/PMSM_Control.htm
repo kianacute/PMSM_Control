@@ -3,7 +3,7 @@
 <title>Static Call Graph - [PMSM_Control\PMSM_Control.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image PMSM_Control\PMSM_Control.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Mar 27 22:19:41 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Mar 28 17:48:26 2026
 <BR><P>
 <H3>Maximum Stack Usage =        312 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -686,7 +686,7 @@ Global Symbols
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MOTOR_IDLE_TASK
 </UL>
 
-<P><STRONG><a name="[8f]"></a>Current_Task_Init</STRONG> (Thumb, 134 bytes, Stack size 8 bytes, current_task.o(i.Current_Task_Init))
+<P><STRONG><a name="[8f]"></a>Current_Task_Init</STRONG> (Thumb, 146 bytes, Stack size 8 bytes, current_task.o(i.Current_Task_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Current_Task_Init &rArr; Encode_ABZ_Init &rArr; HAL_TIM_Encoder_Start &rArr; TIM_CCxChannelCmd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SMO_Observer_Init
@@ -697,7 +697,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 </UL>
 
-<P><STRONG><a name="[94]"></a>Current_Task_Run</STRONG> (Thumb, 666 bytes, Stack size 40 bytes, current_task.o(i.Current_Task_Run))
+<P><STRONG><a name="[94]"></a>Current_Task_Run</STRONG> (Thumb, 618 bytes, Stack size 40 bytes, current_task.o(i.Current_Task_Run))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = Current_Task_Run &rArr; Dead_Zone_Compensation &rArr; __aeabi_dsub
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;arm_sin_f32
@@ -740,7 +740,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
 </UL>
-<P><STRONG><a name="[9e]"></a>Dead_Zone_Compensation</STRONG> (Thumb, 442 bytes, Stack size 64 bytes, current_task.o(i.Dead_Zone_Compensation))
+<P><STRONG><a name="[9e]"></a>Dead_Zone_Compensation</STRONG> (Thumb, 512 bytes, Stack size 64 bytes, current_task.o(i.Dead_Zone_Compensation))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = Dead_Zone_Compensation &rArr; __aeabi_dsub
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
@@ -1199,9 +1199,9 @@ Global Symbols
 <P><STRONG><a name="[e9]"></a>HAL_Init</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, stm32g4xx_hal.o(i.HAL_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = HAL_Init &rArr; HAL_InitTick &rArr; HAL_TIM_Base_Init &rArr; TIM_Base_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Calls]<UL><LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_MspInit
-<LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_NVIC_SetPriorityGrouping
 </UL>
 <BR>[Called By]<UL><LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1303,9 +1303,9 @@ Global Symbols
 <P><STRONG><a name="[f5]"></a>HAL_RCC_ClockConfig</STRONG> (Thumb, 444 bytes, Stack size 32 bytes, stm32g4xx_hal_rcc.o(i.HAL_RCC_ClockConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 108<LI>Call Chain = HAL_RCC_ClockConfig &rArr; HAL_InitTick &rArr; HAL_TIM_Base_Init &rArr; TIM_Base_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
+<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 <LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
-<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
@@ -1333,8 +1333,8 @@ Global Symbols
 <P><STRONG><a name="[f7]"></a>HAL_RCC_OscConfig</STRONG> (Thumb, 1028 bytes, Stack size 32 bytes, stm32g4xx_hal_rcc.o(i.HAL_RCC_OscConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 108<LI>Call Chain = HAL_RCC_OscConfig &rArr; HAL_InitTick &rArr; HAL_TIM_Base_Init &rArr; TIM_Base_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Calls]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
 <BR>[Called By]<UL><LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemClock_Config
 </UL>
@@ -1427,12 +1427,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[fb]"></a>HAL_TIM_ConfigClockSource</STRONG> (Thumb, 246 bytes, Stack size 16 bytes, stm32g4xx_hal_tim.o(i.HAL_TIM_ConfigClockSource))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; TIM_ETR_SetConfig
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; TIM_TI2_ConfigInputStage
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
-<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI2_ConfigInputStage
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI2_ConfigInputStage
 <LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI1_ConfigInputStage
 <LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ITRx_SetConfig
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM1_Init
 </UL>
@@ -1504,12 +1504,12 @@ Global Symbols
 <P><STRONG><a name="[111]"></a>HAL_TIM_PWM_ConfigChannel</STRONG> (Thumb, 292 bytes, Stack size 16 bytes, stm32g4xx_hal_tim.o(i.HAL_TIM_PWM_ConfigChannel))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = HAL_TIM_PWM_ConfigChannel &rArr; TIM_OC1_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
-<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC6_SetConfig
+<BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC6_SetConfig
 <LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC5_SetConfig
 <LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC4_SetConfig
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC3_SetConfig
 <LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC1_SetConfig
+<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM1_Init
 </UL>
@@ -1700,7 +1700,7 @@ Global Symbols
 <LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Paramater_update
 </UL>
 
-<P><STRONG><a name="[a0]"></a>MOTOR_IDLE_TASK</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, current_task.o(i.MOTOR_IDLE_TASK))
+<P><STRONG><a name="[a0]"></a>MOTOR_IDLE_TASK</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, current_task.o(i.MOTOR_IDLE_TASK))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = MOTOR_IDLE_TASK &rArr; Current_PWM_Switch &rArr; HAL_TIMEx_PWMN_Stop &rArr; TIM_CCxNChannelCmd
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_PWM_Switch
@@ -1971,8 +1971,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Speed_Ctrl_Task
 </UL>
 
-<P><STRONG><a name="[14e]"></a>SPEED_CTRL_RUN_Task</STRONG> (Thumb, 284 bytes, Stack size 32 bytes, speed_ctrl.o(i.SPEED_CTRL_RUN_Task))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = SPEED_CTRL_RUN_Task
+<P><STRONG><a name="[14e]"></a>SPEED_CTRL_RUN_Task</STRONG> (Thumb, 316 bytes, Stack size 24 bytes, speed_ctrl.o(i.SPEED_CTRL_RUN_Task))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = SPEED_CTRL_RUN_Task
 </UL>
 <BR>[Calls]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Oblique_Wave
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Weak_Control
@@ -1999,7 +1999,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Current_Task_Run
 </UL>
 
-<P><STRONG><a name="[139]"></a>Speed_Ctrl_Init</STRONG> (Thumb, 156 bytes, Stack size 16 bytes, speed_ctrl.o(i.Speed_Ctrl_Init))
+<P><STRONG><a name="[139]"></a>Speed_Ctrl_Init</STRONG> (Thumb, 168 bytes, Stack size 16 bytes, speed_ctrl.o(i.Speed_Ctrl_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Speed_Ctrl_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Hysteresis_Comp_Init
@@ -2093,8 +2093,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = TIM_CCxChannelCmd
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Start
-<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Stop
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Encoder_Start
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_PWM_Stop
 </UL>
 
 <P><STRONG><a name="[fc]"></a>TIM_ETR_SetConfig</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, stm32g4xx_hal_tim.o(i.TIM_ETR_SetConfig))
@@ -2125,9 +2125,9 @@ Global Symbols
 <P><STRONG><a name="[12b]"></a>UART_SetConfig</STRONG> (Thumb, 582 bytes, Stack size 24 bytes, stm32g4xx_hal_uart.o(i.UART_SetConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
-<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
 <LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK1Freq
+<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetPCLK2Freq
 <LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_uldivmod
 </UL>
 <BR>[Called By]<UL><LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
