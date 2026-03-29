@@ -46,22 +46,24 @@ typedef struct {
 } Hysteresis_Comp_TypeDef;
 
 
-float32_t Hal_PI_f32(Hal_PI_t* controller, float error);
+inline float32_t Hal_PI_f32(Hal_PI_t* controller, float error);
 
-float32_t Hal_LPF_f32(float coff, float input);
+inline float my_abs(float num);
 
-float Lookup_Table_Linear(float x, Lookup_Table_t *table);
+inline float32_t Hal_LPF_f32(float coff, float input);
 
-int binary_search_float_first(float arr[], uint32_t n, float target);
+inline float Lookup_Table_Linear(float x, Lookup_Table_t *table);
 
-float Limit_2PI(float theta);
+inline int binary_search_float_first(float arr[], uint32_t n, float target);
 
-float Oblique_Wave(float end_value, float cur_value, float Sub_Step, float Add_Step);
+inline float Limit_2PI(float theta);
 
-void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time);
+inline float Oblique_Wave(float end_value, float cur_value, float Sub_Step, float Add_Step);
 
-void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l, uint32_t delay);
+inline void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time);
 
-void Hysteresis_Comp_Process(Hysteresis_Comp_TypeDef *hcomp, float analog_input);
+inline void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l, uint32_t delay);
+
+inline void Hysteresis_Comp_Process(Hysteresis_Comp_TypeDef *hcomp, float analog_input);
 
 #endif

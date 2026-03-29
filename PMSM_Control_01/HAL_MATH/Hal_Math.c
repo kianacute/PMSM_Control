@@ -62,6 +62,15 @@ int binary_search_float_first(float arr[], uint32_t n, float target)
      return result;
 }
 
+float my_abs(float num)
+{
+    if (num < 0)
+    {
+        return -num;
+    }
+    return num;
+}
+
 /// @brief 一维线性插值函数，输入x和对应的查找表x_table和y_table，输出插值结果
 /// @param x 输入值
 /// @param x_table 查找表的x坐标数组

@@ -44,7 +44,6 @@ typedef struct Current_Task
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint64_t count;
-    uint64_t timestamp;
 }Current_Task_t;
 
 

@@ -70,23 +70,12 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
-typedef struct vofa_buffer_
-{
-    float32_t data[8];
-    uint8_t tail[4];
-} vofa_buffer_t;
-
-vofa_buffer_t vofa_buffer =
-    {
-        .tail[0] = 0x00,
-        .tail[1] = 0x00,
-        .tail[2] = 0x80,
-        .tail[3] = 0x7F,
-};
-
 TickType_t lasttick = 0; 
 uint16_t adc_v24;
 float Udc_1ms;
+
+uint8_t load_send_buffer[500];
+extern volatile uint32_t CPU_RunTime;
 
 void my_task1(void *argument)
 { 
@@ -96,7 +85,6 @@ void my_task1(void *argument)
         // vTaskGetRunTimeStats((char *)&send_buffer);
         // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
-        
         lasttick = xTaskGetTickCount();
         Speed_Ctrl_Task();
         HAL_ADC_Start(&hadc2);
@@ -111,22 +99,18 @@ void my_task1(void *argument)
     }
 }
 
-
-extern uint32_t adc_cnt;
-uint8_t printf_buffer[100];
-
 void my_task2(void *argument)
 {
     // extern uint8_t sector;
+    
     for (;;)
     {
         lasttick = xTaskGetTickCount();
-        // Current_Task_Run(&vofa_buffer.data[0], &vofa_buffer.data[1], &vofa_buffer.data[2],
-        // &vofa_buffer.data[3], &vofa_buffer.data[4]);
-        
-        //Can_Task_Run();
-        // sprintf((char *)printf_buffer, "adc_v24: %d\r\n", adc_cnt);
-        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)printf_buffer, strlen((char *)printf_buffer));
+        // memset(load_send_buffer, 0, sizeof(load_send_buffer)); // 信息缓冲区清零
+        // vTaskGetRunTimeStats((char *)&load_send_buffer);
+        // vTaskList((char *)&load_send_buffer);  //获取任务运行时间信息
+        // sprintf((char *)load_send_buffer, "adc: %d  %d\r\n", cup_adc_1, cup_adc_2);
+        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)load_send_buffer, strlen((char *)load_send_buffer));
         vTaskDelayUntil(&lasttick, 1000); // 每1000ms执行一次
     }
 }

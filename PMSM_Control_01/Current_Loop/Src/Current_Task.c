@@ -8,6 +8,7 @@
 #include "Observer.h"
 #include "usart.h"
 #include "speed_ctrl.h"
+#include "Vofa.h"
 
 extern MOTOR_t PMSM_42JS;
 extern struct SMO_Parameter SMO_OB;
@@ -54,20 +55,66 @@ void Current_Task_Init(void)
     Current_Task.Iq_PI.Kd = 0.1f;
     Speed_Ctrl.Speed_Switch_Cnt = 0;
     Speed_Ctrl.Speed_Switch_Flag = 0;
+    Current_Task.count = 0;
+    Current_Task.Speed_fb_1ms = 0.0f;
     SMO_Observer_Init();
     Encode_ABZ_Init();
     Nonlinear_FluxObserver_Init();
     HFSWInjection_Init();
 }
 
-inline float my_abs(float num)
+
+int32_t MOTOR_IDLE_TASK(void);
+int32_t MOTOR_READY_TASK(void);
+int32_t MOTOR_OFFSET_CHECK_TASK(void);
+int32_t MOTOR_RUN_TASK(void);
+void Current_Task_Switch(void);
+
+void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
-    if (num < 0)
+    if (hadc->Instance == ADC1)
     {
-        return -num;
+        adc_adjustment.ADC_j1 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1); // Read injected channel value
+        adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
+        adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
+        Current_Task_Switch();    
     }
-    return num;
+    else if (hadc->Instance == ADC2)
+    {
+        
+    }
 }
+
+void Current_Task_Switch(void)
+{
+    // Code to switch current task states
+    switch (Current_Task.Motor_State)
+    {
+    case MOTOR_IDLE:
+        // Handle idle state
+        MOTOR_IDLE_TASK();
+        break;
+    case MOTOR_READY:
+        // Handle ready state
+        MOTOR_READY_TASK();
+        break;
+    case MOTOR_OFFSET_CHECK:
+        // Handle offset check state
+        MOTOR_OFFSET_CHECK_TASK();
+        break;
+    case MOTOR_RUN:
+        // Handle run state
+        MOTOR_RUN_TASK();
+        break;
+    default:
+        break;
+    }
+    Current_Task.count++;
+    Vofa_Task_Run();
+}
+
+
+
 
 
 /// @brief 三相电流重构，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
@@ -350,6 +397,7 @@ int32_t MOTOR_IDLE_TASK(void)
         NonFlux_OB.tPLL.PLL_PI.integral = 0;
         Current_Task.Id_PI.integral = 0;
         Current_Task.Iq_PI.integral = 0;
+        Current_Task_Init();
     }
     else
     {
@@ -375,6 +423,7 @@ int32_t MOTOR_READY_TASK(void)
     }
     else
     {
+        Current_Task.Motor_State = MOTOR_IDLE;
     }
     return 0;
 }
@@ -422,62 +471,4 @@ int32_t MOTOR_RUN_TASK(void)
     }
 
     return 0;
-}
-
-typedef struct vofa_buffer_
-{
-    float32_t data[8];
-    uint8_t tail[4];
-} vofa_buffer_t;
-
-void Current_Task_Switch(void)
-{
-    // Code to switch current task states
-    switch (Current_Task.Motor_State)
-    {
-    case MOTOR_IDLE:
-        // Handle idle state
-        MOTOR_IDLE_TASK();
-        break;
-    case MOTOR_READY:
-        // Handle ready state
-        MOTOR_READY_TASK();
-        break;
-    case MOTOR_OFFSET_CHECK:
-        // Handle offset check state
-        MOTOR_OFFSET_CHECK_TASK();
-        break;
-    case MOTOR_RUN:
-        // Handle run state
-        MOTOR_RUN_TASK();
-        break;
-    default:
-        break;
-    }
-    Current_Task.count++;
-    extern vofa_buffer_t vofa_buffer;
-    extern float Udc_1ms;
-    vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
-    vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Encode_ABZ.rpm);
-    vofa_buffer.data[3] = (float32_t)(Encode_ABZ.theta);
-    vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
-    vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[6] = (float32_t)(Encode_ABZ.theta);
-    vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
-    HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
-}
-
-void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
-{
-    if (hadc->Instance == ADC1)
-    {
-        adc_adjustment.ADC_j1 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1); // Read injected channel value
-        adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
-        adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
-        Current_Task_Switch();
-    }
-    else if (hadc->Instance == ADC2)
-    {
-    }
 }

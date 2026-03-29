@@ -171,11 +171,11 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
     NonFlux_OB.Flux_alpha = 0.0f;
     NonFlux_OB.Flux_beta = 0.0f;
-    NonFlux_OB.tPLL.PLL_PI.kp = 1000.1f / 1.0f;
-    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 4.0f;
+    NonFlux_OB.tPLL.PLL_PI.kp = 200.1f / 1.0f;
+    NonFlux_OB.tPLL.PLL_PI.ki = 16.1f / 40.0f;
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
-    NonFlux_OB.gama = 100000.0f;
+    NonFlux_OB.gama = 1000000.0f;
     NonFlux_OB.pMotor = &PMSM_42JS;
     NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
@@ -183,6 +183,17 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
     NonFlux_OB.PLL_Ki_Lookup.table_size = 10;
+    NonFlux_OB.x_alpha_hat = 0.0f;
+    NonFlux_OB.x_beta_hat = 0.0f;
+    NonFlux_OB.y_alpha_hat = 0.0f;
+    NonFlux_OB.y_beta_hat = 0.0f;
+    NonFlux_OB.Eta_alpha = 0.0f;
+    NonFlux_OB.Eta_beta = 0.0f;
+    NonFlux_OB.Flux_hat = 0.0f;
+    NonFlux_OB.Flux_alpha = 0.0f;
+    NonFlux_OB.Flux_beta = 0.0f;
+    NonFlux_OB.tPLL.we = 0.0f;
+    NonFlux_OB.tPLL.theta = 0.0f;
 }
 
 int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,

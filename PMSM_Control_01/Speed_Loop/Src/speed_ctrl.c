@@ -125,18 +125,22 @@ void SPEED_CTRL_IDLE_Task(void)
 {
     if (MOTOR_Run_flag == 1)
     {
-        
-        Speed_Ctrl.tick_count_idle = xTaskGetTickCount();
-        Speed_Ctrl.Speed_Ref = 0;
-        Speed_Ctrl.Speed_Switch_Flag = 0;
-        align_done = 0;
-        Speed_Ctrl.Speed_PI.integral = 0;
-        Speed_Ctrl.Weak_Control_Hcomp.comp_out = 0;
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_ALIGN;
     }
     else
     {
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
+        align_done = 0;
+        Speed_Ctrl.Speed_Ref = 0;
+        Speed_Ctrl.Speed_Switch_Flag = 0; 
+        Speed_Ctrl.Speed_PI.integral = 0;
+        Speed_Ctrl.Weak_Control_Hcomp.comp_out = 0;
+        Speed_Ctrl.tick_count_idle = xTaskGetTickCount();
+        Speed_Ctrl.Weak_Pi.integral = 0;
+        Speed_Ctrl.target_id = 0;
+        Speed_Ctrl.target_iq = 0;
+        Speed_Ctrl.target_is = 0;
+        Speed_Ctrl.Speed_Fb = 0;
     }
 }
 
@@ -146,8 +150,8 @@ void SPEED_CTRL_ALIGN_Task()
 {
     // vTaskDelay(100);
     // // Alignment logic can be implemented here if needed
-    // Speed_Ctrl.target_id = 0.0f;
-    // Speed_Ctrl.target_iq = 0;
+    Speed_Ctrl.target_id = 0.0f;
+    Speed_Ctrl.target_iq = 0;
     // Speed_Ctrl.Speed_Ref = 0;
     // Current_Task.theta = 0; // Align to d-axis
     // vTaskDelay(100);
@@ -217,14 +221,12 @@ void SPEED_CTRL_RUN_Task(void)
     Weak_Control();
 
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
-    if (Speed_Ctrl.Speed_Ref <= 600 && Speed_Ctrl.Speed_Ref >= -600)
+    if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
     {    
-        Speed_Ctrl.target_id = Oblique_Wave(0.3f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
     {
-        arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Speed_Ctrl.Vs);
-        Speed_Ctrl.Voltage_err = Speed_Ctrl.Vs - Udc_1ms * WEAK_VOLTAGE_COMPENSATION;
         if (Speed_Ctrl.Weak_Control_Hcomp.comp_out == 1)
         {
             Speed_Ctrl.target_id = Hal_PI_f32(&Speed_Ctrl.Weak_Pi, (Speed_Ctrl.Weak_Control_Hcomp.threshold_high - Speed_Ctrl.Voltage_err));
@@ -234,7 +236,9 @@ void SPEED_CTRL_RUN_Task(void)
             Speed_Ctrl.Weak_Pi.integral = 0;
             Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         }
-    }
+    }        
+    arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Speed_Ctrl.Vs);
+    Speed_Ctrl.Voltage_err = Speed_Ctrl.Vs - Udc_1ms * WEAK_VOLTAGE_COMPENSATION;
     arm_sqrt_f32(Speed_Ctrl.target_is * Speed_Ctrl.target_is - Speed_Ctrl.target_id * Speed_Ctrl.target_id,
                  &Speed_Ctrl.target_iq);
 
@@ -243,7 +247,7 @@ void SPEED_CTRL_RUN_Task(void)
 
 void SPEED_CTRL_WAIT_Task(void)
 {
-    vTaskDelay(2000);
+    vTaskDelay(1000);
     Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
 }
 
@@ -253,8 +257,8 @@ void Paramater_update(void)
 {
     Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Kp_Lookup);
     Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Ki_Lookup);
-    NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
-    NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
+    // NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
+    // NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
     SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
     SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
 }
