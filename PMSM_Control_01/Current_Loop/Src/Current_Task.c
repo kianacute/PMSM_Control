@@ -44,7 +44,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 30.0f;
+    float lp = 50.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -69,51 +69,6 @@ inline float my_abs(float num)
     return num;
 }
 
-void Speed_Switch(void)
-{
-    switch (Speed_Ctrl.spd_ctrl_state)
-    {
-    case SPEED_CTRL_IDLE:
-        Current_Task.theta = 0;
-        break;
-    case SPEED_CTRL_ALIGN:
-    {
-        // theta = 0;
-        extern uint8_t align_done;
-        if (align_done == 1)
-        {
-            Encode_ABZ_Get_Offset();
-        }
-        // Current_Task.theta = Limit_2PI(HFSW_OB.tPLL.theta);
-    }
-    case SPEED_CTRL_OPEN:
-    {
-        Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
-        Current_Task.theta = Limit_2PI(Current_Task.theta);
-        break;
-    }
-    case SPEED_CTRL_SWITCH:
-    {
-        Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
-        Current_Task.theta = Limit_2PI(Current_Task.theta);
-        if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
-        {
-            Speed_Ctrl.Speed_Switch_Cnt++;
-            if (Speed_Ctrl.Speed_Switch_Cnt > 10)
-            {
-                Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta = SMO_OB.tPLL.theta;
-            }
-        }
-        break;
-    }
-    case SPEED_CTRL_RUN:
-    {
-        Current_Task.theta = Limit_2PI(SMO_OB.tPLL.theta);
-    }
-    default:
-    }
-}
 
 /// @brief 三相电流重构，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
 /// @param Ia_fb_raw a相电流原始值
@@ -159,11 +114,7 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
     return;
 }
 
-float sign_a, sign_b, sign_c;
-float Ualpha_comp, Ubeta_comp;
-
-
-/// @brief 这种死区补偿方式会引入错误，总之就是更加不稳定
+/// @brief 这种死区补偿方式会引入振动，总之就是更加不稳定
 /// @param Id   
 /// @param Iq   
 /// @param we   
@@ -193,7 +144,6 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_A_Comp = 1;
             }
-            sign_a = 1;
         }
         else if (Ia_pre < -0.1f)
         {
@@ -202,12 +152,10 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_A_Comp = 0;
             }
-            sign_a = 1;
         }
         else
         {
             *Duty_A_Comp = Duty_A_Raw;
-            sign_a = 0;
         }
         if (Ib_pre > 0.1f)
         {
@@ -216,7 +164,6 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_B_Comp = 1;
             }
-            sign_b = 1;
         }
         else if (Ib_pre < -0.1f)
         {
@@ -225,12 +172,10 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_B_Comp = 0;
             }
-            sign_b = -1;
         }
         else 
         {
             *Duty_B_Comp = Duty_B_Raw;
-            sign_b = 0;
         }
         if (Ic_pre > 0.1f)
         {
@@ -239,7 +184,6 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_C_Comp = 1;
             }
-            sign_c = 1;
         }
         else if (Ic_pre < -0.1f)
         {
@@ -248,12 +192,10 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
             {
                 *Duty_C_Comp = 0;
             }
-            sign_c = -1;
         }
         else 
         {
             *Duty_C_Comp = Duty_C_Raw;
-            sign_c = 0;
         }
     }
     else
@@ -262,9 +204,53 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
         *Duty_B_Comp = Duty_B_Raw;
         *Duty_C_Comp = Duty_C_Raw;
     }
-    Ualpha_comp = 2 / 3 * (sign_a - sign_b / 2 - sign_c / 2) * Dead_TIME_DUTY * 16.0f;
-    Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
     return;
+}
+
+void Speed_Switch(void)
+{
+    switch (Speed_Ctrl.spd_ctrl_state)
+    {
+    case SPEED_CTRL_IDLE:
+        Current_Task.theta = 0;
+        break;
+    case SPEED_CTRL_ALIGN:
+    {
+        // theta = 0;
+        extern uint8_t align_done;
+        if (align_done == 1)
+        {
+            Encode_ABZ_Get_Offset();
+        }
+        // Current_Task.theta = Limit_2PI(HFSW_OB.tPLL.theta);
+    }
+    case SPEED_CTRL_OPEN:
+    {
+        Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
+        Current_Task.theta = Limit_2PI(Current_Task.theta);
+        break;
+    }
+    case SPEED_CTRL_SWITCH:
+    {
+        Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
+        Current_Task.theta = Limit_2PI(Current_Task.theta);
+        if (my_abs(NonFlux_OB.tPLL.theta - Current_Task.theta) < 0.10)
+        {
+            Speed_Ctrl.Speed_Switch_Cnt++;
+            if (Speed_Ctrl.Speed_Switch_Cnt > 10)
+            {
+                Speed_Ctrl.Speed_Switch_Flag = 1;
+                Current_Task.theta = NonFlux_OB.tPLL.theta;
+            }
+        }
+        break;
+    }
+    case SPEED_CTRL_RUN:
+    {
+        Current_Task.theta = Limit_2PI(NonFlux_OB.tPLL.theta);
+    }
+    default:
+    }
 }
 
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
@@ -276,7 +262,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
         Current_Task.Speed_fb_1ms = 0;
     }
     Current_Task.avg_count++;
-    Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
+    Current_Task.Speed_fb_1ms += NonFlux_OB.tPLL.we;
     // Speed_Ctrl.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
 
@@ -292,8 +278,8 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
-    SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
-    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref + Ualpha_comp, Current_Task.Ubeta_Ref +- Ubeta_comp,
+    // SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
                                   Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
     // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
@@ -361,6 +347,9 @@ int32_t MOTOR_IDLE_TASK(void)
     {
         Current_Task.Motor_State = MOTOR_READY;
         SMO_OB.tPLL.PLL_PI.integral = 0;
+        NonFlux_OB.tPLL.PLL_PI.integral = 0;
+        Current_Task.Id_PI.integral = 0;
+        Current_Task.Iq_PI.integral = 0;
     }
     else
     {
@@ -470,12 +459,12 @@ void Current_Task_Switch(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(Speed_Ctrl.Voltage_err);
-    vofa_buffer.data[3] = (float32_t)(Speed_Ctrl.Weak_Control_Hcomp.comp_out);
+    vofa_buffer.data[2] = (float32_t)(Encode_ABZ.rpm);
+    vofa_buffer.data[3] = (float32_t)(Encode_ABZ.theta);
     vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
     vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
-    vofa_buffer.data[6] = (float32_t)(NonFlux_OB.Flux_beta);
-    vofa_buffer.data[7] = (float32_t)(SMO_OB.E_alpha);
+    vofa_buffer.data[6] = (float32_t)(Encode_ABZ.theta);
+    vofa_buffer.data[7] = (float32_t)(NonFlux_OB.tPLL.theta);
     HAL_UART_Transmit_DMA(&huart3, (uint8_t *)&vofa_buffer, sizeof(vofa_buffer));
 }
 

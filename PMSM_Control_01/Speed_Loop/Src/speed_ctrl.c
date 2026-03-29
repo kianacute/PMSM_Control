@@ -21,10 +21,10 @@ float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
 // float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
 //                                 0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
 
-float Speed_PI_Lookup_Kp[10] = {5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04,
-                                5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04};
+float Speed_PI_Lookup_Kp[10] = {7.1755e-04, 7.1755e-04, 7.1755e-04, 7.1755e-04, 7.1755e-04,
+                                5.1755e-04, 5.1755e-04, 5.1755e-04, 9.1755e-04, 9.1755e-04};
 float Speed_PI_Lookup_Ki[10] = {5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05,
-                                5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05};
+                                5.1609e-05, 5.1609e-05, 5.1609e-05, 1.1609e-04, 1.1609e-04};
 Speed_Ctrl_t Speed_Ctrl = {
     .FREQ_Hz = 1000,
     .IF_Start_Speed_Lookup = {0},
@@ -40,9 +40,9 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.kp = 5.1755e-04;
     Speed_Ctrl.Speed_PI.ki = 9.1609e-05;
     Speed_Ctrl.Speed_PI.Kd = 0.1f;
-    Speed_Ctrl.Speed_PI.out_max = 5.0f;
-    Speed_Ctrl.Speed_PI.out_min = -5.0f;
-    Speed_Command = 600.0f;
+    Speed_Ctrl.Speed_PI.out_max = 8.0f;
+    Speed_Ctrl.Speed_PI.out_min = -8.0f;
+    Speed_Command = 4500.0f;
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -61,12 +61,12 @@ void Speed_Ctrl_Init(void)
     Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
     Speed_Ctrl.Weak_Pi.kp = 0.01f;
-    Speed_Ctrl.Weak_Pi.ki = 0.01f;
+    Speed_Ctrl.Weak_Pi.ki = 0.10f;
     Speed_Ctrl.Weak_Pi.Kd = 0.1f;
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
     Speed_Ctrl.Weak_Pi.out_max = 0.0f;
-    Speed_Ctrl.Weak_Pi.out_min = -5.0f;
+    Speed_Ctrl.Weak_Pi.out_min = -8.0f;
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -125,11 +125,14 @@ void SPEED_CTRL_IDLE_Task(void)
 {
     if (MOTOR_Run_flag == 1)
     {
-        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_ALIGN;
+        
         Speed_Ctrl.tick_count_idle = xTaskGetTickCount();
         Speed_Ctrl.Speed_Ref = 0;
         Speed_Ctrl.Speed_Switch_Flag = 0;
         align_done = 0;
+        Speed_Ctrl.Speed_PI.integral = 0;
+        Speed_Ctrl.Weak_Control_Hcomp.comp_out = 0;
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_ALIGN;
     }
     else
     {
@@ -143,26 +146,26 @@ void SPEED_CTRL_ALIGN_Task()
 {
     // vTaskDelay(100);
     // // Alignment logic can be implemented here if needed
-    Speed_Ctrl.target_id = 0.0f;
-    Speed_Ctrl.target_iq = 0;
-    Speed_Ctrl.Speed_Ref = 0;
-    Current_Task.theta = 0; // Align to d-axis
-    vTaskDelay(100);
-    Speed_Ctrl.target_id = 1.0f;
-    align_done = 1;
-    vTaskDelay(500);
-    Speed_Ctrl.target_id = -1.0f;
-    vTaskDelay(10);
-    align_done = 0;
-    Speed_Ctrl.target_id = 0.0f;
-    vTaskDelay(500);
+    // Speed_Ctrl.target_id = 0.0f;
+    // Speed_Ctrl.target_iq = 0;
+    // Speed_Ctrl.Speed_Ref = 0;
+    // Current_Task.theta = 0; // Align to d-axis
+    // vTaskDelay(100);
+    // Speed_Ctrl.target_id = 1.0f;
+    // align_done = 1;
+    // vTaskDelay(500);
+    // Speed_Ctrl.target_id = -1.0f;
+    // vTaskDelay(10);
+    // align_done = 0;
+    // Speed_Ctrl.target_id = 0.0f;
+    // vTaskDelay(500);
     // Current_Task.theta = 0.17*6;
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*12;
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*18;
     // vTaskDelay(5000);
-    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_OPEN;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
 }
 
 void SPEED_CTRL_OPEN_Task(void)

@@ -11,9 +11,9 @@ float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
                                          2500, 3000, 3500, 4000, 5000};
 float Observer_PLL_Kp[10] = {500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f, 500.0f};
 float Observer_PLL_Ki[10] = {0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f, 0.4f};
-float LPK_KP[10] =             {0.1f, 0.1f, 0.1f, 0.10f, 0.1f,
+float LPK_KP[10] =             {0.05f, 0.05f, 0.1f, 0.10f, 0.1f,
                                 0.2f, 0.3f, 0.3f, 0.5f, 0.5f};                                
-float GAIN_LOOK[10] =              {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
+float GAIN_LOOK[10] =          {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
                                 15.0f, 20.0f, 20.0f, 20.0f, 20.0f}; 
 
 void SMO_Observer_Init(void)
