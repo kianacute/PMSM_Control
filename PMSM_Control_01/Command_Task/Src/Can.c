@@ -18,7 +18,6 @@ extern struct SMO_Parameter SMO_OB;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Speed_Ctrl_t Speed_Ctrl;
 extern Current_Task_t Current_Task;
-extern float Udc_1ms;
 uint8_t Can_Run_request;
 float Can_speed_request;
 
@@ -36,7 +35,7 @@ void fdcan_transmit_data(void)
     tx_Head.MessageMarker = 0;                       // Message marker for identification
     can_dbc_msg.Motor_status = (float)Current_Task.Motor_State;
     can_dbc_msg.Speed_status = (float)Speed_Ctrl.spd_ctrl_state;
-    can_dbc_msg.Bus_Voltage = (float)(Udc_1ms); // Convert Vbus to integer and scale by 10
+    can_dbc_msg.Bus_Voltage = (float)(0); // Convert Vbus to integer and scale by 10
     can_dbc_msg.Id = (Current_Task.Id_fb);                                                   // Scale Id_fb by 4
     can_dbc_msg.Iq = (Current_Task.Iq_fb);                                                   // Convert Iq_fb to integer
     can_dbc_msg.Speed_rpm = (Speed_Ctrl.Speed_Fb);                                         // Shift Speed_Fb by 80 to fit in uint8_t

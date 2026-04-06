@@ -49,7 +49,7 @@ typedef struct Current_Task
 
 typedef struct adc_adjustment
 {
-    int32_t ADC_j1, ADC_j2, ADC_j3;
+    int32_t ADC_j1, ADC_j2, ADC_j3, ADC_j4;
     int32_t ADC_A_offset, ADC_B_offset, ADC_C_offset;
     uint32_t Motor_ADC_OFFSET_CNT;
 }adc_adjustment_t;

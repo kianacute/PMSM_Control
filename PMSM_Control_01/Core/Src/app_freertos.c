@@ -72,7 +72,6 @@ const osThreadAttr_t defaultTask_attributes = {
 
 TickType_t lasttick = 0; 
 uint16_t adc_v24;
-float Udc_1ms;
 
 uint8_t load_send_buffer[500];
 extern volatile uint32_t CPU_RunTime;
@@ -87,13 +86,6 @@ void my_task1(void *argument)
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
         lasttick = xTaskGetTickCount();
         Speed_Ctrl_Task();
-        HAL_ADC_Start(&hadc2);
-        HAL_ADC_PollForConversion(&hadc2, 1);
-        if (HAL_ADC_GetState(&hadc2) & HAL_ADC_STATE_REG_EOC)
-        {
-            adc_v24 = HAL_ADC_GetValue(&hadc2); // Read ADC value
-            Udc_1ms = adc_v24 * 1.1f * 0.019842f; // 
-        }
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
         // osDelay(1);
     }

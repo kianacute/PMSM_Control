@@ -7,7 +7,7 @@
 
 #define MOTOR_POLE_PAIRS       4U
 #define MOTOR_MAX_RPM          6000.0f
-#define MOTOR_MAX_CURRENT_A    30.0f
+#define MOTOR_MAX_CURRENT_A    20.0f
 #define MOTOR_VOLTAGE_LIMIT_V  48.0f
 #define MOTOR_KV_RPM_PER_V     120.0f
 #define MOTOR_PHASE_RESISTANCE_OHM  0.2f    

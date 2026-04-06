@@ -31,6 +31,7 @@ extern struct Encoder_Parameter Encode_ABZ;
 extern Current_Task_t Current_Task;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern struct SMO_Parameter SMO_OB;
+extern float Udc_ADISR;
 
 void Vofa_Task_Run(void)
 {
@@ -39,7 +40,7 @@ void Vofa_Task_Run(void)
     vofa_buffer.data[0] = Speed_Ctrl.Speed_Ref;
     vofa_buffer.data[1] = Speed_Ctrl.Speed_Fb;
     vofa_buffer.data[2] = (float32_t)(NonFlux_OB.tPLL.theta);
-    vofa_buffer.data[3] = (float32_t)(Encode_ABZ.theta);
+    vofa_buffer.data[3] = (float32_t)(Udc_ADISR);
     vofa_buffer.data[4] = (float32_t)(Current_Task.Id_fb);
     vofa_buffer.data[5] = (float32_t)(Current_Task.Iq_fb);
     vofa_buffer.data[6] = (float32_t)(Speed_Ctrl.target_id);

@@ -16,7 +16,7 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern struct Encoder_Parameter Encode_ABZ;
 extern struct HFSWInjection_Parameter HFSW_OB;
 extern Speed_Ctrl_t Speed_Ctrl;
-extern float Udc_1ms;
+float Udc_ADISR;
 
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
@@ -36,7 +36,6 @@ Current_Task_t Current_Task =
             .out_min = -100.0f,
             .out_max = 100.0f},
         .Iq_PI = {.kp = 1.0f, .ki = 0.1f, .integral = 0.0f, .prev_error = 0.0f, .out_min = -100.0f, .out_max = 100.0f},
-
 };
 
 void Current_Task_Init(void)
@@ -45,7 +44,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 50.0f;
+    float lp = 10.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -77,7 +76,9 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         adc_adjustment.ADC_j1 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1); // Read injected channel value
         adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
+        adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
         Current_Task_Switch();    
+        Udc_ADISR = Udc_ADISR * 0.9f + adc_adjustment.ADC_j4 * 1.1f * 0.019842f * 0.1f; // Update Udc_1ms with the latest ADC value
     }
     else if (hadc->Instance == ADC2)
     {
@@ -455,7 +456,7 @@ int32_t MOTOR_RUN_TASK(void)
     Current_Task.Ib_fb_raw = (adc_adjustment.ADC_j2 - adc_adjustment.ADC_B_offset) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
     Current_Task.Ic_fb_raw = (adc_adjustment.ADC_j3 - adc_adjustment.ADC_C_offset) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
     Current_Task_Run(Current_Task.Ia_fb_raw, Current_Task.Ib_fb_raw, Current_Task.Ic_fb_raw,
-                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, Udc_1ms);
+                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, Udc_ADISR);
     if (Speed_Ctrl.Speed_Ref < 600 && MOTOR_Run_flag == 0)
     {
         __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, 0); // Set PWM duty cycle for Channel 1
