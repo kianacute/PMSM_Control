@@ -7,15 +7,17 @@
 #include "Hal_Math.h"
 #include "FreeRTOS.h"
 #include "Observer.h"
+#include "system.h"
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
 extern MOTOR_t PMSM_42JS;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Current_Task_t Current_Task;
+extern SYSTEM_t System;
 
-float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000, 
-                                        2500, 3000, 3500, 4000, 5000};
+float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
+                                         2500, 3000, 3500, 4000, 5000};
 // float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755,
 //                                 0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
 // float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
@@ -66,7 +68,7 @@ void Speed_Ctrl_Init(void)
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
     Speed_Ctrl.Weak_Pi.out_max = 0.0f;
-    Speed_Ctrl.Weak_Pi.out_min = -8.0f;
+    Speed_Ctrl.Weak_Pi.out_min = -2.0f;
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -74,25 +76,22 @@ void SPEED_CTRL_ALIGN_Task();
 void SPEED_CTRL_OPEN_Task(void);
 void SPEED_CTRL_SWITCH_Task(void);
 void SPEED_CTRL_RUN_Task(void);
-void SPEED_CTRL_WAIT_Task(void);
 void Paramater_update(void);
-void Weak_Control(void);
 
 uint32_t speed_cnt = 0;
 
-void Speed_Ctrl_Task(void)
+void Speed_Run(void)
 {
-    speed_cnt++;
     switch (Speed_Ctrl.spd_ctrl_state)
     {
+    case SPEED_CTRL_IDLE:
+        // Handle idle state
+        SPEED_CTRL_IDLE_Task();
+        break;
     case SPEED_CTRL_ALIGN:
         // Handle align state
         SPEED_CTRL_ALIGN_Task();
         Speed_Ctrl.spd_ctrl_timer++;
-        break;
-    case SPEED_CTRL_IDLE:
-        // Handle idle state
-        SPEED_CTRL_IDLE_Task();
         break;
     case SPEED_CTRL_OPEN:
         // Handle open state
@@ -109,27 +108,31 @@ void Speed_Ctrl_Task(void)
         SPEED_CTRL_RUN_Task();
         Speed_Ctrl.spd_ctrl_timer++;
         break;
-    case SPEED_CTRL_WAIT:
-        // Handle brake state
-        SPEED_CTRL_WAIT_Task();
-        Speed_Ctrl.spd_ctrl_timer++;
-        break;
     default:
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
         break;
+    }
+}
+
+void Speed_Ctrl_Task(void)
+{
+    speed_cnt++;
+    if (System.system_state == SYSTEM_RUN && Current_Task.Motor_State == MOTOR_RUN)
+    {
+        Speed_Run();
+    }
+    else
+    {
+        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
     }
     Paramater_update();
 }
 
 void SPEED_CTRL_IDLE_Task(void)
 {
-    if (MOTOR_Run_flag == 1)
+    if (System.system_state == SYSTEM_RUN)
     {
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_ALIGN;
-    }
-    else
-    {
-        Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
         align_done = 0;
         Speed_Ctrl.Speed_Ref = 0;
         Speed_Ctrl.Speed_Switch_Flag = 0;
@@ -203,24 +206,11 @@ void SPEED_CTRL_SWITCH_Task(void)
 
 void SPEED_CTRL_RUN_Task(void)
 {
-    if (MOTOR_Run_flag == 1)
-    {
-        Speed_Ctrl.Speed_Command = Speed_Command;
-        Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-    }
-    else if (MOTOR_Run_flag == 0)
-    {
-        Speed_Ctrl.Speed_Ref = Oblique_Wave(0.0f, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-        if (Speed_Ctrl.Speed_Ref < 600)
-        {
-            Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_WAIT;
-        }
-    }
-    Weak_Control();
-
+    Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
+    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
-    {    
+    {
         Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
@@ -234,17 +224,11 @@ void SPEED_CTRL_RUN_Task(void)
             Speed_Ctrl.Weak_Pi.integral = 0;
             Speed_Ctrl.target_id = Oblique_Wave(0.0f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
         }
-    }        
+    }
     arm_sqrt_f32(Current_Task.Ud_Target * Current_Task.Ud_Target + Current_Task.Uq_Target * Current_Task.Uq_Target, &Speed_Ctrl.Vs);
     Speed_Ctrl.Voltage_err = Speed_Ctrl.Vs - 24.0f * WEAK_VOLTAGE_COMPENSATION;
     arm_sqrt_f32(Speed_Ctrl.target_is * Speed_Ctrl.target_is - Speed_Ctrl.target_id * Speed_Ctrl.target_id,
                  &Speed_Ctrl.target_iq);
-}
-
-void SPEED_CTRL_WAIT_Task(void)
-{
-    vTaskDelay(1000);
-    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
 }
 
 extern struct SMO_Parameter SMO_OB;
@@ -255,11 +239,6 @@ void Paramater_update(void)
     Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Ki_Lookup);
     // NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
     // NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
-    SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
-    SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
-}
-
-void Weak_Control(void)
-{
-    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
+//    SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
+//    SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
 }

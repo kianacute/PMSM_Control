@@ -37,6 +37,7 @@
 #include "opamp.h"
 #include "Observer.h"
 #include "Can.h"
+#include "system.h"
 
 /* USER CODE END Includes */
 
@@ -85,6 +86,7 @@ void my_task1(void *argument)
         // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
         lasttick = xTaskGetTickCount();
+        SYSTEM_Task();
         Speed_Ctrl_Task();
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
         // osDelay(1);

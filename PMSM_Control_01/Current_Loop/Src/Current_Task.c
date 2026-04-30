@@ -9,6 +9,7 @@
 #include "usart.h"
 #include "speed_ctrl.h"
 #include "Vofa.h"
+#include "system.h"
 
 extern MOTOR_t PMSM_42JS;
 extern struct SMO_Parameter SMO_OB;
@@ -16,7 +17,7 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern struct Encoder_Parameter Encode_ABZ;
 extern struct HFSWInjection_Parameter HFSW_OB;
 extern Speed_Ctrl_t Speed_Ctrl;
-float Udc_ADISR;
+extern SYSTEM_t System;
 
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
@@ -78,40 +79,12 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
         adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
         Current_Task_Switch();    
-        Udc_ADISR = Udc_ADISR * 0.9f + adc_adjustment.ADC_j4 * 1.1f * 0.019842f * 0.1f; // Update Udc_1ms with the latest ADC value
+        Current_Task.Udc_ADISR = Current_Task.Udc_ADISR * 0.9f + adc_adjustment.ADC_j4 * 1.1f * 0.019842f * 0.1f; // Update Udc_1ms with the latest ADC value
     }
     else if (hadc->Instance == ADC2)
     {
         
     }
-}
-
-void Current_Task_Switch(void)
-{
-    // Code to switch current task states
-    switch (Current_Task.Motor_State)
-    {
-    case MOTOR_IDLE:
-        // Handle idle state
-        MOTOR_IDLE_TASK();
-        break;
-    case MOTOR_READY:
-        // Handle ready state
-        MOTOR_READY_TASK();
-        break;
-    case MOTOR_OFFSET_CHECK:
-        // Handle offset check state
-        MOTOR_OFFSET_CHECK_TASK();
-        break;
-    case MOTOR_RUN:
-        // Handle run state
-        MOTOR_RUN_TASK();
-        break;
-    default:
-        break;
-    }
-    Current_Task.count++;
-    Vofa_Task_Run();
 }
 
 
@@ -386,12 +359,45 @@ void Current_PWM_Switch(uint8_t PWM_Flag)
     return;
 }
 
-extern uint8_t MOTOR_Run_flag;
+void Current_Task_Switch(void)
+{
+    // Code to switch current task states
+    if (System.system_state == SYSTEM_RUN)
+    {
+        switch (Current_Task.Motor_State)
+        {
+            case MOTOR_IDLE:
+                // Handle idle state
+                MOTOR_IDLE_TASK();
+                break;
+            case MOTOR_READY:
+                // Handle ready state
+                MOTOR_READY_TASK();
+                break;
+            case MOTOR_OFFSET_CHECK:
+                // Handle offset check state
+                MOTOR_OFFSET_CHECK_TASK();
+                break;
+            case MOTOR_RUN:
+                // Handle run state
+                MOTOR_RUN_TASK();
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        Current_Task.Motor_State = MOTOR_IDLE;
+        Current_PWM_Switch(PWM_CLOSE);
+    }
+    Current_Task.count++;
+}
 
 int32_t MOTOR_IDLE_TASK(void)
 {
     // Code for MOTOR_IDLE state
-    if (MOTOR_Run_flag == 1)
+    if (System.system_state == SYSTEM_RUN)
     {
         Current_Task.Motor_State = MOTOR_READY;
         SMO_OB.tPLL.PLL_PI.integral = 0;
@@ -412,7 +418,7 @@ int32_t MOTOR_READY_TASK(void)
 {
     // Code for MOTOR_READY state
 
-    if (MOTOR_Run_flag == 1)
+    if (System.system_state == SYSTEM_RUN)
     {
         Current_Task.Motor_State = MOTOR_OFFSET_CHECK;
         adc_adjustment.ADC_A_offset = 0;
@@ -451,25 +457,14 @@ int32_t MOTOR_OFFSET_CHECK_TASK(void)
 int32_t MOTOR_RUN_TASK(void)
 {
     /* Code for MOTOR_RUN state */
-
     Current_Task.Ia_fb_raw = (adc_adjustment.ADC_j1 - adc_adjustment.ADC_A_offset) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
     Current_Task.Ib_fb_raw = (adc_adjustment.ADC_j2 - adc_adjustment.ADC_B_offset) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
     Current_Task.Ic_fb_raw = (adc_adjustment.ADC_j3 - adc_adjustment.ADC_C_offset) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
     Current_Task_Run(Current_Task.Ia_fb_raw, Current_Task.Ib_fb_raw, Current_Task.Ic_fb_raw,
-                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, Udc_ADISR);
-    if (Speed_Ctrl.Speed_Ref < 600 && MOTOR_Run_flag == 0)
-    {
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, 0); // Set PWM duty cycle for Channel 1
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, 0); // Set PWM duty cycle for Channel 2
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, 0); // Set PWM duty cycle for Channel 3
-        Current_Task.Motor_State = MOTOR_IDLE;
-    }
-    else
-    {
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Task.PWM_Duty_A_Comp); // Set PWM duty cycle for Channel 1
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Task.PWM_Duty_B_Comp); // Set PWM duty cycle for Channel 2
-        __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Task.PWM_Duty_C_Comp); // Set PWM duty cycle for Channel 3
-    }
+                     &Current_Task.PWM_duty_a, &Current_Task.PWM_duty_b, &Current_Task.PWM_duty_c, Current_Task.Udc_ADISR);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Task.PWM_Duty_A_Comp); // Set PWM duty cycle for Channel 1
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Task.PWM_Duty_B_Comp); // Set PWM duty cycle for Channel 2
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Task.PWM_Duty_C_Comp); // Set PWM duty cycle for Channel 3
 
     return 0;
 }

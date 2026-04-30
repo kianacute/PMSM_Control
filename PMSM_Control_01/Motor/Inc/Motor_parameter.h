@@ -17,6 +17,8 @@
 #define MOTOR_FLUX_LINKAGE_Wb      (MOTOR_FLUX_RPM_per_V / MOTOR_POLE_PAIRS / 1000.0f * 7.79f * 1.414f)
 
 
+
+
 typedef struct MOTOR
 {
     float pole_pairs;
@@ -42,6 +44,15 @@ typedef struct MOTOR
 #define MOTOR_SPEED_LOOP_CYCLE_TIME_S   (1.0f/ MOTOR_SPEED_LOOP_HZ)
 #define Dead_TIME_DUTY         (120.0f/160.0f*1e-6/MOTOR_CURRENT_LOOP_CYCLE_TIME_S)
 // #define Dead_TIME_DUTY         (0/MOTOR_CURRENT_LOOP_HZ)
+
+
+#define U_base   25.0f
+#define I_base   10.0f
+#define F_BASE   20000.0f
+#define L_BASE   (U_base/(I_base*F_BASE))
+#define T_BASE   (1.0f/F_BASE)
+#define R_BASE   (U_base/I_base)
+
 
 
 #endif // MOTOR_PARAMETER_H

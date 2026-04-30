@@ -17,7 +17,6 @@ enum Speed_CtrlState_t
     SPEED_CTRL_OPEN,
     SPEED_CTRL_SWITCH,
     SPEED_CTRL_RUN,
-    SPEED_CTRL_WAIT,
 };
 
 typedef struct Speed_Ctrl
