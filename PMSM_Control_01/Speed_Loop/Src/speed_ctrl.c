@@ -63,7 +63,7 @@ void Speed_Ctrl_Init(void)
     Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
     Speed_Ctrl.Weak_Pi.kp = 0.005f;
-    Speed_Ctrl.Weak_Pi.ki = 0.10f;
+    Speed_Ctrl.Weak_Pi.ki = 0.02f;
     Speed_Ctrl.Weak_Pi.Kd = 0.1f;
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
@@ -156,17 +156,17 @@ void SPEED_CTRL_ALIGN_Task()
     // // Alignment logic can be implemented here if needed
     Speed_Ctrl.target_id = 0.0f;
     Speed_Ctrl.target_iq = 0;
-    Speed_Ctrl.Speed_Ref = 0;
-    Current_Task.theta = 0; // Align to d-axis
-    vTaskDelay(100);
-    Speed_Ctrl.target_id = 1.0f;
-    align_done = 1;
-    vTaskDelay(500);
-    Speed_Ctrl.target_id = 0.0f;
-    vTaskDelay(10);
-    align_done = 0;
-    Speed_Ctrl.target_id = 0.0f;
-    vTaskDelay(500);
+    // Speed_Ctrl.Speed_Ref = 0;
+    // Current_Task.theta = 0; // Align to d-axis
+    // vTaskDelay(100);
+    // Speed_Ctrl.target_id = 1.0f;
+    // align_done = 1;
+    // vTaskDelay(500);
+    // Speed_Ctrl.target_id = 0.0f;
+    // vTaskDelay(10);
+    // align_done = 0;
+    // Speed_Ctrl.target_id = 0.0f;
+    // vTaskDelay(500);
     // Current_Task.theta = 0.17*6;
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*12;
@@ -210,7 +210,7 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
     Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
-    if (Speed_Ctrl.Speed_Ref < 600 && Speed_Ctrl.Speed_Ref >= -600)
+    if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
     {
         Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
@@ -243,4 +243,8 @@ void Paramater_update(void)
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Ki_Lookup);
     // SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
     // SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
+    Current_Task.Id_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Kp_Lookup);
+    Current_Task.Id_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Ki_Lookup);
+    Current_Task.Iq_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Kp_Lookup);
+    Current_Task.Iq_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Ki_Lookup);
 }

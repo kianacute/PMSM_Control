@@ -45,6 +45,10 @@ typedef struct Current_Task
     uint8_t avg_count;
     uint64_t count;
     float Udc_ADISR;
+    Lookup_Table_t ID_PI_Kp_Lookup;  
+    Lookup_Table_t IQ_PI_Kp_Lookup; 
+    Lookup_Table_t ID_PI_Ki_Lookup; 
+    Lookup_Table_t IQ_PI_Ki_Lookup; 
 }Current_Task_t;
 
 

@@ -21,6 +21,13 @@ extern SYSTEM_t System;
 
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
+const float Current_DQ_PI_Index_Coff[5] = {20.0f, 20.0f, 30.0f, 50.0f, 50.0f};
+float Current_DQ_PI_Index[5]      = {0.0f, 2000.0f, 3000.0f, 4000.0f, 5000.0f};
+float Current_ID_PI_Kp_Lookup[5];
+float Current_IQ_PI_Kp_Lookup[5];
+float Current_ID_PI_Ki_Lookup[5];
+float Current_IQ_PI_Ki_Lookup[5];
+
 
 adc_adjustment_t adc_adjustment = {0};
 
@@ -45,14 +52,30 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 50.0f;
     /* 计算电流环参数 */
-    Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
-    Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
-    Current_Task.Id_PI.ki = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
-    Current_Task.Iq_PI.ki = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
+    for(int i = 0; i < sizeof(Current_DQ_PI_Index_Coff) / sizeof(Current_DQ_PI_Index_Coff[0]); i++)
+    {
+        float lp = Current_DQ_PI_Index_Coff[i];
+        Current_ID_PI_Kp_Lookup[i] = Current_Task.pMotor->phase_inductance_d / Current_Task.Loop_time_s * 2 * PI / lp;
+        Current_IQ_PI_Kp_Lookup[i] = Current_Task.pMotor->phase_inductance_q / Current_Task.Loop_time_s * 2 * PI / lp;
+        Current_ID_PI_Ki_Lookup[i] = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
+        Current_IQ_PI_Ki_Lookup[i] = Current_Task.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
+    }
     Current_Task.Id_PI.Kd = 0.1f;
     Current_Task.Iq_PI.Kd = 0.1f;
+    Current_Task.ID_PI_Ki_Lookup.x_table = Current_DQ_PI_Index;
+    Current_Task.IQ_PI_Ki_Lookup.x_table = Current_DQ_PI_Index;
+    Current_Task.ID_PI_Ki_Lookup.y_table = Current_ID_PI_Ki_Lookup;
+    Current_Task.IQ_PI_Ki_Lookup.y_table = Current_IQ_PI_Ki_Lookup;
+    Current_Task.ID_PI_Kp_Lookup.x_table = Current_DQ_PI_Index;
+    Current_Task.IQ_PI_Kp_Lookup.x_table = Current_DQ_PI_Index;
+    Current_Task.ID_PI_Kp_Lookup.y_table = Current_ID_PI_Kp_Lookup;
+    Current_Task.IQ_PI_Kp_Lookup.y_table = Current_IQ_PI_Kp_Lookup;
+    Current_Task.ID_PI_Ki_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
+    Current_Task.IQ_PI_Ki_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
+    Current_Task.ID_PI_Kp_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
+    Current_Task.IQ_PI_Kp_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
+
     Speed_Ctrl.Speed_Switch_Cnt = 0;
     Speed_Ctrl.Speed_Switch_Flag = 0;
     Current_Task.count = 0;

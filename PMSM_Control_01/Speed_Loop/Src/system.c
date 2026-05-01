@@ -27,7 +27,7 @@ void SYSTEM_Init(void)
     // e.g., setting up peripherals, initializing variables, etc.
     Current_Task_Init();
     Speed_Ctrl_Init();
-    Speed_Command = 1000.0f;
+    Speed_Command = 3000.0f;
 }
 
 void SYSTEM_LV_Standy()
