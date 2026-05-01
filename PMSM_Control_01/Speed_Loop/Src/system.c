@@ -27,6 +27,7 @@ void SYSTEM_Init(void)
     // e.g., setting up peripherals, initializing variables, etc.
     Current_Task_Init();
     Speed_Ctrl_Init();
+    Speed_Command = 1000.0f;
 }
 
 void SYSTEM_LV_Standy()
@@ -71,7 +72,6 @@ void SYSTEM_Run()
 
 void SYSTEM_Fault()
 {
-    Speed_Command = 0.0f; // Stop the motor
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_CMD_STANDY;
 }
@@ -108,3 +108,6 @@ void SYSTEM_Task(void)
         break;
     }
 }
+
+
+

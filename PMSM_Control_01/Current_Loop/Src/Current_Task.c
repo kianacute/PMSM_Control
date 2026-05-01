@@ -45,7 +45,7 @@ void Current_Task_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Task.theta = 0.0f;
     Current_Task.pMotor = &PMSM_42JS;
-    float lp = 10.0f;
+    float lp = 50.0f;
     /* 计算电流环参数 */
     Current_Task.Id_PI.kp = Current_Task.pMotor->phase_inductance_d * Current_Task.Loop_time_s * 2 * PI / lp;
     Current_Task.Iq_PI.kp = Current_Task.pMotor->phase_inductance_q * Current_Task.Loop_time_s * 2 * PI / lp;
@@ -404,7 +404,6 @@ int32_t MOTOR_IDLE_TASK(void)
         NonFlux_OB.tPLL.PLL_PI.integral = 0;
         Current_Task.Id_PI.integral = 0;
         Current_Task.Iq_PI.integral = 0;
-        Current_Task_Init();
     }
     else
     {

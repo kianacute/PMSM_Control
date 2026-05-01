@@ -23,10 +23,10 @@ float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
 // float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
 //                                 0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
 
-float Speed_PI_Lookup_Kp[10] = {7.1755e-04, 7.1755e-04, 7.1755e-04, 7.1755e-04, 7.1755e-04,
-                                5.1755e-04, 5.1755e-04, 5.1755e-04, 9.1755e-04, 9.1755e-04};
-float Speed_PI_Lookup_Ki[10] = {5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05,
-                                5.1609e-05, 5.1609e-05, 5.1609e-05, 1.1609e-04, 1.1609e-04};
+float Speed_PI_Lookup_Kp[10] = {9.1755e-04, 8.1755e-04, 6.1755e-04, 6.1755e-04, 6.1755e-04,
+                                5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04};
+float Speed_PI_Lookup_Ki[10] = {9.1609e-05, 7.1609e-05, 6.1609e-05, 5.1609e-05, 5.1609e-05,
+                                5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05};
 Speed_Ctrl_t Speed_Ctrl = {
     .FREQ_Hz = 1000,
     .IF_Start_Speed_Lookup = {0},
@@ -44,7 +44,7 @@ void Speed_Ctrl_Init(void)
     Speed_Ctrl.Speed_PI.Kd = 0.1f;
     Speed_Ctrl.Speed_PI.out_max = 8.0f;
     Speed_Ctrl.Speed_PI.out_min = -8.0f;
-    Speed_Command = 2500.0f;
+
     /* IF阶段初始化查表*/
     Speed_Ctrl.IF_Start_Speed_Lookup.x_table = Speed_Ctrl.pMotor->IF_Start_Ramp_Sec;
     Speed_Ctrl.IF_Start_Speed_Lookup.y_table = Speed_Ctrl.pMotor->IF_Start_Speed_RPM;
@@ -68,7 +68,7 @@ void Speed_Ctrl_Init(void)
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
     Speed_Ctrl.Weak_Pi.out_max = 0.0f;
-    Speed_Ctrl.Weak_Pi.out_min = -2.0f;
+    Speed_Ctrl.Weak_Pi.out_min = -5.0f;
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -124,6 +124,7 @@ void Speed_Ctrl_Task(void)
     else
     {
         Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_IDLE;
+        Speed_Ctrl.Speed_Fb = 0;
     }
     Paramater_update();
 }
@@ -155,17 +156,17 @@ void SPEED_CTRL_ALIGN_Task()
     // // Alignment logic can be implemented here if needed
     Speed_Ctrl.target_id = 0.0f;
     Speed_Ctrl.target_iq = 0;
-    // Speed_Ctrl.Speed_Ref = 0;
-    // Current_Task.theta = 0; // Align to d-axis
-    // vTaskDelay(100);
-    // Speed_Ctrl.target_id = 1.0f;
-    // align_done = 1;
-    // vTaskDelay(500);
-    // Speed_Ctrl.target_id = -1.0f;
-    // vTaskDelay(10);
-    // align_done = 0;
-    // Speed_Ctrl.target_id = 0.0f;
-    // vTaskDelay(500);
+    Speed_Ctrl.Speed_Ref = 0;
+    Current_Task.theta = 0; // Align to d-axis
+    vTaskDelay(100);
+    Speed_Ctrl.target_id = 1.0f;
+    align_done = 1;
+    vTaskDelay(500);
+    Speed_Ctrl.target_id = 0.0f;
+    vTaskDelay(10);
+    align_done = 0;
+    Speed_Ctrl.target_id = 0.0f;
+    vTaskDelay(500);
     // Current_Task.theta = 0.17*6;
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*12;
@@ -209,7 +210,7 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
     Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
-    if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
+    if (Speed_Ctrl.Speed_Ref < 600 && Speed_Ctrl.Speed_Ref >= -600)
     {
         Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
@@ -232,13 +233,14 @@ void SPEED_CTRL_RUN_Task(void)
 }
 
 extern struct SMO_Parameter SMO_OB;
+extern struct NonFluxObserver_Parameter NonFlux_OB;
 
 void Paramater_update(void)
 {
-    Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Kp_Lookup);
-    Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &Speed_Ctrl.Speed_PI_Ki_Lookup);
-    // NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Kp_Lookup);
-    // NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &NonFlux_OB.PLL_Ki_Lookup);
-//    SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
-//    SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
+    Speed_Ctrl.Speed_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Kp_Lookup);
+    Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Ki_Lookup);
+    NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Kp_Lookup);
+    NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Ki_Lookup);
+    // SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
+    // SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
 }

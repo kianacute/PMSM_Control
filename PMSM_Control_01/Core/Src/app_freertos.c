@@ -86,7 +86,6 @@ void my_task1(void *argument)
         // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
         lasttick = xTaskGetTickCount();
-        SYSTEM_Task();
         Speed_Ctrl_Task();
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
         // osDelay(1);
@@ -94,6 +93,23 @@ void my_task1(void *argument)
 }
 
 void my_task2(void *argument)
+{ 
+    for (;;)
+    {
+        // memset(send_buffer, 0, 100); // 信息缓冲区清零
+        // vTaskGetRunTimeStats((char *)&send_buffer);
+        // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
+        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
+        lasttick = xTaskGetTickCount();
+        SYSTEM_Task();
+        vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
+        // osDelay(1);
+    }
+}
+
+extern void MOTOR_Run_flag_UPDOWN(void);
+
+void my_task3(void *argument)
 {
     // extern uint8_t sector;
     
@@ -105,7 +121,8 @@ void my_task2(void *argument)
         // vTaskList((char *)&load_send_buffer);  //获取任务运行时间信息
         // sprintf((char *)load_send_buffer, "adc: %d  %d\r\n", cup_adc_1, cup_adc_2);
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)load_send_buffer, strlen((char *)load_send_buffer));
-        vTaskDelayUntil(&lasttick, 1000); // 每1000ms执行一次
+        vTaskDelayUntil(&lasttick, 10000); // 每10000ms执行一次
+        // MOTOR_Run_flag_UPDOWN();
     }
 }
 
@@ -138,8 +155,6 @@ void MX_FREERTOS_Init(void) {
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, 4000 - 10); // Set initial compare value for TIM1 Channel 4
 
     HAL_TIM_Base_Start(&htim1); // Start TIM1 base timer
-
-    Current_Task_Init();
     // __HAL_TIM_ENABLE_IT(&htim1, TIM_IT_UPDATE); // Enable update interrupt for TIM1
 
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
@@ -151,8 +166,7 @@ void MX_FREERTOS_Init(void) {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
 
-    Speed_Ctrl_Init();
-    Current_Task_Init();
+    SYSTEM_Init();  
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -177,8 +191,9 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
     /* add threads, ... */
-    xTaskCreate(my_task1, "my_task1", 128, NULL, osPriorityNormal, NULL);
-    xTaskCreate(my_task2, "my_task2", 256, NULL, osPriorityNormal, NULL);
+    xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
+    xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
+    xTaskCreate(my_task3, "MOTOR_Run_Task", 256, NULL, osPriorityNormal, NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

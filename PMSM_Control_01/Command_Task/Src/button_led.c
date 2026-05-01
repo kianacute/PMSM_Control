@@ -36,20 +36,25 @@ void Button_LED_DeInit(void)
 
 extern struct Encoder_Parameter Encode_ABZ;
 
+void MOTOR_Run_flag_UPDOWN(void)
+{
+    Motor_state = ~Motor_state;
+    if (Motor_state == 0)
+    {
+        MOTOR_Run_flag = 0;
+    }
+    else
+    {
+        MOTOR_Run_flag = 1;
+    }
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == BUTTON_PIN1)
     {
         // Handle button press for BUTTON_PIN1
-        Motor_state = ~Motor_state;
-        if (Motor_state == 0)
-        {
-            MOTOR_Run_flag = 0;
-        }
-        else
-        {
-            MOTOR_Run_flag = 1;
-        }
+        MOTOR_Run_flag_UPDOWN();
     }
     else if (GPIO_Pin == BUTTON_PIN2)
     {
