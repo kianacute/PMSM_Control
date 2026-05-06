@@ -174,7 +174,7 @@ void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l
 /// @brief 滞回比较器核心处理（必须周期性调用）
 /// @param hcomp 滞回比较器结构体指针
 /// @author doubao
-void Hysteresis_Comp_Process(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
 {
      // 1. 复位优先
      if (hcomp->reset)
@@ -225,4 +225,142 @@ void Hysteresis_Comp_Process(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
      {
           hcomp->comp_out = current_pre;
      }
+}
+
+
+void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+{
+     // 1. 复位优先
+     if (hcomp->reset)
+     {
+          hcomp->comp_out = 0;
+          hcomp->delay_cnt = 0;
+          hcomp->pre_result = 0;
+          return;
+     }
+
+     // 2. 未使能
+     if (!hcomp->enable)
+     {
+          hcomp->comp_out = 0;
+          hcomp->delay_cnt = 0;
+          return;
+     }
+
+     // 3. 滞回核心逻辑
+     uint8_t current_pre;
+     if (hcomp->comp_out)
+     {
+          // 当前输出1 → 低于下限才准备变0
+          current_pre = (analog_input <= hcomp->threshold_low);
+     }
+     else
+     {
+          // 当前输出0 → 高于上限才准备变1
+          current_pre = (analog_input <= hcomp->threshold_high);
+     }
+
+     // 4. 延迟防抖
+     if (current_pre != hcomp->pre_result)
+     {
+          hcomp->delay_cnt = 0;
+          hcomp->pre_result = current_pre;
+     }
+     else
+     {
+          if (hcomp->delay_cnt < hcomp->delay_time)
+          {
+               hcomp->delay_cnt++;
+          }
+     }
+
+     // 5. 延迟满足才更新输出
+     if (hcomp->delay_cnt >= hcomp->delay_time)
+     {
+          hcomp->comp_out = current_pre;
+     }
+}
+
+
+void Sensor_Status_Update(Sensor_Hysteresis_Comp_TypeDef *hcomp, float analog_input,
+                          float theshould1, enum Sensor_Status next_status1,
+                          float theshould2, enum Sensor_Status next_status2)
+{
+    if (analog_input >= theshould1 && analog_input <= theshould2)
+    {
+        hcomp->delay_cnt = 0;
+    }
+    else if (analog_input > theshould2)
+    {
+        hcomp->delay_cnt++;
+        if (hcomp->delay_cnt >= hcomp->delay_time)
+        {
+            hcomp->status = next_status2; 
+            hcomp->delay_cnt = 0;
+        }
+    }
+    else if (analog_input < theshould1)
+    {
+        hcomp->delay_cnt++;
+        if (hcomp->delay_cnt >= hcomp->delay_time)
+        {
+            hcomp->status = next_status1; 
+            hcomp->delay_cnt = 0;
+        }
+    } 
+    else
+    {
+        hcomp->delay_cnt = 0;
+        hcomp->status = SENSOR_STATUS_UNKNOWN;
+    }
+}
+
+
+/// @brief 滞回比较器核心处理（必须周期性调用）
+/// @param hcomp 比较器实例
+/// @param analog_input 模拟输入值  
+/// @author MWZ
+void Sensor_Hysteresis_Comp_Process(Sensor_Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+{
+    // 1. 复位优先
+    if (hcomp->reset)
+    {
+        hcomp->status = SENSOR_STATUS_NORMAL;
+        hcomp->delay_cnt = 0;
+        return;
+    }
+
+    // 2. 未使能
+    if (!hcomp->enable)
+    {
+        hcomp->status = SENSOR_STATUS_NORMAL;
+        hcomp->delay_cnt = 0;
+        return;
+    }
+
+    switch (hcomp->status)
+    {
+    case SENSOR_STATUS_NORMAL:
+        Sensor_Status_Update(hcomp, analog_input, hcomp->threshold_low, SENSOR_STATUS_LOW, 
+                            hcomp->threshold_over, SENSOR_STATUS_OVER);
+        break;    
+    case SENSOR_STATUS_LOW:
+        Sensor_Status_Update(hcomp, analog_input, hcomp->threshold_gnd, SENSOR_STATUS_GND_ERR,
+                            hcomp->threshold_low_re, SENSOR_STATUS_NORMAL);
+        break;
+    case SENSOR_STATUS_OVER:
+        Sensor_Status_Update(hcomp, analog_input, hcomp->threshold_over_re, SENSOR_STATUS_NORMAL, 
+                            hcomp->threshold_power, SENSOR_STATUS_POWER_ERR);
+        break;
+    case SENSOR_STATUS_GND_ERR:
+        Sensor_Status_Update(hcomp, analog_input, hcomp->analog_input_lowlimit, SENSOR_STATUS_GND_ERR,
+                            hcomp->threshold_low, SENSOR_STATUS_LOW);
+        break;
+    case SENSOR_STATUS_POWER_ERR:
+        Sensor_Status_Update(hcomp, analog_input, hcomp->threshold_over, SENSOR_STATUS_OVER, 
+            hcomp->analog_input_uplimit, SENSOR_STATUS_POWER_ERR);
+        break;
+    default:
+        break;
+    }
 }

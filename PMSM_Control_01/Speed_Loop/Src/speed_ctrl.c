@@ -30,7 +30,8 @@ float Speed_PI_Lookup_Ki[10] = {9.1609e-05, 7.1609e-05, 6.1609e-05, 5.1609e-05, 
 Speed_Ctrl_t Speed_Ctrl = {
     .FREQ_Hz = 1000,
     .IF_Start_Speed_Lookup = {0},
-    .IF_Start_Iq_Lookup = {0}};
+    .IF_Start_Iq_Lookup = {0}
+};
 
 uint8_t align_done = 0;
 
@@ -156,8 +157,8 @@ void SPEED_CTRL_ALIGN_Task()
     // // Alignment logic can be implemented here if needed
     Speed_Ctrl.target_id = 0.0f;
     Speed_Ctrl.target_iq = 0;
-    // Speed_Ctrl.Speed_Ref = 0;
-    // Current_Task.theta = 0; // Align to d-axis
+    Speed_Ctrl.Speed_Ref = 0;
+    Current_Task.theta = 0; // Align to d-axis
     // vTaskDelay(100);
     // Speed_Ctrl.target_id = 1.0f;
     // align_done = 1;
@@ -208,7 +209,7 @@ void SPEED_CTRL_SWITCH_Task(void)
 void SPEED_CTRL_RUN_Task(void)
 {
     Speed_Ctrl.Speed_Ref = Oblique_Wave(Speed_Ctrl.Speed_Command, Speed_Ctrl.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
-    Hysteresis_Comp_Process(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
+    Hysteresis_Comp_Process_Add(&Speed_Ctrl.Weak_Control_Hcomp, Speed_Ctrl.Voltage_err);
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
     {

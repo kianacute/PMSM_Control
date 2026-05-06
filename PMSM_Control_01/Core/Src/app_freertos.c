@@ -38,7 +38,8 @@
 #include "Observer.h"
 #include "Can.h"
 #include "system.h"
-
+#include "System_Diag.h"
+#include "Motor_Diag.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -126,6 +127,24 @@ void my_task3(void *argument)
     }
 }
 
+
+void my_task4(void *argument)
+{ 
+    System_Diag_Task();
+    for (;;)
+    {
+        // memset(send_buffer, 0, 100); // 信息缓冲区清零
+        // vTaskGetRunTimeStats((char *)&send_buffer);
+        // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
+        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
+        lasttick = xTaskGetTickCount();
+        System_Diag_Task();
+        vTaskDelayUntil(&lasttick, 10); // 每10ms执行一次
+        // osDelay(1);
+    }
+}
+
+
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -193,7 +212,8 @@ void MX_FREERTOS_Init(void) {
     /* add threads, ... */
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
-    xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
+    // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
+    xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityNormal, NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

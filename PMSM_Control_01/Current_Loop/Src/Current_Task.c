@@ -42,7 +42,8 @@ Current_Task_t Current_Task =
             .integral = 0.0f,
             .prev_error = 0.0f,
             .out_min = -100.0f,
-            .out_max = 100.0f},
+            .out_max = 100.0f
+        },
         .Iq_PI = {.kp = 1.0f, .ki = 0.1f, .integral = 0.0f, .prev_error = 0.0f, .out_min = -100.0f, .out_max = 100.0f},
 };
 

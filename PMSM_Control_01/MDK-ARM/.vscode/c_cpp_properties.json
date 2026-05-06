@@ -18,8 +18,10 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Speed_Loop\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Command_Task\\Inc",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\DIAG\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MDK-ARM",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Core\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\ST\\ARM\\DSP\\Lib",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Drivers\\STM32G4xx_HAL_Driver\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\Third_Party\\FreeRTOS\\Source",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang",
@@ -28,7 +30,7 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Speed_Loop\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Command_Task\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\ST\\ARM\\DSP\\Lib"
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\DIAG\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

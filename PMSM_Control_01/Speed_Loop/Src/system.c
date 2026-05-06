@@ -55,6 +55,12 @@ void SYSTEM_CMD_Standy()
 
 void SYSTEM_Run()
 {
+    if(System_Fault_Flag == 1)
+    {
+        System.system_state = SYSTEM_FAULT;
+        Speed_Ctrl.Speed_Command = 0;
+        return;
+    }
     if(MOTOR_Run_flag == 1)
     {
         Speed_Ctrl.Speed_Command = Speed_Command; 
