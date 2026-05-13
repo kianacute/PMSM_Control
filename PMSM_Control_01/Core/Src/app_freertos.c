@@ -171,7 +171,7 @@ void MX_FREERTOS_Init(void) {
     HAL_ADCEx_InjectedStart_IT(&hadc2); // Start ADC2 injected conversion
 
     __HAL_TIM_SET_AUTORELOAD(&htim1, 4000 - 1);            // Set the auto-reload value for TIM1
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, 4000 - 10); // Set initial compare value for TIM1 Channel 4
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, 4000 - 5); // Set initial compare value for TIM1 Channel 4
 
     HAL_TIM_Base_Start(&htim1); // Start TIM1 base timer
     // __HAL_TIM_ENABLE_IT(&htim1, TIM_IT_UPDATE); // Enable update interrupt for TIM1

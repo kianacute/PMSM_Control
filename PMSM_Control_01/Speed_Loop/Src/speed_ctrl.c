@@ -64,12 +64,12 @@ void Speed_Ctrl_Init(void)
     Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
     Speed_Ctrl.Weak_Pi.kp = 0.005f;
-    Speed_Ctrl.Weak_Pi.ki = 0.02f;
+    Speed_Ctrl.Weak_Pi.ki = 0.05f;
     Speed_Ctrl.Weak_Pi.Kd = 0.1f;
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
     Speed_Ctrl.Weak_Pi.out_max = 0.0f;
-    Speed_Ctrl.Weak_Pi.out_min = -5.0f;
+    Speed_Ctrl.Weak_Pi.out_min = -8.0f;
 }
 
 void SPEED_CTRL_IDLE_Task(void);
@@ -155,7 +155,7 @@ void SPEED_CTRL_ALIGN_Task()
 {
     // vTaskDelay(100);
     // // Alignment logic can be implemented here if needed
-    Speed_Ctrl.target_id = 0.0f;
+    Speed_Ctrl.target_id = 0.5f;
     Speed_Ctrl.target_iq = 0;
     Speed_Ctrl.Speed_Ref = 0;
     Current_Task.theta = 0; // Align to d-axis

@@ -268,6 +268,7 @@ void Speed_Switch(void)
             Encode_ABZ_Get_Offset();
         }
         // Current_Task.theta = Limit_2PI(HFSW_OB.tPLL.theta);
+        break;
     }
     case SPEED_CTRL_OPEN:
     {

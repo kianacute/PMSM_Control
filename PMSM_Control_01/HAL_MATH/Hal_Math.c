@@ -194,36 +194,42 @@ void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      }
 
      // 3. 滞回核心逻辑
-     uint8_t current_pre;
-     if (hcomp->comp_out)
+     switch (hcomp->comp_out)
      {
-          // 当前输出1 → 低于下限才准备变0
-          current_pre = (analog_input >= hcomp->threshold_low);
-     }
-     else
-     {
-          // 当前输出0 → 高于上限才准备变1
-          current_pre = (analog_input >= hcomp->threshold_high);
-     }
-
-     // 4. 延迟防抖
-     if (current_pre != hcomp->pre_result)
-     {
-          hcomp->delay_cnt = 0;
-          hcomp->pre_result = current_pre;
-     }
-     else
-     {
-          if (hcomp->delay_cnt < hcomp->delay_time)
+     case 0:
+          /* code */
+          if (analog_input <= hcomp->threshold_high)
+          {
+               hcomp->pre_result = 0;
+               hcomp->delay_cnt = 0;
+          }
+          else
           {
                hcomp->delay_cnt++;
+               if(hcomp->delay_cnt >= hcomp->delay_time)
+               {
+                    hcomp->comp_out = 1;
+               }
           }
-     }
-
-     // 5. 延迟满足才更新输出
-     if (hcomp->delay_cnt >= hcomp->delay_time)
-     {
-          hcomp->comp_out = current_pre;
+          break;
+     case 1:
+          if (analog_input >= hcomp->threshold_low)
+          {
+               hcomp->pre_result = 1;
+               hcomp->delay_cnt = 0;
+          }
+          else
+          {
+               hcomp->delay_cnt++;
+               if(hcomp->delay_cnt >= hcomp->delay_time)
+               {
+                    hcomp->comp_out = 0;
+               }
+          }
+          break;
+     default:
+          hcomp->comp_out = 0;
+          break;
      }
 }
 
@@ -248,36 +254,42 @@ void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      }
 
      // 3. 滞回核心逻辑
-     uint8_t current_pre;
-     if (hcomp->comp_out)
+     switch (hcomp->comp_out)
      {
-          // 当前输出1 → 低于下限才准备变0
-          current_pre = (analog_input <= hcomp->threshold_low);
-     }
-     else
-     {
-          // 当前输出0 → 高于上限才准备变1
-          current_pre = (analog_input <= hcomp->threshold_high);
-     }
-
-     // 4. 延迟防抖
-     if (current_pre != hcomp->pre_result)
-     {
-          hcomp->delay_cnt = 0;
-          hcomp->pre_result = current_pre;
-     }
-     else
-     {
-          if (hcomp->delay_cnt < hcomp->delay_time)
+     case 0:
+          /* code */
+          if (analog_input >= hcomp->threshold_low)
+          {
+               hcomp->pre_result = 0;
+               hcomp->delay_cnt = 0;
+          }
+          else
           {
                hcomp->delay_cnt++;
+               if(hcomp->delay_cnt >= hcomp->delay_time)
+               {
+                    hcomp->comp_out = 1;
+               }
           }
-     }
-
-     // 5. 延迟满足才更新输出
-     if (hcomp->delay_cnt >= hcomp->delay_time)
-     {
-          hcomp->comp_out = current_pre;
+          break;
+     case 1:
+          if (analog_input <= hcomp->threshold_high)
+          {
+               hcomp->pre_result = 1;
+               hcomp->delay_cnt = 0;
+          }
+          else
+          {
+               hcomp->delay_cnt++;
+               if(hcomp->delay_cnt >= hcomp->delay_time)
+               {
+                    hcomp->comp_out = 0;
+               }
+          }
+          break;
+     default:
+          hcomp->comp_out = 0;
+          break;
      }
 }
 
