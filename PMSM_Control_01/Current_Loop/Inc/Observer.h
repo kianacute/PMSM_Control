@@ -63,6 +63,7 @@ struct NonFluxObserver_Parameter
     MOTOR_t *pMotor;
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;
+    Lookup_Table_t Gama_Lookup;
 };
 
 struct HFSWInjection_Parameter

@@ -139,6 +139,7 @@ int n, m;
 
 int main()
 {
+     char ch;
      Hysteresis_Comp_TypeDef hcomp;
      hcomp.enable = 1;
      hcomp.reset = 0;
@@ -148,12 +149,21 @@ int main()
      hcomp.delay_cnt = 0;
      hcomp.pre_result = 0;
      hcomp.comp_out = 0;
-     FILE *fp = fopen("input.csv", "r");
+     FILE *fp = fopen("input1.csv", "r");
      float analog_input;
      fscanf(fp, "%d", &n);
      printf("Number of inputs: %d\n", n);
      for (int i = 0; i < n; i++)
      {
+          while(fscanf(fp, "%c", &ch) != EOF)
+          {
+               // fseek(fp, 1L, SEEK_CUR);
+               if(ch != ',')
+               {
+                    break;
+               }
+          } 
+          fseek(fp, -1L, SEEK_CUR);
           fscanf(fp, "%f", &analog_input);
           Hysteresis_Comp_Process_Add(&hcomp, analog_input);
           printf("Analog Input: %f, wait cnt: %lu, Comparator Output: %d\n", analog_input, (unsigned long)hcomp.delay_cnt, hcomp.comp_out);

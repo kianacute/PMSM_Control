@@ -9,12 +9,39 @@ extern MOTOR_t PMSM_42JS;
 float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
 float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
                                          2500, 3000, 3500, 4000, 5000};
-float Observer_PLL_Kp[10] = {418.71976, 418.43951, 418.87903, 628.31854, 628.75806, 628.1976, 1256.6371, 1466.0765, 1675.5161, 2094.3953};
-float Observer_PLL_Ki[10] = {0.087729819, 0.087729819, 0.087729819, 0.19739211, 0.35091928, 0.54831147, 0.78956842, 1.0746901, 1.4036771, 2.1932459};
-float LPK_KP[10] =             {0.05f, 0.05f, 0.1f, 0.10f, 0.1f,
-                                0.2f, 0.3f, 0.3f, 0.5f, 0.5f};
-float GAIN_LOOK[10] =          {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
-                                15.0f, 20.0f, 20.0f, 20.0f, 20.0f}; 
+float Observer_PLL_Kp[10] =
+    {
+        209.4395067,
+        209.4395067,
+        418.8790133,
+        628.31852,
+        837.7580267,
+        1047.197533,
+        1256.63704,
+        1466.076547,
+        1675.516053,
+        2094.395067,
+};
+
+float Observer_PLL_Ki[10] =
+    {
+        0.087729819,
+        0.087729819,
+        0.087729819,
+        0.19739211,
+        0.35091928,
+        0.54831147,
+        0.78956842,
+        1.0746901,
+        1.4036771,
+        2.1932459,
+};
+float LPK_KP[10] = {0.05f, 0.05f, 0.1f, 0.10f, 0.1f,
+                    0.2f, 0.3f, 0.3f, 0.5f, 0.5f};
+float GAIN_LOOK[10] = {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
+                       15.0f, 20.0f, 20.0f, 20.0f, 20.0f};
+float NorObserver_Gama_Lookup[10] = {1e4, 1e5, 1e6, 1e6, 1e6,
+                                     2e6, 3e6, 4e6, 5e6, 5e6};
 
 void SMO_Observer_Init(void)
 {
@@ -30,10 +57,10 @@ void SMO_Observer_Init(void)
     SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
     SMO_OB.LPF.x_table = Observer_Lookup_Speed_index;
     SMO_OB.LPF.y_table = LPK_KP;
-    SMO_OB.LPF.table_size = sizeof(Observer_Lookup_Speed_index)/sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.LPF.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
     SMO_OB.GAIN_LOOKUP.x_table = Observer_Lookup_Speed_index;
     SMO_OB.GAIN_LOOKUP.y_table = GAIN_LOOK;
-    SMO_OB.GAIN_LOOKUP.table_size = sizeof(Observer_Lookup_Speed_index)/sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.GAIN_LOOKUP.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
 }
 
 int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
@@ -154,8 +181,8 @@ void Encode_ABZ_UpDate(void)
 
     if (Encode_ABZ.rpm_filt_cnt >= Encode_ABZ.rpm_filt_RP)
     {
-        Encode_ABZ.rpm = Encode_ABZ.rpm_last *0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f / 
-                ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
+        Encode_ABZ.rpm = Encode_ABZ.rpm_last * 0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f /
+                                                         ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
         Encode_ABZ.we = Encode_ABZ.rpm * 2.0f * PI / 60.0f * MOTOR_POLE_PAIRS;
         Encode_ABZ.rpm_last = Encode_ABZ.rpm;
         Encode_ABZ.counter = 0;
@@ -183,6 +210,9 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
     NonFlux_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
     NonFlux_OB.PLL_Ki_Lookup.table_size = 10;
+    NonFlux_OB.Gama_Lookup.x_table = Observer_Lookup_Speed_index;
+    NonFlux_OB.Gama_Lookup.y_table = NorObserver_Gama_Lookup;
+    NonFlux_OB.Gama_Lookup.table_size = 10;
     NonFlux_OB.x_alpha_hat = 0.0f;
     NonFlux_OB.x_beta_hat = 0.0f;
     NonFlux_OB.y_alpha_hat = 0.0f;

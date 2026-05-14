@@ -242,10 +242,12 @@ void Paramater_update(void)
     Speed_Ctrl.Speed_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Speed_Ctrl.Speed_PI_Ki_Lookup);
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Kp_Lookup);
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Ki_Lookup);
+    NonFlux_OB.gama = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.Gama_Lookup);
     // SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
     // SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
     Current_Task.Id_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Kp_Lookup);
     Current_Task.Id_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Ki_Lookup);
     Current_Task.Iq_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Kp_Lookup);
     Current_Task.Iq_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Ki_Lookup);
+
 }
