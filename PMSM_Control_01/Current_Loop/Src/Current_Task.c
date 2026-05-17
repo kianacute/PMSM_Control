@@ -160,6 +160,49 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
     return;
 }
 
+
+void Phace_Min_Max(float A, float B, float C)
+{
+    if( Current_Task.Phace_check_cnt > (int)(20000/(Speed_Ctrl.Speed_Ref/60.0f*4.0f + 1)) )
+    {
+        Current_Task.Phace_check_cnt = 0;
+        Current_Task.A_Max = 0;
+        Current_Task.A_Min = 0; 
+        Current_Task.B_Max = 0;
+        Current_Task.B_Min = 0;
+        Current_Task.C_Max = 0;
+        Current_Task.C_Min = 0;
+    }
+    else
+    {
+        Current_Task.Phace_check_cnt++;
+    }
+    if (A > Current_Task.A_Max)
+    {
+        Current_Task.A_Max = A;
+    }
+    if (A < Current_Task.A_Min)
+    {
+        Current_Task.A_Min = A;
+    }
+    if (B > Current_Task.B_Max)
+    {
+        Current_Task.B_Max = B;
+    }
+    if (B < Current_Task.B_Min)
+    {
+        Current_Task.B_Min = B;
+    }
+    if (C > Current_Task.C_Max)
+    {
+        Current_Task.C_Max = C;
+    }
+    if (C < Current_Task.C_Min)
+    {
+        Current_Task.C_Min = C;
+    }
+}
+
 /// @brief 这种死区补偿方式会引入振动，总之就是更加不稳定
 /// @param Id   
 /// @param Iq   
@@ -296,13 +339,11 @@ void Speed_Switch(void)
     }
     case SPEED_CTRL_RUN:
     {
-        Current_Task.theta = Limit_2PI(SMO_OB.tPLL.theta + angle_comp);
+        Current_Task.theta = Limit_2PI(NonFlux_OB.tPLL.theta + angle_comp);
     }
     default:
     }
 }
-
-float is_adr, is_adr_last;
 
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
 {
@@ -313,7 +354,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
         Current_Task.Speed_fb_1ms = 0;
     }
     Current_Task.avg_count++;
-    Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
+    Current_Task.Speed_fb_1ms += NonFlux_OB.tPLL.we;
     // Speed_Ctrl.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
 
@@ -328,10 +369,11 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     // HFSW_OB.hfj_cnt++;
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
+    Phace_Min_Max(my_abs(ia_fb), my_abs(ib_fb), my_abs(ic_fb));
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
-    SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
-    // Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
-    //                               Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    // SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
+                                  Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
     // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
     // HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
@@ -436,6 +478,12 @@ int32_t MOTOR_IDLE_TASK(void)
         Current_Task.Id_PI.integral = 0;
         Current_Task.Iq_PI.integral = 0;
         EMF_Cal.EMF = 0;
+        Current_Task.A_Max = 0;
+        Current_Task.A_Min = 0; 
+        Current_Task.B_Max = 0;
+        Current_Task.B_Min = 0;
+        Current_Task.C_Max = 0;
+        Current_Task.C_Min = 0;
     }
     else
     {

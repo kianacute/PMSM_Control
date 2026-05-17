@@ -29,7 +29,7 @@ void SYSTEM_Init(void)
     // e.g., setting up peripherals, initializing variables, etc.
     Current_Task_Init();
     Speed_Ctrl_Init();
-    Speed_Command = 2000.0f;
+    Speed_Command = 1000.0f;
 }
 
 void SYSTEM_LV_Standy()
@@ -84,6 +84,7 @@ void SYSTEM_Run()
 
 void SYSTEM_Fault()
 {
+    System.Fault_cnt++;
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_WAIT;
 }

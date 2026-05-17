@@ -119,7 +119,7 @@ void my_task3(void *argument)
         // vTaskList((char *)&load_send_buffer);  //获取任务运行时间信息
         // sprintf((char *)load_send_buffer, "adc: %d  %d\r\n", cup_adc_1, cup_adc_2);
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)load_send_buffer, strlen((char *)load_send_buffer));
-        vTaskDelayUntil(&lasttick, 10000); // 每10000ms执行一次
+        vTaskDelayUntil(&lasttick, 20000); // 每20000ms执行一次
         MOTOR_Run_flag_UPDOWN();
     }
 }
@@ -209,10 +209,12 @@ void MX_FREERTOS_Init(void) {
     /* add threads, ... */
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
-    // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
-    xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityNormal, NULL);
+    xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
+    xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
   /* USER CODE END RTOS_THREADS */
 
+
+  
   /* USER CODE BEGIN RTOS_EVENTS */
     /* add events, ... */
   /* USER CODE END RTOS_EVENTS */

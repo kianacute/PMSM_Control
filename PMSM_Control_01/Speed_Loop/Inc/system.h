@@ -23,7 +23,8 @@ enum SYSTEM_State_t
 typedef struct SYSTEM_Ctrl
 {
     uint32_t FREQ_Hz;                               // 循环周期
-    enum SYSTEM_State_t system_state;                            // 系统状态
+    enum SYSTEM_State_t system_state;  
+    uint32_t Fault_cnt;                          // 系统状态
 } SYSTEM_t;
 
 void SYSTEM_Init(void);

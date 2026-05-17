@@ -174,7 +174,7 @@ void SPEED_CTRL_ALIGN_Task()
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*18;
     // vTaskDelay(5000);
-    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_OPEN;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
 }
 
 void SPEED_CTRL_OPEN_Task(void)
@@ -213,7 +213,7 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
     {
-        Speed_Ctrl.target_id = Oblique_Wave(0.4f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
     {

@@ -39,6 +39,8 @@ typedef struct Current_Task
     float Ia_fb, Ib_fb, Ic_fb;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
     float PWM_Duty_A_Comp, PWM_Duty_B_Comp, PWM_Duty_C_Comp;
+    float A_Max, A_Min, B_Max, B_Min, C_Max, C_Min;
+    uint32_t Phace_check_cnt;
     uint8_t sector;
     enum Motor_State Motor_State;
     uint8_t PWM_OPEN_Flag;
