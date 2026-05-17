@@ -31,6 +31,7 @@ typedef struct Current_Task
     float Ud_Target, Uq_Target;                             
     float Id_Ref, Iq_Ref;
     float Id_fb, Iq_fb;
+    float Is_fb;
     float Ualpha_Ref, Ubeta_Ref, sinVal, cosVal;
     float theta;
     float ialpha_fb, ibeta_fb;

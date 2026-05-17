@@ -18,10 +18,11 @@ extern struct Encoder_Parameter Encode_ABZ;
 extern struct HFSWInjection_Parameter HFSW_OB;
 extern Speed_Ctrl_t Speed_Ctrl;
 extern SYSTEM_t System;
+extern struct EMF_Cal_Parameter EMF_Cal;
 
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
-const float Current_DQ_PI_Index_Coff[5] = {20.0f, 20.0f, 30.0f, 50.0f, 50.0f};
+const float Current_DQ_PI_Index_Coff[5] = {20.0f, 20.0f, 30.0f, 30.0f, 30.0f};
 float Current_DQ_PI_Index[5]      = {0.0f, 2000.0f, 3000.0f, 4000.0f, 5000.0f};
 float Current_ID_PI_Kp_Lookup[5];
 float Current_IQ_PI_Kp_Lookup[5];
@@ -252,6 +253,8 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
     return;
 }
 
+float angle_comp;
+
 void Speed_Switch(void)
 {
     switch (Speed_Ctrl.spd_ctrl_state)
@@ -280,24 +283,26 @@ void Speed_Switch(void)
     {
         Current_Task.theta += Speed_Ctrl.Speed_Ref / 60 * 2 * PI * Current_Task.pMotor->pole_pairs * Current_Task.Loop_time_s;
         Current_Task.theta = Limit_2PI(Current_Task.theta);
-        if (my_abs(NonFlux_OB.tPLL.theta - Current_Task.theta) < 0.10)
+        if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
         {
             Speed_Ctrl.Speed_Switch_Cnt++;
             if (Speed_Ctrl.Speed_Switch_Cnt > 10)
             {
                 Speed_Ctrl.Speed_Switch_Flag = 1;
-                Current_Task.theta = NonFlux_OB.tPLL.theta;
+                Current_Task.theta = SMO_OB.tPLL.theta;
             }
         }
         break;
     }
     case SPEED_CTRL_RUN:
     {
-        Current_Task.theta = Limit_2PI(NonFlux_OB.tPLL.theta);
+        Current_Task.theta = Limit_2PI(SMO_OB.tPLL.theta + angle_comp);
     }
     default:
     }
 }
+
+float is_adr, is_adr_last;
 
 void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32_t *PWM_duty_a, float32_t *PWM_duty_b, float32_t *PWM_duty_c, float Udc)
 {
@@ -308,7 +313,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
         Current_Task.Speed_fb_1ms = 0;
     }
     Current_Task.avg_count++;
-    Current_Task.Speed_fb_1ms += NonFlux_OB.tPLL.we;
+    Current_Task.Speed_fb_1ms += SMO_OB.tPLL.we;
     // Speed_Ctrl.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Task.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
 
@@ -324,9 +329,9 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Speed_Switch();
     Phase_Current_Rewrite(ia_fb, ib_fb, ic_fb, &Current_Task.Ia_fb, &Current_Task.Ib_fb, &Current_Task.Ic_fb, Current_Task.sector);
     arm_clarke_f32(Current_Task.Ia_fb, Current_Task.Ib_fb, &Current_Task.ialpha_fb, &Current_Task.ibeta_fb);
-    // SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
-    Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
-                                  Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    SMO_Observer(&SMO_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref, Current_Task.ialpha_fb, Current_Task.ibeta_fb);
+    // Nonlinear_FluxObserver_Update(&NonFlux_OB, Current_Task.Ualpha_Ref, Current_Task.Ubeta_Ref,
+    //                               Current_Task.ialpha_fb, Current_Task.ibeta_fb);
 
     // HFSWInjection_NSF(&HFSW_OB, Current_Task.Id_fb);
     // HFSWInjection_Update(&HFSW_OB, Current_Task.ialpha_fb, Current_Task.ibeta_fb, HFSW_OB.U_hfj);
@@ -357,6 +362,7 @@ void Current_Task_Run(float32_t ia_fb, float32_t ib_fb, float32_t ic_fb, float32
     Current_Task.PWM_Duty_A_Comp *= PWM_MAX_DUTY;
     Current_Task.PWM_Duty_B_Comp *= PWM_MAX_DUTY;
     Current_Task.PWM_Duty_C_Comp *= PWM_MAX_DUTY;
+    arm_sqrt_f32(Current_Task.Id_fb * Current_Task.Id_fb + Current_Task.Iq_fb * Current_Task.Iq_fb, &Current_Task.Is_fb);
 }
 
 void Current_PWM_Switch(uint8_t PWM_Flag)
@@ -429,6 +435,7 @@ int32_t MOTOR_IDLE_TASK(void)
         NonFlux_OB.tPLL.PLL_PI.integral = 0;
         Current_Task.Id_PI.integral = 0;
         Current_Task.Iq_PI.integral = 0;
+        EMF_Cal.EMF = 0;
     }
     else
     {

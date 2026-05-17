@@ -167,7 +167,6 @@ void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l
      hcomp->threshold_low = th_l;
      hcomp->delay_time = delay;
      hcomp->delay_cnt = 0;
-     hcomp->pre_result = 0;
      hcomp->comp_out = 0;
 }
 
@@ -181,7 +180,6 @@ void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      {
           hcomp->comp_out = 0;
           hcomp->delay_cnt = 0;
-          hcomp->pre_result = 0;
           return;
      }
 
@@ -200,7 +198,7 @@ void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_in
           /* code */
           if (analog_input <= hcomp->threshold_high)
           {
-               hcomp->pre_result = 0;
+
                hcomp->delay_cnt = 0;
           }
           else
@@ -215,7 +213,6 @@ void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      case 1:
           if (analog_input >= hcomp->threshold_low)
           {
-               hcomp->pre_result = 1;
                hcomp->delay_cnt = 0;
           }
           else
@@ -241,7 +238,6 @@ void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      {
           hcomp->comp_out = 0;
           hcomp->delay_cnt = 0;
-          hcomp->pre_result = 0;
           return;
      }
 
@@ -260,7 +256,7 @@ void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_in
           /* code */
           if (analog_input >= hcomp->threshold_low)
           {
-               hcomp->pre_result = 0;
+
                hcomp->delay_cnt = 0;
           }
           else
@@ -275,7 +271,6 @@ void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_in
      case 1:
           if (analog_input <= hcomp->threshold_high)
           {
-               hcomp->pre_result = 1;
                hcomp->delay_cnt = 0;
           }
           else

@@ -3,43 +3,49 @@
 #include "Motor_parameter.h"
 #include "tim.h"
 
+
 struct SMO_Parameter SMO_OB = {0};
 extern MOTOR_t PMSM_42JS;
+
+struct EMF_Cal_Parameter EMF_Cal = {0};
 
 float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
 float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
                                          2500, 3000, 3500, 4000, 5000};
 float Observer_PLL_Kp[10] =
     {
-        209.4395067,
-        209.4395067,
-        418.8790133,
-        628.31852,
-        837.7580267,
-        1047.197533,
-        1256.63704,
-        1466.076547,
-        1675.516053,
-        2094.395067,
+        148.0737312,
+        148.0737312,
+        296.1474624,
+        444.2211936,
+        592.2949249,
+        740.3686561,
+        888.4423873,
+        1036.516118,
+        1184.58985,
+        1480.737312,
 };
 
 float Observer_PLL_Ki[10] =
     {
-        0.087729819,
-        0.087729819,
-        0.087729819,
-        0.19739211,
-        0.35091928,
-        0.54831147,
-        0.78956842,
-        1.0746901,
-        1.4036771,
-        2.1932459,
+        0.548311337,
+        0.548311337,
+        2.193245348,
+        4.934802032,
+        8.772981391,
+        13.70778342,
+        19.73920813,
+        26.86725551,
+        35.09192556,
+        54.83113369,
 };
+
 float LPK_KP[10] = {0.05f, 0.05f, 0.1f, 0.10f, 0.1f,
                     0.2f, 0.3f, 0.3f, 0.5f, 0.5f};
-float GAIN_LOOK[10] = {6.0f, 6.0f, 6.0f, 10.0f, 12.0f,
-                       15.0f, 20.0f, 20.0f, 20.0f, 20.0f};
+float SMO_EKF[10] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f,
+                        10.0f, 12.2f, 14.0f, 16.0f, 16.0f};
+float SMO_Gain_Lookup[10] = {6.0f, 6.0f, 6.0f, 6.0f, 6.0f,
+                       6.0f, 6.0f, 6.0f, 6.0f, 6.0f};
 float NorObserver_Gama_Lookup[10] = {1e4, 1e5, 1e6, 1e6, 1e6,
                                      2e6, 3e6, 4e6, 5e6, 5e6};
 
@@ -48,56 +54,69 @@ void SMO_Observer_Init(void)
     // memset(&SMO, 0, sizeof(SMO));
     SMO_OB.pMotor = &PMSM_42JS;
     SMO_OB.E_LPF_Coff = 0.3f;
-    SMO_OB.Gain_Min = 2.0f;
-    SMO_OB.Gain_Add = 20.0f;
+    SMO_OB.Gain = 1.0f;
     SMO_OB.tPLL.PLL_PI.kp = 40.1f;
     SMO_OB.tPLL.PLL_PI.ki = 5.1f / 100.0f;
     SMO_OB.tPLL.PLL_PI.out_max = 10000.0f;
     SMO_OB.tPLL.PLL_PI.out_min = -10000.0f;
     SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
-    SMO_OB.LPF.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.LPF.y_table = LPK_KP;
-    SMO_OB.LPF.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
-    SMO_OB.GAIN_LOOKUP.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.GAIN_LOOKUP.y_table = GAIN_LOOK;
-    SMO_OB.GAIN_LOOKUP.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.SMO_Gain_Lookup.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.SMO_Gain_Lookup.y_table = SMO_Gain_Lookup;
+    SMO_OB.SMO_Gain_Lookup.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.SMO_EKF_Lookup.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.SMO_EKF_Lookup.y_table = SMO_EKF;
+    SMO_OB.SMO_EKF_Lookup.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
+    SMO_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
+    SMO_OB.PLL_Kp_Lookup.table_size = 10;
+    SMO_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
+    SMO_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
+    SMO_OB.PLL_Ki_Lookup.table_size = 10;
 }
 
-int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
+void EMF_CAL_Init(void)
+{
+    EMF_Cal.pMotor = &PMSM_42JS;
+    EMF_Cal.EMF_alpha = 0.0f;
+    EMF_Cal.EMF_beta = 0.0f;
+    EMF_Cal.ialpha_last = 0.0f;
+    EMF_Cal.ibeta_last = 0.0f;
+    EMF_Cal.EMF_LPF_Coff = 0.0001f;
+}
+ 
+
+void EMF_CAL_Update(struct EMF_Cal_Parameter *EMF_Cal, float32_t Ualpha, float32_t Ubeta,
+                 float32_t Ialpha, float32_t Ibeta, float discrete_time)
+{
+
+    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->phase_inductance_s * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) 
+                        * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->phase_inductance_s * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) 
+                        * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
+
+    EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->phase_resistance_ohm - EMF_Cal->Ls_Ialpha;
+    EMF_Cal->EMF_beta = Ubeta - Ibeta * EMF_Cal->pMotor->phase_resistance_ohm - EMF_Cal->Ls_Ibeta;
+    EMF_Cal->ialpha_last = Ialpha;
+    EMF_Cal->ibeta_last = Ibeta;
+    arm_sqrt_f32(EMF_Cal->EMF_alpha * EMF_Cal->EMF_alpha + EMF_Cal->EMF_beta * EMF_Cal->EMF_beta, &EMF_Cal->EMF);
+}
+
+void SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
                  float32_t Ialpha, float32_t Ibeta)
 {
-    float Est_a, Est_b;
-    SMO->we_lpf = SMO->tPLL.we * 0.5f + SMO->we_lpf * 0.5f;
-    if (SMO->ia_mat_k > Ialpha)
-    {
-        Est_a = SMO->Gain_Min + SMO->Gain_Add;
-    }
-    else
-    {
-        Est_a = -(SMO->Gain_Min + SMO->Gain_Add);
-    }
-
-    if (SMO->ib_mat_k > Ibeta)
-    {
-        Est_b = SMO->Gain_Min + SMO->Gain_Add;
-    }
-    else
-    {
-        Est_b = -(SMO->Gain_Min + SMO->Gain_Add);
-    }
-    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s * SMO->ia_mat_k + Ualpha / SMO->pMotor->phase_inductance_s - Est_a / SMO->pMotor->phase_inductance_s) * SMO->discrete_time;
-    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s * SMO->ib_mat_k + Ubeta / SMO->pMotor->phase_inductance_s - Est_b / SMO->pMotor->phase_inductance_s) * SMO->discrete_time;
-
-    /*观测到的反电动势必须滤波*/
-    SMO->E_alpha = Est_a * SMO->E_LPF_Coff + SMO->E_alpha * (1 - SMO->E_LPF_Coff);
-    SMO->E_beta = Est_b * SMO->E_LPF_Coff + SMO->E_beta * (1 - SMO->E_LPF_Coff);
+    SMO->E_alpha = (SMO->ia_mat_k - Ialpha) * SMO->Gain;
+    SMO->E_beta = (SMO->ib_mat_k - Ibeta) * SMO->Gain;
+    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s 
+                    * SMO->ia_mat_k + Ualpha / SMO->pMotor->phase_inductance_s - SMO->E_alpha / SMO->pMotor->phase_inductance_s) 
+                    * SMO->discrete_time;
+    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s 
+                    * SMO->ib_mat_k + Ubeta / SMO->pMotor->phase_inductance_s - SMO->E_beta / SMO->pMotor->phase_inductance_s) 
+                    * SMO->discrete_time;
     arm_sqrt_f32(SMO->E_alpha * SMO->E_alpha + SMO->E_beta * SMO->E_beta, &SMO->E_Peak);
     /*保留这一拍的数据*/
     SMO->ia_mat_k = SMO->ia_mat_k1;
     SMO->ib_mat_k = SMO->ib_mat_k1;
     PLL_Update(&SMO->tPLL, -SMO->E_alpha, SMO->E_beta, SMO->discrete_time);
-
-    return 0;
 }
 
 struct Encoder_Parameter Encode_ABZ;
@@ -224,9 +243,10 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.Flux_beta = 0.0f;
     NonFlux_OB.tPLL.we = 0.0f;
     NonFlux_OB.tPLL.theta = 0.0f;
+    EMF_CAL_Init();
 }
 
-int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
+void Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
                                   float32_t Ialpha, float32_t Ibeta)
 {
     NFO->y_alpha_hat = (Ualpha - NFO->pMotor->phase_resistance_ohm * Ialpha);
@@ -241,7 +261,7 @@ int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32
     NFO->Flux_alpha = NFO->Eta_alpha / NFO->pMotor->flux_linkage_wb;
     NFO->Flux_beta = NFO->Eta_beta / NFO->pMotor->flux_linkage_wb;
     PLL_Update(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha, NFO->discrete_time);
-    return 0;
+    EMF_CAL_Update(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, NFO->discrete_time);
 }
 
 struct HFSWInjection_Parameter HFSW_OB =

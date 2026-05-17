@@ -80,6 +80,7 @@ extern volatile uint32_t CPU_RunTime;
 
 void my_task1(void *argument)
 { 
+    Motor_Diag_Init();
     for (;;)
     {
         // memset(send_buffer, 0, 100); // 信息缓冲区清零
@@ -88,6 +89,7 @@ void my_task1(void *argument)
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
         lasttick = xTaskGetTickCount();
         Speed_Ctrl_Task();
+        Motor_Diag_Task();
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
         // osDelay(1);
     }
@@ -97,14 +99,9 @@ void my_task2(void *argument)
 { 
     for (;;)
     {
-        // memset(send_buffer, 0, 100); // 信息缓冲区清零
-        // vTaskGetRunTimeStats((char *)&send_buffer);
-        // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
-        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
         lasttick = xTaskGetTickCount();
         SYSTEM_Task();
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
-        // osDelay(1);
     }
 }
 
@@ -130,7 +127,7 @@ void my_task3(void *argument)
 
 void my_task4(void *argument)
 { 
-    System_Diag_Task();
+    System_Diag_Init(); 
     for (;;)
     {
         // memset(send_buffer, 0, 100); // 信息缓冲区清零

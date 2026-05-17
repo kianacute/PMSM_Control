@@ -8,6 +8,8 @@
 #include "FreeRTOS.h"
 #include "Observer.h"
 #include "speed_ctrl.h"
+#include "System_Diag.h"
+#include "Motor_Diag.h"
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
@@ -27,7 +29,7 @@ void SYSTEM_Init(void)
     // e.g., setting up peripherals, initializing variables, etc.
     Current_Task_Init();
     Speed_Ctrl_Init();
-    Speed_Command = 3000.0f;
+    Speed_Command = 2000.0f;
 }
 
 void SYSTEM_LV_Standy()
@@ -53,9 +55,13 @@ void SYSTEM_CMD_Standy()
     }
 }
 
+extern uint8_t System_Diag_Fault_Flag;
+extern uint8_t Motor_Diag_Fault_Flag;
+
 void SYSTEM_Run()
 {
-    if(System_Fault_Flag == 1)
+    System_Fault_Flag = System_Diag_Fault_Flag | Motor_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
+    if(System_Fault_Flag != 0)
     {
         System.system_state = SYSTEM_FAULT;
         Speed_Ctrl.Speed_Command = 0;
@@ -79,13 +85,15 @@ void SYSTEM_Run()
 void SYSTEM_Fault()
 {
     vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_CMD_STANDY;
+    System.system_state = SYSTEM_WAIT;
 }
 
 void SYSTEM_Wait()
 {
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_CMD_STANDY;
+    System_Diag_Fault_Flag = 0;
+    Motor_Diag_Fault_Flag = 0;
 }
 
 void SYSTEM_Task(void)

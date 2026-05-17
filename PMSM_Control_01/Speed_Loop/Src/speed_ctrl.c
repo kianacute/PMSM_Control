@@ -63,8 +63,8 @@ void Speed_Ctrl_Init(void)
 
     Hysteresis_Comp_Init(&Speed_Ctrl.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Ctrl.Weak_Control_Hcomp.enable = 1;
-    Speed_Ctrl.Weak_Pi.kp = 0.005f;
-    Speed_Ctrl.Weak_Pi.ki = 0.05f;
+    Speed_Ctrl.Weak_Pi.kp = 0.01f;
+    Speed_Ctrl.Weak_Pi.ki = 0.1f;
     Speed_Ctrl.Weak_Pi.Kd = 0.1f;
     // Speed_Ctrl.Weak_Pi.kp = 1.01f;
     // Speed_Ctrl.Weak_Pi.ki = 1.01f;
@@ -174,7 +174,7 @@ void SPEED_CTRL_ALIGN_Task()
     // vTaskDelay(5000);
     // Current_Task.theta = 0.17*18;
     // vTaskDelay(5000);
-    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_RUN;
+    Speed_Ctrl.spd_ctrl_state = SPEED_CTRL_OPEN;
 }
 
 void SPEED_CTRL_OPEN_Task(void)
@@ -213,7 +213,7 @@ void SPEED_CTRL_RUN_Task(void)
     Speed_Ctrl.target_is = Hal_PI_f32(&Speed_Ctrl.Speed_PI, Speed_Ctrl.Speed_Ref - Speed_Ctrl.Speed_Fb);
     if (Speed_Ctrl.Speed_Ref < 1000 && Speed_Ctrl.Speed_Ref >= -600)
     {
-        Speed_Ctrl.target_id = Oblique_Wave(0.5f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+        Speed_Ctrl.target_id = Oblique_Wave(0.4f, Speed_Ctrl.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     }
     else
     {
@@ -244,10 +244,12 @@ void Paramater_update(void)
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.PLL_Ki_Lookup);
     NonFlux_OB.gama = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &NonFlux_OB.Gama_Lookup);
     // SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.LPF);
-    // SMO_OB.Gain_Add = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.GAIN_LOOKUP);
+    SMO_OB.Gain = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.SMO_Gain_Lookup);
+    float SMO_EKF = Lookup_Table_Linear(Speed_Ctrl.Speed_Fb, &SMO_OB.SMO_EKF_Lookup);
+    SMO_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &SMO_OB.PLL_Kp_Lookup) / SMO_EKF;
+    SMO_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &SMO_OB.PLL_Ki_Lookup) / SMO_EKF;
     Current_Task.Id_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Kp_Lookup);
     Current_Task.Id_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.ID_PI_Ki_Lookup);
     Current_Task.Iq_PI.kp = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Kp_Lookup);
     Current_Task.Iq_PI.ki = Lookup_Table_Linear(Speed_Ctrl.Speed_Ref, &Current_Task.IQ_PI_Ki_Lookup);
-
 }

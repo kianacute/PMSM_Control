@@ -8,8 +8,7 @@
 struct SMO_Parameter
 {
     float discrete_time;
-    float Gain_Min;
-    float Gain_Add;
+    float Gain;
     float est_Max;
     float ia_mat_k, ia_mat_k1;
     float ib_mat_k, ib_mat_k1;
@@ -22,8 +21,8 @@ struct SMO_Parameter
     MOTOR_t *pMotor;
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;
-    Lookup_Table_t LPF;
-    Lookup_Table_t GAIN_LOOKUP;
+    Lookup_Table_t SMO_EKF_Lookup;
+    Lookup_Table_t SMO_Gain_Lookup;
 };
 
 struct Encoder_Parameter
@@ -86,16 +85,29 @@ struct HFSWInjection_Parameter
     float Id_hfj, Id_hfj_last;
 };
 
+struct EMF_Cal_Parameter
+{
+    float EMF_alpha;
+    float EMF_beta;
+    float Ls_Ialpha;
+    float Ls_Ibeta;
+    float ialpha_last;
+    float ibeta_last;
+    float EMF;
+    float EMF_LPF_Coff;
+    MOTOR_t *pMotor;
+};
+
 void SMO_Observer_Init(void);
-int SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
-                 float32_t Ialpha, float32_t Ibeta);
+void SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
+                  float32_t Ialpha, float32_t Ibeta);
 
 void Encode_ABZ_Init(void);
 void Encode_ABZ_Get_Offset(void);
 void Encode_ABZ_UpDate(void);
 
 void Nonlinear_FluxObserver_Init(void);
-int Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
+void Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
                                   float32_t Ialpha, float32_t Ibeta);
 
 void HFSWInjection_Init(void);

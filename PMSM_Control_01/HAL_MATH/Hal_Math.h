@@ -41,7 +41,6 @@ typedef struct {
 
     // 内部状态
     uint32_t delay_cnt;   // 延迟计数器
-    uint8_t pre_result;      // 预输出结果
     uint8_t comp_out;        // 最终输出
 } Hysteresis_Comp_TypeDef;
 

@@ -8,6 +8,8 @@ extern SYSTEM_t System;
 
 static Diag_Node_t *System_Diag_Head = NULL;
 
+uint8_t System_Diag_Fault_Flag = 0;
+
 static Sensor_Diag_Item_t Hv_Sensor = {
     .hcomp = {
         .enable = 1,
@@ -29,7 +31,23 @@ static Sensor_Diag_Item_t Hv_Sensor = {
 static void Hv_Sensor_Update(Diag_Node_t *node)
 {
     Sensor_Diag_Item_t *item = (Sensor_Diag_Item_t *)node;
+    if(System.system_state == SYSTEM_WAIT)
+    {
+        item->hcomp.reset = 1; // 系统未运行时复位比较器
+    }
+    else
+    {
+        item->hcomp.reset = 0; // 系统运行时正常工作
+    }
+    if(System.system_state >= SYSTEM_RUN)
+    {
+        item->hcomp.enable = 1; // 系统运行时使能比较器
+    }
     Sensor_Hysteresis_Comp_Process(&item->hcomp, Current_Task.Udc_ADISR);
+    if (item->hcomp.status != 0)
+    {
+        System_Diag_Fault_Flag |= 0x01; // 设置高压过压故障标志
+    }
 }
 
 void System_Diag_Init(void)
