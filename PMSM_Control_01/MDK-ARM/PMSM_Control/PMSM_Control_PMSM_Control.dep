@@ -1,1992 +1,0 @@
-Dependencies for Project 'PMSM_Control', Target 'PMSM_Control': (DO NOT MODIFY !)
-CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
-F (startup_stm32g431xx.s)(0x69D313BC)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I ../Middlewares/ST/ARM/DSP/Inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include--pd "__UVISION_VERSION SETA 532" --pd "_RTE_ SETA 1" --pd "STM32G431xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32g431xx.lst --xref -o pmsm_control\startup_stm32g431xx.o --depend pmsm_control\startup_stm32g431xx.d)
-F (../Core/Src/main.c)(0x6A11D1A5)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\main.o --omf_browse pmsm_control\main.crf --depend pmsm_control\main.d)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x68EA6110)
-I (../Core/Inc/adc.h)(0x694C03B0)
-I (../Core/Inc/dma.h)(0x6947FE44)
-I (../Core/Inc/fdcan.h)(0x69401A77)
-I (../Core/Inc/opamp.h)(0x694C03B1)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/gpio.h)(0x693ED04F)
-F (../Core/Src/gpio.c)(0x6989E910)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\gpio.o --omf_browse pmsm_control\gpio.crf --depend pmsm_control\gpio.d)
-I (../Core/Inc/gpio.h)(0x693ED04F)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/app_freertos.c)(0x6A11B18F)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\app_freertos.o --omf_browse pmsm_control\app_freertos.crf --depend pmsm_control\app_freertos.d)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x68EA6110)
-I (../Core/Inc/fdcan.h)(0x69401A77)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/gpio.h)(0x693ED04F)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (../Core/Inc/adc.h)(0x694C03B0)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (../Core/Inc/opamp.h)(0x694C03B1)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Command\Inc\Can.h)(0x6989E0E2)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-I (..\Motor_Control\DIAG\Inc\System_Diag.h)(0x6A11ADF9)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (..\Motor_Control\DIAG\Inc\Motor_Diag.h)(0x6A048F30)
-F (../Core/Src/adc.c)(0x69D8F5A1)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\adc.o --omf_browse pmsm_control\adc.crf --depend pmsm_control\adc.d)
-I (../Core/Inc/adc.h)(0x694C03B0)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/dma.c)(0x6989E911)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\dma.o --omf_browse pmsm_control\dma.crf --depend pmsm_control\dma.d)
-I (../Core/Inc/dma.h)(0x6947FE44)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/fdcan.c)(0x6989E911)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\fdcan.o --omf_browse pmsm_control\fdcan.crf --depend pmsm_control\fdcan.d)
-I (../Core/Inc/fdcan.h)(0x69401A77)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/opamp.c)(0x694D41C7)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\opamp.o --omf_browse pmsm_control\opamp.crf --depend pmsm_control\opamp.d)
-I (../Core/Inc/opamp.h)(0x694C03B1)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/tim.c)(0x69D313BA)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\tim.o --omf_browse pmsm_control\tim.crf --depend pmsm_control\tim.d)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/usart.c)(0x6989F07A)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\usart.o --omf_browse pmsm_control\usart.crf --depend pmsm_control\usart.d)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/stm32g4xx_it.c)(0x697DB6F9)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_it.o --omf_browse pmsm_control\stm32g4xx_it.crf --depend pmsm_control\stm32g4xx_it.d)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_it.h)(0x697DB6F9)
-F (../Core/Src/stm32g4xx_hal_msp.c)(0x6947F499)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_msp.o --omf_browse pmsm_control\stm32g4xx_hal_msp.crf --depend pmsm_control\stm32g4xx_hal_msp.d)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/stm32g4xx_hal_timebase_tim.c)(0x6947F7E2)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_timebase_tim.o --omf_browse pmsm_control\stm32g4xx_hal_timebase_tim.crf --depend pmsm_control\stm32g4xx_hal_timebase_tim.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4lf_math.lib)(0x68EA61DD)()
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_tim.o --omf_browse pmsm_control\stm32g4xx_hal_tim.crf --depend pmsm_control\stm32g4xx_hal_tim.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_tim_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_tim_ex.o --omf_browse pmsm_control\stm32g4xx_hal_tim_ex.crf --depend pmsm_control\stm32g4xx_hal_tim_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_adc.o --omf_browse pmsm_control\stm32g4xx_hal_adc.crf --depend pmsm_control\stm32g4xx_hal_adc.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_adc_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_adc_ex.o --omf_browse pmsm_control\stm32g4xx_hal_adc_ex.crf --depend pmsm_control\stm32g4xx_hal_adc_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_adc.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_ll_adc.o --omf_browse pmsm_control\stm32g4xx_ll_adc.crf --depend pmsm_control\stm32g4xx_ll_adc.d)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal.o --omf_browse pmsm_control\stm32g4xx_hal.crf --depend pmsm_control\stm32g4xx_hal.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_rcc.o --omf_browse pmsm_control\stm32g4xx_hal_rcc.crf --depend pmsm_control\stm32g4xx_hal_rcc.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_rcc_ex.o --omf_browse pmsm_control\stm32g4xx_hal_rcc_ex.crf --depend pmsm_control\stm32g4xx_hal_rcc_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_flash.o --omf_browse pmsm_control\stm32g4xx_hal_flash.crf --depend pmsm_control\stm32g4xx_hal_flash.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_flash_ex.o --omf_browse pmsm_control\stm32g4xx_hal_flash_ex.crf --depend pmsm_control\stm32g4xx_hal_flash_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_flash_ramfunc.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_flash_ramfunc.o --omf_browse pmsm_control\stm32g4xx_hal_flash_ramfunc.crf --depend pmsm_control\stm32g4xx_hal_flash_ramfunc.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_gpio.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_gpio.o --omf_browse pmsm_control\stm32g4xx_hal_gpio.crf --depend pmsm_control\stm32g4xx_hal_gpio.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_exti.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_exti.o --omf_browse pmsm_control\stm32g4xx_hal_exti.crf --depend pmsm_control\stm32g4xx_hal_exti.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_dma.o --omf_browse pmsm_control\stm32g4xx_hal_dma.crf --depend pmsm_control\stm32g4xx_hal_dma.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_dma_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_dma_ex.o --omf_browse pmsm_control\stm32g4xx_hal_dma_ex.crf --depend pmsm_control\stm32g4xx_hal_dma_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_pwr.o --omf_browse pmsm_control\stm32g4xx_hal_pwr.crf --depend pmsm_control\stm32g4xx_hal_pwr.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_pwr_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_pwr_ex.o --omf_browse pmsm_control\stm32g4xx_hal_pwr_ex.crf --depend pmsm_control\stm32g4xx_hal_pwr_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_cortex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_cortex.o --omf_browse pmsm_control\stm32g4xx_hal_cortex.crf --depend pmsm_control\stm32g4xx_hal_cortex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_fdcan.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_fdcan.o --omf_browse pmsm_control\stm32g4xx_hal_fdcan.crf --depend pmsm_control\stm32g4xx_hal_fdcan.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_opamp.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_opamp.o --omf_browse pmsm_control\stm32g4xx_hal_opamp.crf --depend pmsm_control\stm32g4xx_hal_opamp.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_opamp_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_opamp_ex.o --omf_browse pmsm_control\stm32g4xx_hal_opamp_ex.crf --depend pmsm_control\stm32g4xx_hal_opamp_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_uart.o --omf_browse pmsm_control\stm32g4xx_hal_uart.crf --depend pmsm_control\stm32g4xx_hal_uart.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_uart_ex.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stm32g4xx_hal_uart_ex.o --omf_browse pmsm_control\stm32g4xx_hal_uart_ex.crf --depend pmsm_control\stm32g4xx_hal_uart_ex.d)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Core/Src/system_stm32g4xx.c)(0x68EA6126)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\system_stm32g4xx.o --omf_browse pmsm_control\system_stm32g4xx.crf --depend pmsm_control\system_stm32g4xx.d)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Middlewares/Third_Party/FreeRTOS/Source/croutine.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\croutine.o --omf_browse pmsm_control\croutine.crf --depend pmsm_control\croutine.d)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/croutine.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\event_groups.o --omf_browse pmsm_control\event_groups.crf --depend pmsm_control\event_groups.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/list.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\list.o --omf_browse pmsm_control\list.crf --depend pmsm_control\list.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/queue.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\queue.o --omf_browse pmsm_control\queue.crf --depend pmsm_control\queue.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\stream_buffer.o --omf_browse pmsm_control\stream_buffer.crf --depend pmsm_control\stream_buffer.d)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/stream_buffer.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/tasks.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\tasks.o --omf_browse pmsm_control\tasks.crf --depend pmsm_control\tasks.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/stack_macros.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdio.h)(0x5F63877C)
-F (../Middlewares/Third_Party/FreeRTOS/Source/timers.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\timers.o --omf_browse pmsm_control\timers.crf --depend pmsm_control\timers.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\cmsis_os2.o --omf_browse pmsm_control\cmsis_os2.crf --depend pmsm_control\cmsis_os2.d)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/timers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/freertos_mpool.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/freertos_os2.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\heap_4.o --omf_browse pmsm_control\heap_4.crf --depend pmsm_control\heap_4.d)
-I (D:\Keil\ARM\ARMCC\include\stdlib.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-F (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/port.c)(0x68EA6110)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\port.o --omf_browse pmsm_control\port.crf --depend pmsm_control\port.d)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-F (..\BSP\STM32\src\Bsp_STM32G431.c)(0x6A11E320)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\bsp_stm32g431.o --omf_browse pmsm_control\bsp_stm32g431.crf --depend pmsm_control\bsp_stm32g431.d)
-I (..\BSP\STM32\inc\Bsp_STM32G431.h)(0x6A11E5FF)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x68EA6110)
-I (../Core/Inc/fdcan.h)(0x69401A77)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/gpio.h)(0x693ED04F)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (../Core/Inc/adc.h)(0x694C03B0)
-I (../Core/Inc/opamp.h)(0x694C03B1)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\DIAG\Inc\Motor_Diag.h)(0x6A048F30)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (..\Motor_Control\DIAG\Inc\System_Diag.h)(0x6A11ADF9)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-F (..\MATH_LIB\src\Hal_Math.c)(0x6A0804FB)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\hal_math.o --omf_browse pmsm_control\hal_math.crf --depend pmsm_control\hal_math.d)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-F (..\Motor_Control\Current_Loop\Src\Current_Loop.c)(0x6A11E47D)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\current_loop.o --omf_browse pmsm_control\current_loop.crf --depend pmsm_control\current_loop.d)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\SVPWM.h)(0x69B40C2E)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-F (..\Motor_Control\Current_Loop\Src\Observer.c)(0x6A09393C)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\observer.o --omf_browse pmsm_control\observer.crf --depend pmsm_control\observer.d)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-F (..\Motor_Control\Current_Loop\Src\SVPWM.c)(0x69B40C22)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\svpwm.o --omf_browse pmsm_control\svpwm.crf --depend pmsm_control\svpwm.d)
-I (..\Motor_Control\Current_Loop\Inc\SVPWM.h)(0x69B40C2E)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-F (..\Motor_Control\Motor_Para\Src\Motor_Parameter.c)(0x6A07EEF7)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\motor_parameter.o --omf_browse pmsm_control\motor_parameter.crf --depend pmsm_control\motor_parameter.d)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-F (..\Motor_Control\Speed_Loop\Src\Speed_Loop.c)(0x6A11D331)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\speed_loop.o --omf_browse pmsm_control\speed_loop.crf --depend pmsm_control\speed_loop.d)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-F (..\Motor_Control\Speed_Loop\Src\System_Loop.c)(0x6A11D1C1)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\system_loop.o --omf_browse pmsm_control\system_loop.crf --depend pmsm_control\system_loop.d)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\Motor_Control\DIAG\Inc\System_Diag.h)(0x6A11ADF9)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (..\Motor_Control\DIAG\Inc\Motor_Diag.h)(0x6A048F30)
-F (..\Motor_Control\Command\Src\button_led.c)(0x69F371F9)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\button_led.o --omf_browse pmsm_control\button_led.crf --depend pmsm_control\button_led.d)
-I (..\Motor_Control\Command\Inc\button_led.h)(0x685FD6D8)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/tim.h)(0x697B3E70)
-I (D:\Keil\ARM\ARMCC\include\stdio.h)(0x5F63877C)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-F (..\Motor_Control\Command\Src\Can.c)(0x6A11D191)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\can.o --omf_browse pmsm_control\can.crf --depend pmsm_control\can.d)
-I (..\Motor_Control\Command\Inc\Can.h)(0x6989E0E2)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Core/Inc/fdcan.h)(0x69401A77)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (..\Motor_Control\Command\Inc\CAN_DBC_Messages.h)(0x69A3D9DD)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-F (..\Motor_Control\Command\Src\CAN_DBC_Messages.c)(0x69A592A7)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\can_dbc_messages.o --omf_browse pmsm_control\can_dbc_messages.crf --depend pmsm_control\can_dbc_messages.d)
-I (..\Motor_Control\Command\Inc\CAN_DBC_Messages.h)(0x69A3D9DD)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-F (..\Motor_Control\Command\Src\Vofa.c)(0x6A11D194)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\vofa.o --omf_browse pmsm_control\vofa.crf --depend pmsm_control\vofa.d)
-I (..\Motor_Control\Command\Inc\Vofa.h)(0x69C8ED05)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stddef.h)(0x5F63877C)
-I (../Core/Inc/FreeRTOSConfig.h)(0x69F49ED9)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x68EA6110)
-I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x68EA6110)
-I (../Core/Inc/usart.h)(0x693ED04F)
-I (../Core/Inc/main.h)(0x693ED050)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x68EA6126)
-I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6989E913)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_def.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h)(0x68EA6126)
-I (../Drivers/CMSIS/Include/core_cm4.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_version.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (../Drivers/CMSIS/Include/mpu_armv7.h)(0x68EA6110)
-I (../Drivers/CMSIS/Device/ST/STM32G4xx/Include/system_stm32g4xx.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_fdcan.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x68EA6126)
-I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x68EA6126)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-F (..\Motor_Control\DIAG\Src\Diag_List.c)(0x6A049373)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\diag_list.o --omf_browse pmsm_control\diag_list.crf --depend pmsm_control\diag_list.d)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-F (..\Motor_Control\DIAG\Src\Motor_Diag.c)(0x6A11D20F)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\motor_diag.o --omf_browse pmsm_control\motor_diag.crf --depend pmsm_control\motor_diag.d)
-I (..\Motor_Control\DIAG\Inc\Motor_Diag.h)(0x6A048F30)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
-I (..\Motor_Control\Current_Loop\Inc\Observer.h)(0x6A093924)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-F (..\Motor_Control\DIAG\Src\System_Diag.c)(0x6A11D0FA)(--c99 -c --cpu Cortex-M4.fp.sp -g -O2 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/ST/ARM/DSP/Inc -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\MATH_LIB\inc -I ..\Motor_Control\Command\Inc -I ..\Motor_Control\Current_Loop\Inc -I ..\Motor_Control\DIAG\Inc -I ..\Motor_Control\Motor_Para\Inc -I ..\Motor_Control\Speed_Loop\Inc -I ..\BSP\STM32\inc-I.\RTE\_PMSM_Control-ID:\Keil\ARM\CMSIS\5.7.0\CMSIS\Core\Include-D__UVISION_VERSION="532" -D_RTE_ -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx -D__TARGET_FPU_VFP -D__FPU_PRESENT -DARM_MATH_CM4-o pmsm_control\system_diag.o --omf_browse pmsm_control\system_diag.crf --depend pmsm_control\system_diag.d)
-I (..\Motor_Control\DIAG\Inc\System_Diag.h)(0x6A11ADF9)
-I (..\Motor_Control\Speed_Loop\Inc\System_Loop.h)(0x6A098169)
-I (..\MATH_LIB\inc\Hal_Math.h)(0x6A08048B)
-I (../Middlewares/ST/ARM/DSP/Inc/arm_math.h)(0x68EA61DD)
-I (../Drivers/CMSIS/Include/cmsis_compiler.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\stdint.h)(0x5F63877C)
-I (../Drivers/CMSIS/Include/cmsis_armcc.h)(0x68EA6110)
-I (D:\Keil\ARM\ARMCC\include\string.h)(0x5F63878A)
-I (D:\Keil\ARM\ARMCC\include\math.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\float.h)(0x5F63877C)
-I (D:\Keil\ARM\ARMCC\include\limits.h)(0x5F63877C)
-I (..\Motor_Control\Motor_Para\Inc\Motor_parameter.h)(0x6A07EEF4)
-I (..\Motor_Control\DIAG\Inc\Diag_List.h)(0x6A049009)
-I (..\Motor_Control\Speed_Loop\Inc\Speed_Loop.h)(0x6A11D15D)
-I (..\Motor_Control\Current_Loop\Inc\Current_Loop.h)(0x6A11DBF1)
