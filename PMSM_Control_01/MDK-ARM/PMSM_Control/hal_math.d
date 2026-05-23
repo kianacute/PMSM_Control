@@ -1,4 +1,4 @@
-pmsm_control\hal_math.o: ..\HAL_MATH\Hal_Math.c
+pmsm_control\hal_math.o: ..\MATH_LIB\src\Hal_Math.c
 pmsm_control\hal_math.o: ../Middlewares/ST/ARM/DSP/Inc/arm_math.h
 pmsm_control\hal_math.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 pmsm_control\hal_math.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdint.h
@@ -7,4 +7,4 @@ pmsm_control\hal_math.o: D:\Keil\ARM\ARMCC\Bin\..\include\string.h
 pmsm_control\hal_math.o: D:\Keil\ARM\ARMCC\Bin\..\include\math.h
 pmsm_control\hal_math.o: D:\Keil\ARM\ARMCC\Bin\..\include\float.h
 pmsm_control\hal_math.o: D:\Keil\ARM\ARMCC\Bin\..\include\limits.h
-pmsm_control\hal_math.o: ..\HAL_MATH\Hal_Math.h
+pmsm_control\hal_math.o: ..\MATH_LIB\inc\Hal_Math.h

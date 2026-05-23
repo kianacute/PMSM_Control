@@ -1,8 +1,8 @@
-pmsm_control\observer.o: ..\Current_Loop\Src\Observer.c
-pmsm_control\observer.o: ../Current_Loop/inc/Observer.h
+pmsm_control\observer.o: ..\Motor_Control\Current_Loop\Src\Observer.c
+pmsm_control\observer.o: ..\Motor_Control\Current_Loop\Inc\Observer.h
 pmsm_control\observer.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdint.h
-pmsm_control\observer.o: ../Motor/Inc/Motor_parameter.h
-pmsm_control\observer.o: ../HAL_MATH/Hal_Math.h
+pmsm_control\observer.o: ..\Motor_Control\Motor_Para\Inc\Motor_parameter.h
+pmsm_control\observer.o: ..\MATH_LIB\inc\Hal_Math.h
 pmsm_control\observer.o: ../Middlewares/ST/ARM/DSP/Inc/arm_math.h
 pmsm_control\observer.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 pmsm_control\observer.o: ../Drivers/CMSIS/Include/cmsis_armcc.h

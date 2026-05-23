@@ -1,5 +1,5 @@
-pmsm_control\button_led.o: ..\Speed_Loop\Src\button_led.c
-pmsm_control\button_led.o: ../Speed_Loop/Inc/button_led.h
+pmsm_control\button_led.o: ..\Motor_Control\Command\Src\button_led.c
+pmsm_control\button_led.o: ..\Motor_Control\Command\Inc\button_led.h
 pmsm_control\button_led.o: ../Core/Inc/main.h
 pmsm_control\button_led.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h
 pmsm_control\button_led.o: ../Core/Inc/stm32g4xx_hal_conf.h
@@ -42,9 +42,9 @@ pmsm_control\button_led.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uar
 pmsm_control\button_led.o: ../Core/Inc/usart.h
 pmsm_control\button_led.o: ../Core/Inc/tim.h
 pmsm_control\button_led.o: D:\Keil\ARM\ARMCC\Bin\..\include\stdio.h
-pmsm_control\button_led.o: ../Current_Loop/inc/Observer.h
-pmsm_control\button_led.o: ../Motor/Inc/Motor_parameter.h
-pmsm_control\button_led.o: ../HAL_MATH/Hal_Math.h
+pmsm_control\button_led.o: ..\Motor_Control\Current_Loop\Inc\Observer.h
+pmsm_control\button_led.o: ..\Motor_Control\Motor_Para\Inc\Motor_parameter.h
+pmsm_control\button_led.o: ..\MATH_LIB\inc\Hal_Math.h
 pmsm_control\button_led.o: ../Middlewares/ST/ARM/DSP/Inc/arm_math.h
 pmsm_control\button_led.o: D:\Keil\ARM\ARMCC\Bin\..\include\string.h
 pmsm_control\button_led.o: D:\Keil\ARM\ARMCC\Bin\..\include\math.h

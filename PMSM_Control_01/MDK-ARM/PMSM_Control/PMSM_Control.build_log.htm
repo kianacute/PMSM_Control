@@ -17,52 +17,83 @@ Library Manager: ArmAr.exe V5.06 update 7 (build 960)
 Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
 CPU DLL:         SARMCM3.DLL V5.32.0.0
 Dialog DLL:      DCM.DLL V1.17.3.0
-Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.8.0
+Target DLL:      Segger\JL2CM3.dll V2.99.38.0
 Dialog DLL:      TCM.DLL V1.46.0.0
  
 <h2>Project:</h2>
 D:\STM32\Motor\PMSM_Control\Project\PMSM_Control_01\MDK-ARM\PMSM_Control.uvprojx
-Project File Date:  03/23/2026
+Project File Date:  05/23/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil\ARM\ARMCC\Bin'
 Build target 'PMSM_Control'
-compiling Current_Task.c...
-../Current_Loop/inc/Current_Task.h(62): warning:  #1-D: last line of file ends without a newline
+compiling Motor_Parameter.c...
+compiling SVPWM.c...
+..\Motor_Control\Current_Loop\Inc\SVPWM.h(10): warning:  #1-D: last line of file ends without a newline
   #endif // SVPWM_H
-../Current_Loop/inc/SVPWM.h(10): warning:  #1-D: last line of file ends without a newline
-  #endif // SVPWM_H
+..\Motor_Control\Current_Loop\Src\SVPWM.c(76): warning:  #1-D: last line of file ends without a newline
+  }
+..\Motor_Control\Current_Loop\Src\SVPWM.c: 2 warnings, 0 errors
+compiling CAN_DBC_Messages.c...
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(154): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      msg_obj->Id = (float)raw_Id * 0.001 + 0;
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(158): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      msg_obj->Iq = (float)raw_Iq * 0.001 + 0;
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(162): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      msg_obj->Speed_rpm = (float)raw_Speed_rpm * 0.5 + 0;
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(184): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      int64_t raw_Id = (int64_t)((msg_obj->Id - 0) / 0.001);
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(188): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      int64_t raw_Iq = (int64_t)((msg_obj->Iq - 0) / 0.001);
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c(192): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+      int64_t raw_Speed_rpm = (int64_t)((msg_obj->Speed_rpm - 0) / 0.5);
+..\Motor_Control\Command\Src\CAN_DBC_Messages.c: 6 warnings, 0 errors
+compiling Hal_Math.c...
+..\MATH_LIB\src\Hal_Math.c(373): warning:  #1-D: last line of file ends without a newline
+  }
+..\MATH_LIB\src\Hal_Math.c: 1 warning, 0 errors
+compiling Observer.c...
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
   #define __FPU_PRESENT             1U       /*!< FPU present                                   */
-..\Current_Loop\src\Current_Task.c(99): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-          if (my_abs(SMO_OB.tPLL.theta - Current_Task.theta) < 0.10)
-..\Current_Loop\src\Current_Task.c(115): warning:  #127-D: expected a statement
-      }
-..\Current_Loop\src\Current_Task.c(191): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_A_Comp = Duty_A_Raw + Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(200): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_A_Comp = Duty_A_Raw - Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(214): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_B_Comp = Duty_B_Raw + Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(223): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_B_Comp = Duty_B_Raw - Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(237): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_C_Comp = Duty_C_Raw + Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(246): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-              *Duty_C_Comp = Duty_C_Raw - Dead_TIME_DUTY;
-..\Current_Loop\src\Current_Task.c(265): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      Ualpha_comp = 2 / 3 * (sign_a - sign_b / 2 - sign_c / 2) * Dead_TIME_DUTY * 16.0f;
-..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
-..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
-..\Current_Loop\src\Current_Task.c(266): warning:  #1035-D: single-precision operand implicitly converted to double-precision
-      Ubeta_comp = 2 / 3 * (0.866 * sign_b - 0.866 * sign_c) * Dead_TIME_DUTY * 16.0f;
-..\Current_Loop\src\Current_Task.c: 15 warnings, 0 errors
+..\Motor_Control\Current_Loop\Src\Observer.c(159): warning:  #186-D: pointless comparison of unsigned integer with zero
+      if (Encode_ABZ.value < 0)
+..\Motor_Control\Current_Loop\Src\Observer.c(203): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          Encode_ABZ.rpm = Encode_ABZ.rpm_last * 0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f /
+..\Motor_Control\Current_Loop\Src\Observer.c(203): warning:  #1035-D: single-precision operand implicitly converted to double-precision
+          Encode_ABZ.rpm = Encode_ABZ.rpm_last * 0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f /
+..\Motor_Control\Current_Loop\Src\Observer.c: 4 warnings, 0 errors
+compiling button_led.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\Motor_Control\Command\Src\button_led.c(71): warning:  #1-D: last line of file ends without a newline
+  }
+..\Motor_Control\Command\Src\button_led.c(8): warning:  #177-D: variable "tmp_buffer"  was declared but never referenced
+  static uint8_t tmp_buffer[50] = {0};
+..\Motor_Control\Command\Src\button_led.c: 3 warnings, 0 errors
+compiling Can.c...
+..\Motor_Control\Command\Inc\Can.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // __CAN_TASK_H__
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\Motor_Control\Current_Loop\Inc\Current_Loop.h(70): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
+..\Motor_Control\Command\Src\Can.c(112): warning:  #1-D: last line of file ends without a newline
+  }
+..\Motor_Control\Command\Src\Can.c(8): warning:  #550-D: variable "can_cnt"  was set but never used
+  static uint8_t can_cnt;
+..\Motor_Control\Command\Src\Can.c: 5 warnings, 0 errors
+compiling app_freertos.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\Motor_Control\Current_Loop\Inc\Current_Loop.h(70): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
+..\Motor_Control\Command\Inc\Can.h(8): warning:  #1-D: last line of file ends without a newline
+  #endif // __CAN_TASK_H__
+../Core/Src/app_freertos.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=40200 RO-data=2812 RW-data=1200 ZI-data=9680  
+Program Size: Code=34344 RO-data=2712 RW-data=340 ZI-data=10308  
 FromELF: creating hex file...
-"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 15 Warning(s).
+"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 24 Warning(s).
 
 <h2>Software Packages used:</h2>
 
