@@ -1,10 +1,12 @@
 #include "System_Diag.h"
-#include "speed_ctrl.h"
-#include "Current_Task.h"
-#include "system.h"
+#include "Speed_Loop.h"
+#include "Current_Loop.h"
+#include "System_Loop.h"
 
-extern Current_Task_t Current_Task;
+extern Current_Loop_t Current_Loop;
 extern SYSTEM_t System;
+extern Current_Loop_Input_t Current_Loop_Input;
+extern Current_Loop_Output_t Current_Loop_Output;
 
 static Diag_Node_t *System_Diag_Head = NULL;
 
@@ -43,7 +45,7 @@ static void Hv_Sensor_Update(Diag_Node_t *node)
     {
         item->hcomp.enable = 1; // 系统运行时使能比较器
     }
-    Sensor_Hysteresis_Comp_Process(&item->hcomp, Current_Task.Udc_ADISR);
+    Sensor_Hysteresis_Comp_Process(&item->hcomp, Current_Loop_Input.Udc_ADISR);
     if (item->hcomp.status != 0)
     {
         System_Diag_Fault_Flag |= 0x01; // 设置高压过压故障标志

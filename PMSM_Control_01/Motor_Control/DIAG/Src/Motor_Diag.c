@@ -1,13 +1,13 @@
 #include "Motor_Diag.h"
-#include "speed_ctrl.h"
-#include "Current_Task.h"
+#include "Speed_Loop.h"
+#include "Current_Loop.h"
 #include "Observer.h"
-#include "system.h"
+#include "System_Loop.h"
 
-extern Speed_Ctrl_t Speed_Ctrl;
+extern Speed_Loop_t Speed_Loop;
 extern SYSTEM_t System ;
 extern struct EMF_Cal_Parameter EMF_Cal;
-extern Current_Task_t Current_Task;
+extern Current_Loop_t Current_Loop;
 
 static Diag_Node_t *Motor_Diag_Head = NULL;
 
@@ -20,7 +20,7 @@ uint8_t Motor_Diag_Fault_Flag = 0;
 static void MOTOR_Over_Speed_Update(Diag_Node_t *node)
 {
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
-    Hysteresis_Comp_Process_Add(&item->hcomp, Speed_Ctrl.Speed_Fb);
+    Hysteresis_Comp_Process_Add(&item->hcomp, Speed_Loop.Speed_Fb);
     if(item->hcomp.comp_out == 1)
     {
         Motor_Diag_Fault_Flag |= 0x01; // 设置过速故障标志
@@ -47,7 +47,7 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
         Motor_Phase_A_Lock.hcomp.enable = 1;
         Motor_Phase_B_Lock.hcomp.enable = 1;
         Motor_Phase_C_Lock.hcomp.enable = 1;
-        uint32_t delay_time = -Speed_Ctrl.Speed_Ref * 0.24f + 750;
+        uint32_t delay_time = -Speed_Loop.Speed_Ref * 0.24f + 750;
         if(delay_time < 10)
         {
             delay_time = 10;
@@ -57,20 +57,20 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
         Motor_Phase_C_Lock.hcomp.delay_time = delay_time;
     }
 
-    float err = my_abs(Current_Task.A_Max - 0);
+    float err = my_abs(Current_Loop.A_Max - 0);
     Hysteresis_Comp_Process_Sub(&Motor_Phase_A_Lock.hcomp, err);
     if(Motor_Phase_A_Lock.hcomp.comp_out == 1)
     {
         Motor_Diag_Fault_Flag |= 0x04; // 设置A相锁定故障标志
     }
 
-    err = my_abs(Current_Task.B_Max - 0);
+    err = my_abs(Current_Loop.B_Max - 0);
     Hysteresis_Comp_Process_Sub(&Motor_Phase_B_Lock.hcomp, err);
     if(Motor_Phase_B_Lock.hcomp.comp_out == 1)
     {
         Motor_Diag_Fault_Flag |= 0x08; // 设置B相锁定故障标志
     }
-    err = my_abs(Current_Task.C_Max - 0);
+    err = my_abs(Current_Loop.C_Max - 0);
     Hysteresis_Comp_Process_Sub(&Motor_Phase_C_Lock.hcomp, err);
     if(Motor_Phase_C_Lock.hcomp.comp_out == 1)
     {
@@ -96,7 +96,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
     {
         item->hcomp.enable = 0; // 系统运行时使能比较器
     }
-    emf_err = my_abs(Speed_Ctrl.Speed_Fb * Speed_Ctrl.pMotor->flux_rpm_per_v / 1000.0f - EMF_Cal.EMF);
+    emf_err = my_abs(Speed_Loop.Speed_Fb * Speed_Loop.pMotor->flux_rpm_per_v / 1000.0f - EMF_Cal.EMF);
     Hysteresis_Comp_Process_Add(&item->hcomp, emf_err);
     if(item->hcomp.comp_out == 1)
     {

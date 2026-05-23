@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G431xx,__TARGET_FPU_VFP,__FPU_PRESENT,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Current_Loop/inc;../UDS/uds_c/inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../HAL_MATH;../Speed_Loop/Inc;../Motor/Inc;../Command_Task/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;..\MATH_LIB\inc;..\Motor_Control\Command\Inc;..\Motor_Control\Current_Loop\Inc;..\Motor_Control\DIAG\Inc;..\Motor_Control\Motor_Para\Inc;..\Motor_Control\Speed_Loop\Inc;..\BSP\STM32\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -808,6 +808,104 @@
                     </VariousControls>
                   </Cads>
                 </FileArmAds>
+              </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/Library/DSP Library/DSP Library</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>2</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>4</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>1</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
+          <Files>
+            <File>
+              <FileName>arm_cortexM4lf_math.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4lf_math.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>1</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
               </FileOption>
             </File>
           </Files>
@@ -1985,170 +2083,102 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>ADC_Interrupt_TASK</GroupName>
+          <GroupName>BSP</GroupName>
           <Files>
             <File>
-              <FileName>Current_Task.c</FileName>
+              <FileName>Bsp_STM32G431.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Current_Loop\src\Current_Task.c</FilePath>
-            </File>
-            <File>
-              <FileName>SVPWM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Current_Loop\src\SVPWM.c</FilePath>
-            </File>
-            <File>
-              <FileName>Observer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Current_Loop\Src\Observer.c</FilePath>
+              <FilePath>..\BSP\STM32\src\Bsp_STM32G431.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>SPEED_TASK</GroupName>
-          <Files>
-            <File>
-              <FileName>button_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Speed_Loop\Src\button_led.c</FilePath>
-            </File>
-            <File>
-              <FileName>speed_ctrl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Speed_Loop\Src\speed_ctrl.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Motor_Parameter</GroupName>
-          <Files>
-            <File>
-              <FileName>Motor_Parameter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor\Src\Motor_Parameter.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Hal_Math_LIB</GroupName>
+          <GroupName>Math_LIB</GroupName>
           <Files>
             <File>
               <FileName>Hal_Math.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\HAL_MATH\Hal_Math.c</FilePath>
+              <FilePath>..\MATH_LIB\src\Hal_Math.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>COMMAND_TASK</GroupName>
+          <GroupName>Motor_Control</GroupName>
           <Files>
+            <File>
+              <FileName>Current_Loop.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Current_Loop\Src\Current_Loop.c</FilePath>
+            </File>
+            <File>
+              <FileName>Observer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Current_Loop\Src\Observer.c</FilePath>
+            </File>
+            <File>
+              <FileName>SVPWM.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Current_Loop\Src\SVPWM.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor_Parameter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Motor_Para\Src\Motor_Parameter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Speed_Loop.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Speed_Loop\Src\Speed_Loop.c</FilePath>
+            </File>
+            <File>
+              <FileName>System_Loop.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Speed_Loop\Src\System_Loop.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Motor_Command</GroupName>
+          <Files>
+            <File>
+              <FileName>button_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Command\Src\button_led.c</FilePath>
+            </File>
             <File>
               <FileName>Can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Command_Task\Src\Can.c</FilePath>
+              <FilePath>..\Motor_Control\Command\Src\Can.c</FilePath>
             </File>
             <File>
               <FileName>CAN_DBC_Messages.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Command_Task\Src\CAN_DBC_Messages.c</FilePath>
+              <FilePath>..\Motor_Control\Command\Src\CAN_DBC_Messages.c</FilePath>
+            </File>
+            <File>
+              <FileName>Vofa.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\Command\Src\Vofa.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/Library/DSP Library/DSP Library</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>2</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>4</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <uGnu>2</uGnu>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>2</v6Lto>
-                <v6WtE>2</v6WtE>
-                <v6Rtti>2</v6Rtti>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <ClangAsOpt>1</ClangAsOpt>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
+          <GroupName>Motor_Diag</GroupName>
           <Files>
             <File>
-              <FileName>arm_cortexM4lf_math.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>../Middlewares/ST/ARM/DSP/Lib/arm_cortexM4lf_math.lib</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds/>
-              </FileOption>
+              <FileName>Diag_List.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\DIAG\Src\Diag_List.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor_Diag.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\DIAG\Src\Motor_Diag.c</FilePath>
+            </File>
+            <File>
+              <FileName>System_Diag.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Control\DIAG\Src\System_Diag.c</FilePath>
             </File>
           </Files>
         </Group>

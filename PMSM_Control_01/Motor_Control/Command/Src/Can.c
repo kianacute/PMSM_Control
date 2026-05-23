@@ -1,8 +1,8 @@
 #include "Can.h"
 #include "fdcan.h"
 #include "CAN_DBC_Messages.h"
-#include "speed_ctrl.h"
-#include "Current_Task.h"
+#include "Speed_Loop.h"
+#include "Current_Loop.h"
 #include "Observer.h"
 
 static uint8_t can_cnt;
@@ -16,8 +16,8 @@ CAN_Motor_List1_t can_dbc_list1;
 CAN_Motor_List2_t can_dbc_list2;
 extern struct SMO_Parameter SMO_OB;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Speed_Ctrl_t Speed_Ctrl;
-extern Current_Task_t Current_Task;
+extern Speed_Loop_t Speed_Loop;
+extern Current_Loop_t Current_Loop;
 uint8_t Can_Run_request;
 float Can_speed_request;
 
@@ -33,12 +33,12 @@ void fdcan_transmit_data(void)
     tx_Head.FDFormat = FDCAN_CLASSIC_CAN;            // Use classic CAN format
     tx_Head.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // No Tx events
     tx_Head.MessageMarker = 0;                       // Message marker for identification
-    can_dbc_msg.Motor_status = (float)Current_Task.Motor_State;
-    can_dbc_msg.Speed_status = (float)Speed_Ctrl.spd_ctrl_state;
+    can_dbc_msg.Motor_status = (float)Current_Loop.Motor_State;
+    can_dbc_msg.Speed_status = (float)Speed_Loop.spd_ctrl_state;
     can_dbc_msg.Bus_Voltage = (float)(0); // Convert Vbus to integer and scale by 10
-    can_dbc_msg.Id = (Current_Task.Id_fb);                                                   // Scale Id_fb by 4
-    can_dbc_msg.Iq = (Current_Task.Iq_fb);                                                   // Convert Iq_fb to integer
-    can_dbc_msg.Speed_rpm = (Speed_Ctrl.Speed_Fb);                                         // Shift Speed_Fb by 80 to fit in uint8_t
+    can_dbc_msg.Id = (Current_Loop.Id_fb);                                                   // Scale Id_fb by 4
+    can_dbc_msg.Iq = (Current_Loop.Iq_fb);                                                   // Convert Iq_fb to integer
+    can_dbc_msg.Speed_rpm = (Speed_Loop.Speed_Fb);                                         // Shift Speed_Fb by 80 to fit in uint8_t
     CAN_Pack_Motor_para(send_buffer, &can_dbc_msg);
     // Transmit the data over FDCAN
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_Head, (uint8_t *)send_buffer);

@@ -110,14 +110,13 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim16);
-  __HAL_TIM_ENABLE_IT(&htim16, TIM_IT_UPDATE);  //使能更新中断
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
   MX_FREERTOS_Init();
-
+  Bsp_Init();
   /* Start scheduler */
   osKernelStart();
 
@@ -209,7 +208,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM16)
   {
     CPU_RunTime++;
-    // Speed_Ctrl_Task();
+    // Speed_Loop_Task();
   }
   /* USER CODE END Callback 1 */
 }

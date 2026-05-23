@@ -1,5 +1,5 @@
-#ifndef __SPEED_CTRL_H__
-#define __SPEED_CTRL_H__
+#ifndef __Speed_LOOP_H__
+#define __Speed_LOOP_H__
 
 #include "Hal_Math.h"
 #include "Motor_parameter.h"
@@ -10,19 +10,19 @@
 #define SPEED_ID_SUB_STEP (1.0 / 1000.0f)
 #define SPEED_SWITCH_ID_SUB_STEP (0.0005f)
 
-enum Speed_CtrlState_t
+enum Speed_LoopState_t
 {
-    SPEED_CTRL_IDLE = 0,
-    SPEED_CTRL_ALIGN,
-    SPEED_CTRL_OPEN,
-    SPEED_CTRL_SWITCH,
-    SPEED_CTRL_RUN,
+    Speed_Loop_IDLE = 0,
+    Speed_Loop_ALIGN,
+    Speed_Loop_OPEN,
+    Speed_Loop_SWITCH,
+    Speed_Loop_RUN,
 };
 
-typedef struct Speed_Ctrl
+typedef struct Speed_Loop
 {
     uint32_t FREQ_Hz;                               // 循环周期
-    enum Speed_CtrlState_t spd_ctrl_state;          // 速度控制状态
+    enum Speed_LoopState_t spd_ctrl_state;          // 速度控制状态
     uint32_t spd_ctrl_timer;                        // 速度控制状态计时器
     uint32_t tick_count_idle;                       // 进入空闲状态的时间戳
     float target_iq, target_id, target_is;          // 目标电流
@@ -41,9 +41,9 @@ typedef struct Speed_Ctrl
     float Voltage_err;
     Hysteresis_Comp_TypeDef Weak_Control_Hcomp;     // 弱磁滞回比较器
     Hal_PI_t Weak_Pi;                               // 弱磁PI控制器参数
-} Speed_Ctrl_t;
+} Speed_Loop_t;
 
-void Speed_Ctrl_Init(void);
-void Speed_Ctrl_Task(void);
+void Speed_Loop_Init(void);
+void Speed_Loop_Task(void);
 
-#endif // __SPEED_CTRL_H__
+#endif // __Speed_Loop_H__

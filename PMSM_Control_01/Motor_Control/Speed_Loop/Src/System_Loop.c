@@ -1,13 +1,13 @@
-#include "system.h"
+#include "System_Loop.h"
 #include "arm_math.h"
-#include "Current_Task.h"
+#include "Current_Loop.h"
 #include "Motor_parameter.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "Hal_Math.h"
 #include "FreeRTOS.h"
 #include "Observer.h"
-#include "speed_ctrl.h"
+#include "Speed_Loop.h"
 #include "System_Diag.h"
 #include "Motor_Diag.h"
 
@@ -15,8 +15,11 @@ extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
 extern MOTOR_t PMSM_42JS;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Current_Task_t Current_Task;
-extern Speed_Ctrl_t Speed_Ctrl;
+extern Current_Loop_t Current_Loop;
+extern Speed_Loop_t Speed_Loop;
+extern Current_Loop_Input_t Current_Loop_Input;
+extern Current_Loop_Output_t Current_Loop_Output;
+
 uint8_t System_Fault_Flag = 0;
 
 SYSTEM_t System = {
@@ -27,8 +30,10 @@ void SYSTEM_Init(void)
 {
     // Initialization code for the system
     // e.g., setting up peripherals, initializing variables, etc.
-    Current_Task_Init();
-    Speed_Ctrl_Init();
+    Current_Loop_Init();
+    Speed_Loop_Init();
+    Motor_Diag_Init();
+    System_Diag_Init();
     Speed_Command = 1000.0f;
 }
 
@@ -40,7 +45,7 @@ void SYSTEM_LV_Standy()
 
 void SYSTEM_HV_Standy()
 {
-    if(Current_Task.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
+    if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
         vTaskDelay(SYSTEM_HV_STANDY_TIME);
         System.system_state = SYSTEM_CMD_STANDY;
@@ -64,17 +69,17 @@ void SYSTEM_Run()
     if(System_Fault_Flag != 0)
     {
         System.system_state = SYSTEM_FAULT;
-        Speed_Ctrl.Speed_Command = 0;
+        Speed_Loop.Speed_Command = 0;
         return;
     }
     if(MOTOR_Run_flag == 1)
     {
-        Speed_Ctrl.Speed_Command = Speed_Command; 
+        Speed_Loop.Speed_Command = Speed_Command; 
     }
     else 
     {
-        Speed_Ctrl.Speed_Command = 0;
-        if(Speed_Ctrl.Speed_Ref < 50.0f)
+        Speed_Loop.Speed_Command = 0;
+        if(Speed_Loop.Speed_Ref < 50.0f)
         {
             System.system_state = SYSTEM_WAIT;
         }

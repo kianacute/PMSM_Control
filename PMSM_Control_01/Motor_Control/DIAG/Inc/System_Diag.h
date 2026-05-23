@@ -1,7 +1,7 @@
 #ifndef __SYSTEM_DIAG_H__
 #define __SYSTEM_DIAG_H__
 
-#include "system.h"
+#include "System_Loop.h"
 #include "Hal_Math.h"
 #include "Diag_List.h"
 
