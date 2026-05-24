@@ -45,7 +45,7 @@ void SYSTEM_HV_Standy()
 {
     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
-        // vTaskDelay(SYSTEM_HV_STANDY_TIME);
+        vTaskDelay(SYSTEM_HV_STANDY_TIME);
         System.system_state = SYSTEM_CMD_STANDY;
     }
 }
@@ -100,8 +100,11 @@ void SYSTEM_Wait()
     Motor_Diag_Fault_Flag = 0;
 }
 
+uint32_t System_cnt;
+
 void SYSTEM_Task(void)
 {
+    System_cnt++;
     switch (System.system_state)
     {
     case SYSTEM_LV_STANDY:

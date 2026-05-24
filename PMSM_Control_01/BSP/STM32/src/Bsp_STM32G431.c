@@ -114,11 +114,12 @@ int Bsp_Init(void)
     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
+
     HAL_TIM_Base_Start(&htim16);
     __HAL_TIM_ENABLE_IT(&htim16, TIM_IT_UPDATE);  //使能更新中断
     
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
-    xTaskCreate(my_task2, "SYSTEM_Task", 512, NULL, osPriorityHigh, NULL);
+    xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityRealtime, NULL);
     // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
     xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     SYSTEM_Init();

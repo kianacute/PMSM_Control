@@ -52,6 +52,7 @@ uint32_t speed_cnt = 0;
 
 void Speed_Run(void)
 {
+    Speed_Loop.spd_ctrl_timer++;
     switch (Speed_Loop.spd_ctrl_state)
     {
     case Speed_Loop_IDLE:
@@ -61,22 +62,18 @@ void Speed_Run(void)
     case Speed_Loop_ALIGN:
         // Handle align state
         Speed_Loop_ALIGN_Task();
-        Speed_Loop.spd_ctrl_timer++;
         break;
     case Speed_Loop_OPEN:
         // Handle open state
         Speed_Loop_OPEN_Task();
-        Speed_Loop.spd_ctrl_timer++;
         break;
     case Speed_Loop_SWITCH:
         // Handle switch state
         Speed_Loop_SWITCH_Task();
-        Speed_Loop.spd_ctrl_timer++;
         break;
     case Speed_Loop_RUN:
         // Handle run state
         Speed_Loop_RUN_Task();
-        Speed_Loop.spd_ctrl_timer++;
         break;
     default:
         Speed_Loop.spd_ctrl_state = Speed_Loop_IDLE;
@@ -209,7 +206,7 @@ void Paramater_update(void)
 {
     Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
     Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
-    
+
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_PLL_Ki_Lookup);
     NonFlux_OB.gama = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_Gama_Lookup);
