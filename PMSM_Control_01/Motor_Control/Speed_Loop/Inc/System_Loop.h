@@ -2,7 +2,7 @@
 #define __SYSTEM_H__
 
 #include "Hal_Math.h"
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 
 #define SYSTEM_HZ               (1000.0f)
 

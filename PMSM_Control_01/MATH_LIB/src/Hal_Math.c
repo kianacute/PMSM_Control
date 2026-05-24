@@ -37,7 +37,7 @@ float32_t Hal_PI_f32(Hal_PI_t *controller, float error)
 /// @param n 数组长度
 /// @param target 目标值
 /// @return 查找到小于等于目标值的最后一个元素的下标
-int binary_search_float_first(float arr[], uint32_t n, float target)
+int binary_search_float_first(const float* arr, uint32_t n, float target)
 {
      if (n == 0 || arr == NULL)
      {

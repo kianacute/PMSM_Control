@@ -19,8 +19,8 @@ typedef struct Hal_PI_f32
 
 typedef struct Lookup_Table
 {
-    float *x_table;
-    float *y_table;
+    const float *x_table;
+    const float *y_table;
     uint32_t table_size;
 }Lookup_Table_t;
 
@@ -88,7 +88,7 @@ inline float32_t Hal_LPF_f32(float coff, float input);
 
 inline float Lookup_Table_Linear(float x, Lookup_Table_t *table);
 
-inline int binary_search_float_first(float arr[], uint32_t n, float target);
+inline int binary_search_float_first(const float* arr, uint32_t n, float target);
 
 inline float Limit_2PI(float theta);
 

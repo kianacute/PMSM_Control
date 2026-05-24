@@ -1,58 +1,19 @@
 #include "Observer.h"
 #include "arm_math.h"
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 #include "tim.h"
 
 
 struct SMO_Parameter SMO_OB = {0};
-extern MOTOR_t PMSM_42JS;
+extern Motor_Config_t PMSM_42JS_Config;
 
 struct EMF_Cal_Parameter EMF_Cal = {0};
 
-float Speed_index_coeff[10] = {0.0f, 0.02f, 0.05f, 0.10f, 0.20f, 0.30f, 0.40f, 0.60f, 0.80f, 1.00f};
-float Observer_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
-                                         2500, 3000, 3500, 4000, 5000};
-float Observer_PLL_Kp[10] =
-    {
-        148.0737312,
-        148.0737312,
-        296.1474624,
-        444.2211936,
-        592.2949249,
-        740.3686561,
-        888.4423873,
-        1036.516118,
-        1184.58985,
-        1480.737312,
-};
-
-float Observer_PLL_Ki[10] =
-    {
-        0.548311337,
-        0.548311337,
-        2.193245348,
-        4.934802032,
-        8.772981391,
-        13.70778342,
-        19.73920813,
-        26.86725551,
-        35.09192556,
-        54.83113369,
-};
-
-float LPK_KP[10] = {0.05f, 0.05f, 0.1f, 0.10f, 0.1f,
-                    0.2f, 0.3f, 0.3f, 0.5f, 0.5f};
-float SMO_EKF[10] = {1.0f, 2.0f, 4.0f, 6.0f, 8.0f,
-                        10.0f, 12.2f, 14.0f, 16.0f, 16.0f};
-float SMO_Gain_Lookup[10] = {6.0f, 6.0f, 6.0f, 6.0f, 6.0f,
-                       6.0f, 6.0f, 6.0f, 6.0f, 6.0f};
-float NorObserver_Gama_Lookup[10] = {1e4, 1e5, 1e6, 1e6, 1e6,
-                                     2e6, 3e6, 4e6, 5e6, 5e6};
 
 void SMO_Observer_Init(void)
 {
     // memset(&SMO, 0, sizeof(SMO));
-    SMO_OB.pMotor = &PMSM_42JS;
+    SMO_OB.pMotor = &PMSM_42JS_Config;
     SMO_OB.E_LPF_Coff = 0.3f;
     SMO_OB.Gain = 1.0f;
     SMO_OB.tPLL.PLL_PI.kp = 40.1f;
@@ -60,23 +21,11 @@ void SMO_Observer_Init(void)
     SMO_OB.tPLL.PLL_PI.out_max = 10000.0f;
     SMO_OB.tPLL.PLL_PI.out_min = -10000.0f;
     SMO_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
-    SMO_OB.SMO_Gain_Lookup.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.SMO_Gain_Lookup.y_table = SMO_Gain_Lookup;
-    SMO_OB.SMO_Gain_Lookup.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
-    SMO_OB.SMO_EKF_Lookup.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.SMO_EKF_Lookup.y_table = SMO_EKF;
-    SMO_OB.SMO_EKF_Lookup.table_size = sizeof(Observer_Lookup_Speed_index) / sizeof(Observer_Lookup_Speed_index[0]);
-    SMO_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
-    SMO_OB.PLL_Kp_Lookup.table_size = 10;
-    SMO_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
-    SMO_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
-    SMO_OB.PLL_Ki_Lookup.table_size = 10;
 }
 
 void EMF_CAL_Init(void)
 {
-    EMF_Cal.pMotor = &PMSM_42JS;
+    EMF_Cal.pMotor = &PMSM_42JS_Config;
     EMF_Cal.EMF_alpha = 0.0f;
     EMF_Cal.EMF_beta = 0.0f;
     EMF_Cal.ialpha_last = 0.0f;
@@ -89,13 +38,13 @@ void EMF_CAL_Update(struct EMF_Cal_Parameter *EMF_Cal, float32_t Ualpha, float32
                  float32_t Ialpha, float32_t Ibeta, float discrete_time)
 {
 
-    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->phase_inductance_s * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) 
+    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) 
                         * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
-    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->phase_inductance_s * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) 
+    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) 
                         * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
 
-    EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->phase_resistance_ohm - EMF_Cal->Ls_Ialpha;
-    EMF_Cal->EMF_beta = Ubeta - Ibeta * EMF_Cal->pMotor->phase_resistance_ohm - EMF_Cal->Ls_Ibeta;
+    EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ialpha;
+    EMF_Cal->EMF_beta = Ubeta - Ibeta * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ibeta;
     EMF_Cal->ialpha_last = Ialpha;
     EMF_Cal->ibeta_last = Ibeta;
     arm_sqrt_f32(EMF_Cal->EMF_alpha * EMF_Cal->EMF_alpha + EMF_Cal->EMF_beta * EMF_Cal->EMF_beta, &EMF_Cal->EMF);
@@ -106,11 +55,11 @@ void SMO_Observer(struct SMO_Parameter *SMO, float32_t Ualpha, float32_t Ubeta,
 {
     SMO->E_alpha = (SMO->ia_mat_k - Ialpha) * SMO->Gain;
     SMO->E_beta = (SMO->ib_mat_k - Ibeta) * SMO->Gain;
-    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s 
-                    * SMO->ia_mat_k + Ualpha / SMO->pMotor->phase_inductance_s - SMO->E_alpha / SMO->pMotor->phase_inductance_s) 
+    SMO->ia_mat_k1 = SMO->ia_mat_k + ((-SMO->pMotor->motor_param->Rs) / SMO->pMotor->motor_param->Ls 
+                    * SMO->ia_mat_k + Ualpha / SMO->pMotor->motor_param->Ls - SMO->E_alpha / SMO->pMotor->motor_param->Ls) 
                     * SMO->discrete_time;
-    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->phase_resistance_ohm) / SMO->pMotor->phase_inductance_s 
-                    * SMO->ib_mat_k + Ubeta / SMO->pMotor->phase_inductance_s - SMO->E_beta / SMO->pMotor->phase_inductance_s) 
+    SMO->ib_mat_k1 = SMO->ib_mat_k + ((-SMO->pMotor->motor_param->Rs) / SMO->pMotor->motor_param->Ls 
+                    * SMO->ib_mat_k + Ubeta / SMO->pMotor->motor_param->Ls - SMO->E_beta / SMO->pMotor->motor_param->Ls) 
                     * SMO->discrete_time;
     arm_sqrt_f32(SMO->E_alpha * SMO->E_alpha + SMO->E_beta * SMO->E_beta, &SMO->E_Peak);
     /*保留这一拍的数据*/
@@ -222,16 +171,7 @@ void Nonlinear_FluxObserver_Init(void)
     NonFlux_OB.tPLL.PLL_PI.out_max = 10000.0f;
     NonFlux_OB.tPLL.PLL_PI.out_min = -10000.0f;
     NonFlux_OB.gama = 1000000.0f;
-    NonFlux_OB.pMotor = &PMSM_42JS;
-    NonFlux_OB.PLL_Kp_Lookup.x_table = Observer_Lookup_Speed_index;
-    NonFlux_OB.PLL_Kp_Lookup.y_table = Observer_PLL_Kp;
-    NonFlux_OB.PLL_Kp_Lookup.table_size = 10;
-    NonFlux_OB.PLL_Ki_Lookup.x_table = Observer_Lookup_Speed_index;
-    NonFlux_OB.PLL_Ki_Lookup.y_table = Observer_PLL_Ki;
-    NonFlux_OB.PLL_Ki_Lookup.table_size = 10;
-    NonFlux_OB.Gama_Lookup.x_table = Observer_Lookup_Speed_index;
-    NonFlux_OB.Gama_Lookup.y_table = NorObserver_Gama_Lookup;
-    NonFlux_OB.Gama_Lookup.table_size = 10;
+    NonFlux_OB.pMotor = &PMSM_42JS_Config;
     NonFlux_OB.x_alpha_hat = 0.0f;
     NonFlux_OB.x_beta_hat = 0.0f;
     NonFlux_OB.y_alpha_hat = 0.0f;
@@ -249,17 +189,17 @@ void Nonlinear_FluxObserver_Init(void)
 void Nonlinear_FluxObserver_Update(struct NonFluxObserver_Parameter *NFO, float32_t Ualpha, float32_t Ubeta,
                                   float32_t Ialpha, float32_t Ibeta)
 {
-    NFO->y_alpha_hat = (Ualpha - NFO->pMotor->phase_resistance_ohm * Ialpha);
-    NFO->y_beta_hat = (Ubeta - NFO->pMotor->phase_resistance_ohm * Ibeta);
-    // NFO->y_alpha_hat = (0 - NFO->pMotor->phase_resistance_ohm * Ialpha);
-    // NFO->y_beta_hat = (0 - NFO->pMotor->phase_resistance_ohm * Ibeta);
-    NFO->x_alpha_hat += ((NFO->y_alpha_hat + NFO->gama * NFO->Eta_alpha * (NFO->pMotor->flux_linkage_wb * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);
-    NFO->x_beta_hat += ((NFO->y_beta_hat + NFO->gama * NFO->Eta_beta * (NFO->pMotor->flux_linkage_wb * NFO->pMotor->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);
-    NFO->Eta_alpha = NFO->x_alpha_hat - NFO->pMotor->phase_inductance_s * Ialpha;
-    NFO->Eta_beta = NFO->x_beta_hat - NFO->pMotor->phase_inductance_s * Ibeta;
+    NFO->y_alpha_hat = (Ualpha - NFO->pMotor->motor_param->Rs * Ialpha);
+    NFO->y_beta_hat = (Ubeta - NFO->pMotor->motor_param->Rs * Ibeta);
+    // NFO->y_alpha_hat = (0 - NFO->pMotor->motor_param->Rs * Ialpha);
+    // NFO->y_beta_hat = (0 - NFO->pMotor->motor_param->Rs * Ibeta);
+    NFO->x_alpha_hat += ((NFO->y_alpha_hat + NFO->gama * NFO->Eta_alpha * (NFO->pMotor->motor_param->flux_linkage_wb * NFO->pMotor->motor_param->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);
+    NFO->x_beta_hat += ((NFO->y_beta_hat + NFO->gama * NFO->Eta_beta * (NFO->pMotor->motor_param->flux_linkage_wb * NFO->pMotor->motor_param->flux_linkage_wb - NFO->Flux_hat)) * NFO->discrete_time);
+    NFO->Eta_alpha = NFO->x_alpha_hat - NFO->pMotor->motor_param->Ls * Ialpha;
+    NFO->Eta_beta = NFO->x_beta_hat - NFO->pMotor->motor_param->Ls * Ibeta;
     NFO->Flux_hat = NFO->Eta_alpha * NFO->Eta_alpha + NFO->Eta_beta * NFO->Eta_beta;
-    NFO->Flux_alpha = NFO->Eta_alpha / NFO->pMotor->flux_linkage_wb;
-    NFO->Flux_beta = NFO->Eta_beta / NFO->pMotor->flux_linkage_wb;
+    NFO->Flux_alpha = NFO->Eta_alpha / NFO->pMotor->motor_param->flux_linkage_wb;
+    NFO->Flux_beta = NFO->Eta_beta / NFO->pMotor->motor_param->flux_linkage_wb;
     PLL_Update(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha, NFO->discrete_time);
     EMF_CAL_Update(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, NFO->discrete_time);
 }

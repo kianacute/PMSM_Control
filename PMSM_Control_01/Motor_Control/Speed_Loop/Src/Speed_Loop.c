@@ -1,32 +1,18 @@
 #include "Speed_Loop.h"
 #include "arm_math.h"
 #include "Current_Loop.h"
-#include "Motor_parameter.h"
-#include "FreeRTOS.h"
-#include "task.h"
+#include "Motor_Config.h"
 #include "Hal_Math.h"
-#include "FreeRTOS.h"
 #include "Observer.h"
 #include "System_Loop.h"
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
-extern MOTOR_t PMSM_42JS;
+extern Motor_Config_t PMSM_42JS_Config;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Current_Loop_t Current_Loop;
+extern Current_Loop_t Current_Loop;;
 extern SYSTEM_t System;
 
-float Speed_PI_Lookup_Speed_index[10] = {0, 500, 1000, 1500, 2000,
-                                         2500, 3000, 3500, 4000, 5000};
-// float Speed_PI_Lookup_Kp[10] = {0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755,
-//                                 0.00051755, 0.00051755, 0.00051755, 0.00051755, 0.00051755};
-// float Speed_PI_Lookup_Ki[10] = {0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609,
-//                                 0.000091609, 0.000091609, 0.000091609, 0.000091609, 0.000091609};
-
-float Speed_PI_Lookup_Kp[10] = {9.1755e-04, 8.1755e-04, 6.1755e-04, 6.1755e-04, 6.1755e-04,
-                                5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04, 5.1755e-04};
-float Speed_PI_Lookup_Ki[10] = {9.1609e-05, 7.1609e-05, 6.1609e-05, 5.1609e-05, 5.1609e-05,
-                                5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05, 5.1609e-05};
 Speed_Loop_t Speed_Loop;
 
 uint8_t align_done = 0;
@@ -35,28 +21,14 @@ void Speed_Loop_Init(void)
 {
     Speed_Loop.spd_ctrl_state = Speed_Loop_IDLE;
     Speed_Loop.spd_ctrl_timer = 0;
-    Speed_Loop.pMotor = &PMSM_42JS;
+    Speed_Loop.pMotor = &PMSM_42JS_Config;
     Speed_Loop.Speed_PI.kp = 5.1755e-04;
     Speed_Loop.Speed_PI.ki = 9.1609e-05;
     Speed_Loop.Speed_PI.Kd = 0.1f;
     Speed_Loop.Speed_PI.out_max = 8.0f;
     Speed_Loop.Speed_PI.out_min = -8.0f;
-    Speed_Loop.FREQ_Hz = 1000,
-
-    /* IF阶段初始化查表*/
-    Speed_Loop.IF_Start_Speed_Lookup.x_table = Speed_Loop.pMotor->IF_Start_Ramp_Sec;
-    Speed_Loop.IF_Start_Speed_Lookup.y_table = Speed_Loop.pMotor->IF_Start_Speed_RPM;
-    Speed_Loop.IF_Start_Speed_Lookup.table_size = Speed_Loop.pMotor->IF_Start_Profile_Length;
-    Speed_Loop.IF_Start_Iq_Lookup.x_table = Speed_Loop.pMotor->IF_Start_Ramp_Sec;
-    Speed_Loop.IF_Start_Iq_Lookup.y_table = Speed_Loop.pMotor->IF_Start_Iq_A;
-    Speed_Loop.IF_Start_Iq_Lookup.table_size = Speed_Loop.pMotor->IF_Start_Profile_Length;
-    /* 速度环PI初始化查表*/
-    Speed_Loop.Speed_PI_Ki_Lookup.x_table = Speed_PI_Lookup_Speed_index;
-    Speed_Loop.Speed_PI_Ki_Lookup.y_table = Speed_PI_Lookup_Ki;
-    Speed_Loop.Speed_PI_Ki_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
-    Speed_Loop.Speed_PI_Kp_Lookup.x_table = Speed_PI_Lookup_Speed_index;
-    Speed_Loop.Speed_PI_Kp_Lookup.y_table = Speed_PI_Lookup_Kp;
-    Speed_Loop.Speed_PI_Kp_Lookup.table_size = sizeof(Speed_PI_Lookup_Speed_index) / sizeof(float);
+    Speed_Loop.FREQ_Hz = 1000;
+    Speed_Loop.Speed_Switch_Cnt = 0;
 
     Hysteresis_Comp_Init(&Speed_Loop.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
     Speed_Loop.Weak_Control_Hcomp.enable = 1;
@@ -177,8 +149,8 @@ void Speed_Loop_ALIGN_Task()
 void Speed_Loop_OPEN_Task(void)
 {
     float tick_count = (xTaskGetTickCount() - Speed_Loop.tick_count_idle) / 1000.0f;
-    Speed_Loop.Speed_Ref = Lookup_Table_Linear(tick_count, &Speed_Loop.IF_Start_Speed_Lookup);
-    Speed_Loop.target_iq = Lookup_Table_Linear(tick_count, &Speed_Loop.IF_Start_Iq_Lookup);
+    Speed_Loop.Speed_Ref = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Speed_Lookup);
+    Speed_Loop.target_iq = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Iq_Lookup);
     Speed_Loop.target_id = 0;
     if (Speed_Loop.Speed_Ref >= 600)
     {
@@ -235,18 +207,19 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 
 void Paramater_update(void)
 {
-    Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Speed_Loop.Speed_PI_Kp_Lookup);
-    Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Speed_Loop.Speed_PI_Ki_Lookup);
-    NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &NonFlux_OB.PLL_Kp_Lookup);
-    NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &NonFlux_OB.PLL_Ki_Lookup);
-    NonFlux_OB.gama = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &NonFlux_OB.Gama_Lookup);
-    // SMO_OB.E_LPF_Coff = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &SMO_OB.LPF);
-    SMO_OB.Gain = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &SMO_OB.SMO_Gain_Lookup);
-    float SMO_EKF = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &SMO_OB.SMO_EKF_Lookup);
-    SMO_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &SMO_OB.PLL_Kp_Lookup) / SMO_EKF;
-    SMO_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &SMO_OB.PLL_Ki_Lookup) / SMO_EKF;
-    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Current_Loop.ID_PI_Kp_Lookup);
-    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Current_Loop.ID_PI_Ki_Lookup);
-    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Current_Loop.IQ_PI_Kp_Lookup);
-    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &Current_Loop.IQ_PI_Ki_Lookup);
+    Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
+    Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
+    
+    NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
+    NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_PLL_Ki_Lookup);
+    NonFlux_OB.gama = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.NonFlux_Gama_Lookup);
+
+    SMO_OB.Gain = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.SMO_Gain_Lookup);
+    SMO_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.SMO_PLL_Kp_Lookup);
+    SMO_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.SMO_PLL_Ki_Lookup);
+
+    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Kp_Lookup);
+    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
+    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
+    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
 }

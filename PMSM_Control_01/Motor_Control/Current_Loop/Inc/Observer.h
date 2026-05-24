@@ -2,7 +2,7 @@
 #define __Observer_H_
 
 #include <stdint.h>
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 #include "Hal_Math.h"
 
 struct SMO_Parameter
@@ -18,11 +18,7 @@ struct SMO_Parameter
     float E_LPF_Coff;
     float we_lpf;
     struct PLL tPLL;
-    MOTOR_t *pMotor;
-    Lookup_Table_t PLL_Kp_Lookup;
-    Lookup_Table_t PLL_Ki_Lookup;
-    Lookup_Table_t SMO_EKF_Lookup;
-    Lookup_Table_t SMO_Gain_Lookup;
+    Motor_Config_t *pMotor;
 };
 
 struct Encoder_Parameter
@@ -59,7 +55,7 @@ struct NonFluxObserver_Parameter
     float y_beta_hat;
     float Eta_alpha;
     float Eta_beta;
-    MOTOR_t *pMotor;
+    Motor_Config_t *pMotor;
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;
     Lookup_Table_t Gama_Lookup;
@@ -95,7 +91,7 @@ struct EMF_Cal_Parameter
     float ibeta_last;
     float EMF;
     float EMF_LPF_Coff;
-    MOTOR_t *pMotor;
+    Motor_Config_t *pMotor;
 };
 
 void SMO_Observer_Init(void);

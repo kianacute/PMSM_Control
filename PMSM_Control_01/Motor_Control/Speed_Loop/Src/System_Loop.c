@@ -1,11 +1,8 @@
 #include "System_Loop.h"
 #include "arm_math.h"
 #include "Current_Loop.h"
-#include "Motor_parameter.h"
-#include "FreeRTOS.h"
-#include "task.h"
+#include "Motor_Config.h"
 #include "Hal_Math.h"
-#include "FreeRTOS.h"
 #include "Observer.h"
 #include "Speed_Loop.h"
 #include "System_Diag.h"
@@ -13,7 +10,7 @@
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
-extern MOTOR_t PMSM_42JS;
+extern Motor_Config_t PMSM_42JS_Config;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Current_Loop_t Current_Loop;
 extern Speed_Loop_t Speed_Loop;
@@ -34,6 +31,7 @@ void SYSTEM_Init(void)
     Speed_Loop_Init();
     Motor_Diag_Init();
     System_Diag_Init();
+    Motor_Config_Init();
     Speed_Command = 1000.0f;
 }
 
@@ -47,7 +45,7 @@ void SYSTEM_HV_Standy()
 {
     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
-        vTaskDelay(SYSTEM_HV_STANDY_TIME);
+        // vTaskDelay(SYSTEM_HV_STANDY_TIME);
         System.system_state = SYSTEM_CMD_STANDY;
     }
 }

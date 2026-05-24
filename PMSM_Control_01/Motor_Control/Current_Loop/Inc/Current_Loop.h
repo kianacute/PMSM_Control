@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "Hal_Math.h"
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 
 #define MOTOR_ADC_OFFSET_SAMPLE_CNT                 (100U)
 #define WEAK_VOLTAGE_COMPENSATION                   (2.0f/3.0f)
@@ -35,8 +35,8 @@ typedef struct Current_Loop
     // Define any necessary variables and structures for the current task
     uint32_t FREQ_HZ;                                       //电流环频率
     float Loop_time_s;                                      //电流环循环时间
-    MOTOR_t *pMotor;                            //电机参数指针  
-    Hal_PI_t Id_PI;                             //d轴电流PI控制器参数
+    Motor_Config_t *pMotor;                             //电机参数指针  
+    Hal_PI_t Id_PI;                                     //d轴电流PI控制器参数
     Hal_PI_t Iq_PI;                                     //q轴电流PI控制器参数
     float Ud_Target, Uq_Target;                             
     float Id_Ref, Iq_Ref;
@@ -57,10 +57,6 @@ typedef struct Current_Loop
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint32_t Loop_count;
-    Lookup_Table_t ID_PI_Kp_Lookup;  
-    Lookup_Table_t IQ_PI_Kp_Lookup; 
-    Lookup_Table_t ID_PI_Ki_Lookup; 
-    Lookup_Table_t IQ_PI_Ki_Lookup; 
 }Current_Loop_t;
 
 

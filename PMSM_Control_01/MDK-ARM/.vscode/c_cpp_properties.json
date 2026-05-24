@@ -16,7 +16,7 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Command\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Current_Loop\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\DIAG\\Inc",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Para\\Inc",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Config\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Speed_Loop\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\BSP\\STM32\\inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MDK-ARM",
@@ -28,8 +28,8 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\BSP\\STM32\\src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MATH_LIB\\src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Current_Loop\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Para\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Speed_Loop\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Config\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Command\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\DIAG\\Src"
             ],

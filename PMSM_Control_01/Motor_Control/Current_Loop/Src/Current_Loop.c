@@ -2,12 +2,12 @@
 #include "Current_Loop.h"
 #include "Hal_Math.h"
 #include "SVPWM.h"
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 #include "Observer.h"
 #include "Speed_Loop.h"
 #include "System_Loop.h"
 
-extern MOTOR_t PMSM_42JS;
+extern Motor_Config_t PMSM_42JS_Config;
 extern struct SMO_Parameter SMO_OB;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern struct Encoder_Parameter Encode_ABZ;
@@ -23,13 +23,6 @@ Current_Loop_Output_t Current_Loop_Output;
 
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
-const float Current_DQ_PI_Index_Coff[5] = {20.0f, 20.0f, 30.0f, 30.0f, 30.0f};
-float Current_DQ_PI_Index[5]      = {0.0f, 2000.0f, 3000.0f, 4000.0f, 5000.0f};
-float Current_ID_PI_Kp_Lookup[5];
-float Current_IQ_PI_Kp_Lookup[5];
-float Current_ID_PI_Ki_Lookup[5];
-float Current_IQ_PI_Ki_Lookup[5];
-
 
 Current_Loop_t Current_Loop;
 
@@ -38,32 +31,12 @@ void Current_Loop_Init(void)
     // Initialization code for current task
     // e.g., setting up filters, initializing variables, etc.
     Current_Loop.theta = 0.0f;
-    Current_Loop.pMotor = &PMSM_42JS;
+    Current_Loop.pMotor = &PMSM_42JS_Config;
     Current_Loop.FREQ_HZ = 20000;
     Current_Loop.Loop_time_s = 1.0f / 20000.0f;
     /* 计算电流环参数 */
-    for(int i = 0; i < sizeof(Current_DQ_PI_Index_Coff) / sizeof(Current_DQ_PI_Index_Coff[0]); i++)
-    {
-        float lp = Current_DQ_PI_Index_Coff[i];
-        Current_ID_PI_Kp_Lookup[i] = Current_Loop.pMotor->phase_inductance_d / Current_Loop.Loop_time_s * 2 * PI / lp;
-        Current_IQ_PI_Kp_Lookup[i] = Current_Loop.pMotor->phase_inductance_q / Current_Loop.Loop_time_s * 2 * PI / lp;
-        Current_ID_PI_Ki_Lookup[i] = Current_Loop.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
-        Current_IQ_PI_Ki_Lookup[i] = Current_Loop.pMotor->phase_resistance_ohm * 2 * PI / lp; /* 离散化，其中开关周期被抵消 */
-    }
     Current_Loop.Id_PI.Kd = 0.1f;
     Current_Loop.Iq_PI.Kd = 0.1f;
-    Current_Loop.ID_PI_Ki_Lookup.x_table = Current_DQ_PI_Index;
-    Current_Loop.IQ_PI_Ki_Lookup.x_table = Current_DQ_PI_Index;
-    Current_Loop.ID_PI_Ki_Lookup.y_table = Current_ID_PI_Ki_Lookup;
-    Current_Loop.IQ_PI_Ki_Lookup.y_table = Current_IQ_PI_Ki_Lookup;
-    Current_Loop.ID_PI_Kp_Lookup.x_table = Current_DQ_PI_Index;
-    Current_Loop.IQ_PI_Kp_Lookup.x_table = Current_DQ_PI_Index;
-    Current_Loop.ID_PI_Kp_Lookup.y_table = Current_ID_PI_Kp_Lookup;
-    Current_Loop.IQ_PI_Kp_Lookup.y_table = Current_IQ_PI_Kp_Lookup;
-    Current_Loop.ID_PI_Ki_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
-    Current_Loop.IQ_PI_Ki_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
-    Current_Loop.ID_PI_Kp_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
-    Current_Loop.IQ_PI_Kp_Lookup.table_size = sizeof(Current_DQ_PI_Index) / sizeof(float);
 
     Speed_Loop.Speed_Switch_Cnt = 0;
     Speed_Loop.Speed_Switch_Flag = 0;
@@ -285,13 +258,13 @@ void Speed_Switch(void)
     }
     case Speed_Loop_OPEN:
     {
-        Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->pole_pairs * Current_Loop.Loop_time_s;
+        Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->motor_param->pole_pairs * Current_Loop.Loop_time_s;
         Current_Loop.theta = Limit_2PI(Current_Loop.theta);
         break;
     }
     case Speed_Loop_SWITCH:
     {
-        Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->pole_pairs * Current_Loop.Loop_time_s;
+        Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->motor_param->pole_pairs * Current_Loop.Loop_time_s;
         Current_Loop.theta = Limit_2PI(Current_Loop.theta);
         if (my_abs(SMO_OB.tPLL.theta - Current_Loop.theta) < 0.10)
         {
@@ -312,19 +285,23 @@ void Speed_Switch(void)
     }
 }
 
-void Current_Loop_Run(void)
+void Current_Avg_Filt()
 {
     if (Current_Loop.avg_count >= (Current_Loop.FREQ_HZ / Speed_Loop.FREQ_Hz))
     {
         Current_Loop.avg_count = 0;
-        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->pole_pairs * 60 / 20.0f;
+        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->motor_param->pole_pairs * 60 / 20.0f;
         Current_Loop.Speed_fb_1ms = 0;
     }
     Current_Loop.avg_count++;
-    Current_Loop.Speed_fb_1ms += NonFlux_OB.tPLL.we;
+    Current_Loop.Speed_fb_1ms += NonFlux_OB.tPLL.we;    
+}
+
+void Current_Loop_Run(void)
+{
+
     // Speed_Loop.Speed_Fb = SMO_OB.tPLL.we / 2 / PI / Current_Loop.pMotor->pole_pairs * 60;
     Encode_ABZ_UpDate();
-
     // if ((HFSW_OB.hfj_cnt % HFSW_OB.PSR) >= HFSW_OB.PSR / 2)
     // {
     //     HFSW_OB.U_hfj = 2.4f;
@@ -335,6 +312,7 @@ void Current_Loop_Run(void)
     // }
     // HFSW_OB.hfj_cnt++;
     Speed_Switch();
+    Current_Avg_Filt();
     Phase_Current_Rewrite(Current_Loop_Input.Ia_fb_raw - Current_Loop.Ia_fb_offset, 
                           Current_Loop_Input.Ib_fb_raw - Current_Loop.Ib_fb_offset, 
                           Current_Loop_Input.Ic_fb_raw - Current_Loop.Ic_fb_offset,

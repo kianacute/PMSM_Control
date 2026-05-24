@@ -2,7 +2,7 @@
 #define __Speed_LOOP_H__
 
 #include "Hal_Math.h"
-#include "Motor_parameter.h"
+#include "Motor_Config.h"
 
 #define SPEED_ADD_STEP (1000 / 1000.0f)
 #define SPEED_SUB_STEP (1000 / 1000.0f)
@@ -29,12 +29,8 @@ typedef struct Speed_Loop
     float Speed_Command;                            // 速度命令
     float Speed_Ref, Speed_Fb;                      // 速度参考值和反馈值
     float Speed_Sub_Step, Speed_Add_Step;           // 速度增减步长
-    MOTOR_t *pMotor;                                // 电机参数指针 
+    Motor_Config_t *pMotor;                         // 电机参数指针 
     Hal_PI_t Speed_PI;                              // 速度PI控制器参数
-    Lookup_Table_t Speed_PI_Kp_Lookup;              // 速度PI比例增益查表
-    Lookup_Table_t Speed_PI_Ki_Lookup;              // 速度PI积分增益查表
-    Lookup_Table_t IF_Start_Speed_Lookup;           // 启动速度查表
-    Lookup_Table_t IF_Start_Iq_Lookup;              // 启动Iq查表
     uint32_t Speed_Switch_Cnt;                      // IF模式切换计数器
     uint8_t Speed_Switch_Flag;                      // 速度闭环标志  
     float Vs;  
