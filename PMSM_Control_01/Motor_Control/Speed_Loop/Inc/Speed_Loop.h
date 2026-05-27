@@ -19,6 +19,26 @@ enum Speed_LoopState_t
     Speed_Loop_RUN,
 };
 
+/* 一阶LADRC控制器
+ * 参考: https://zhuanlan.zhihu.com/p/664345718
+ * 一阶系统模型: dy/dt = f + b0*u
+ * LESO (线性扩张状态观测器): 估计系统输出z1和总扰动z2
+ * LSEF (线性误差反馈): u = (wc*(ref - z1) - z2) / b0
+ * 参数整定: wo = (3~10)*wc, b0越大抗扰越弱
+ */
+typedef struct LADRC_FirstOrder
+{
+    float h;       // 采样周期 (s)
+    float b0;      // 控制增益, 一阶系统: b0 = Kt/J (转矩常数/转动惯量)
+    float wo;      // 观测器带宽 (rad/s), beta1=2*wo, beta2=wo^2
+    float wc;      // 控制器带宽 (rad/s), kp = wc
+    float z1;      // 输出估计值 (速度观测)
+    float z2;      // 总扰动估计值 (负载+模型不确定性)
+    float u;       // 当前控制量
+    float out_max; // 输出上限
+    float out_min; // 输出下限
+} LADRC_FirstOrder_t;
+
 typedef struct Speed_Loop
 {
     uint32_t FREQ_Hz;                               // 循环周期
@@ -37,9 +57,13 @@ typedef struct Speed_Loop
     float Voltage_err;
     Hysteresis_Comp_TypeDef Weak_Control_Hcomp;     // 弱磁滞回比较器
     Hal_PI_t Weak_Pi;                               // 弱磁PI控制器参数
+    LADRC_FirstOrder_t Speed_LADRC;                 // 一阶LADRC控制器
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);
 void Speed_Loop_Task(void);
+
+void LADRC_FirstOrder_Init(LADRC_FirstOrder_t *ladrc, float h, float b0, float wo, float wc, float out_max, float out_min);
+float LADRC_FirstOrder_Update(LADRC_FirstOrder_t *ladrc, float ref, float y);
 
 #endif // __Speed_Loop_H__

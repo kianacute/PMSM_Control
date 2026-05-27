@@ -39,6 +39,9 @@ void Speed_Loop_Init(void)
     // Speed_Loop.Weak_Pi.ki = 1.01f;
     Speed_Loop.Weak_Pi.out_max = 0.0f;
     Speed_Loop.Weak_Pi.out_min = -8.0f;
+
+
+    LADRC_FirstOrder_Init(&Speed_Loop.Speed_LADRC, 0.001f, 100000.0f, 200.0f, 20.0f, 8.0f, -8.0f);
 }
 
 void Speed_Loop_IDLE_Task(void);
@@ -112,6 +115,9 @@ void Speed_Loop_IDLE_Task(void)
         Speed_Loop.target_iq = 0;
         Speed_Loop.target_is = 0;
         Speed_Loop.Speed_Fb = 0;
+        Speed_Loop.Speed_LADRC.z1 = 0;
+        Speed_Loop.Speed_LADRC.z2 = 0;
+        Speed_Loop.Speed_LADRC.u = 0;
     }
 }
 
@@ -176,7 +182,8 @@ void Speed_Loop_RUN_Task(void)
 {
     Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command, Speed_Loop.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
     Hysteresis_Comp_Process_Add(&Speed_Loop.Weak_Control_Hcomp, Speed_Loop.Voltage_err);
-    Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
+    Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
+    // Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
     if (Speed_Loop.Speed_Ref < 1000 && Speed_Loop.Speed_Ref >= -600)
     {
         Speed_Loop.target_id = Oblique_Wave(0.5f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
@@ -196,7 +203,8 @@ void Speed_Loop_RUN_Task(void)
     arm_sqrt_f32(Current_Loop.Ud_Target * Current_Loop.Ud_Target + Current_Loop.Uq_Target * Current_Loop.Uq_Target, &Speed_Loop.Vs);
     Speed_Loop.Voltage_err = Speed_Loop.Vs - 24.0f * WEAK_VOLTAGE_COMPENSATION;
     arm_sqrt_f32(Speed_Loop.target_is * Speed_Loop.target_is - Speed_Loop.target_id * Speed_Loop.target_id,
-                 &Speed_Loop.target_iq);
+                 &Speed_Loop.target_iq);  
+      
 }
 
 extern struct SMO_Parameter SMO_OB;
@@ -220,3 +228,62 @@ void Paramater_update(void)
     Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
     Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
 }
+
+/* ==================================================================
+ * 一阶LADRC (线性自抗扰控制)
+ * 参考: https://zhuanlan.zhihu.com/p/664345718
+ *
+ * 一阶系统: dy/dt = f(y,t,d) + b0 * u
+ * 其中 f 为总扰动 (内部不确定性 + 外部扰动)
+ *
+ * 扩张状态: x1=y, x2=f
+ *   dx1/dt = x2 + b0*u
+ *   dx2/dt = df/dt
+ *
+ * LESO (线性扩张状态观测器) — 欧拉前向离散化:
+ *   e(k) = y(k) - z1(k)
+ *   z1(k+1) = z1(k) + h * [beta1*e(k) + z2(k) + b0*u(k)]
+ *   z2(k+1) = z2(k) + h * [beta2*e(k)]
+ *   其中 beta1=2*wo, beta2=wo^2
+ *
+ * LSEF (线性误差反馈控制律):
+ *   u0 = wc * (ref - z1)
+ *   u  = (u0 - z2) / b0
+ *
+ * 参数整定: wo ≈ (3~10)*wc, b0 = Kt/J
+ * ================================================================== */
+
+void LADRC_FirstOrder_Init(LADRC_FirstOrder_t *ladrc, float h, float b0, float wo, float wc, float out_max, float out_min)
+{
+    ladrc->h = h;
+    ladrc->b0 = b0;
+    ladrc->wo = wo;
+    ladrc->wc = wc;
+    ladrc->z1 = 0.0f;
+    ladrc->z2 = 0.0f;
+    ladrc->u = 0.0f;
+    ladrc->out_max = out_max;
+    ladrc->out_min = out_min;
+}
+
+float LADRC_FirstOrder_Update(LADRC_FirstOrder_t *ladrc, float ref, float y)
+{
+    float beta1 = 2.0f * ladrc->wo;
+    float beta2 = ladrc->wo * ladrc->wo;
+    float e = y - ladrc->z1;
+
+    ladrc->z1 += ladrc->h * (beta1 * e + ladrc->z2 + ladrc->b0 * ladrc->u);
+    ladrc->z2 += ladrc->h * (beta2 * e);
+
+    float u0 = ladrc->wc * (ref - ladrc->z1);
+    ladrc->u = (u0 - ladrc->z2) / ladrc->b0;
+
+    if (ladrc->u > ladrc->out_max)
+        ladrc->u = ladrc->out_max;
+    else if (ladrc->u < ladrc->out_min)
+        ladrc->u = ladrc->out_min;
+
+    return ladrc->u;
+}
+
+

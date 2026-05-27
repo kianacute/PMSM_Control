@@ -396,6 +396,7 @@ void Current_Loop_Switch(void)
     }
     else
     {
+        MOTOR_IDLE_TASK();
         Current_Loop.Motor_State = MOTOR_IDLE;
         Current_PWM_Switch(PWM_CLOSE);
     }
@@ -430,6 +431,8 @@ int32_t MOTOR_IDLE_TASK(void)
         // Current_Loop.Ic_fb = 0.0f;      
         Current_Loop.Id_fb = 0.0f;
         Current_Loop.Iq_fb = 0.0f;
+        Current_Loop.Id_Ref = 0.0f;
+        Current_Loop.Iq_Ref = 0.0f;
     }
     return 0;
 }
