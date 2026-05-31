@@ -19,6 +19,7 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Config\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Speed_Loop\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\BSP\\STM32\\inc",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motot_Para_Identify\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MDK-ARM",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Core\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\ST\\ARM\\DSP\\Lib",
@@ -31,7 +32,8 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Speed_Loop\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Motor_Config\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Command\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\DIAG\\Src"
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\DIAG\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motot_Para_Identify\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

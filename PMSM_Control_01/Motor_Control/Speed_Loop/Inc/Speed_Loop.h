@@ -4,11 +4,11 @@
 #include "Hal_Math.h"
 #include "Motor_Config.h"
 
-#define SPEED_ADD_STEP (1000 / 1000.0f)
-#define SPEED_SUB_STEP (1000 / 1000.0f)
+#define SPEED_ADD_STEP (3000 / 1000.0f)
+#define SPEED_SUB_STEP (100000 / 1000.0f)
 #define SPEED_ID_ADD_STEP (1.0 / 1000.0f)
 #define SPEED_ID_SUB_STEP (1.0 / 1000.0f)
-#define SPEED_SWITCH_ID_SUB_STEP (0.0005f)
+#define SPEED_SWITCH_ID_SUB_STEP (0.001f)
 
 enum Speed_LoopState_t
 {

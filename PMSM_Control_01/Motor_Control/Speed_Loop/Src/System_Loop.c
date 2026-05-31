@@ -32,7 +32,7 @@ void SYSTEM_Init(void)
     Motor_Diag_Init();
     System_Diag_Init();
     Motor_Config_Init();
-    Speed_Command = 1000.0f;
+    Speed_Command = 500.0f;
 }
 
 void SYSTEM_LV_Standy()
@@ -77,7 +77,7 @@ void SYSTEM_Run()
     else 
     {
         Speed_Loop.Speed_Command = 0;
-        if(Speed_Loop.Speed_Ref < 50.0f)
+        if(Speed_Loop.Speed_Ref < 50.0f || Speed_Loop.spd_ctrl_state < Speed_Loop_RUN)
         {
             System.system_state = SYSTEM_WAIT;
         }
@@ -94,7 +94,7 @@ void SYSTEM_Fault()
 
 void SYSTEM_Wait()
 {
-    vTaskDelay(SYSTEM_WAIT_TIME);
+    // vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_CMD_STANDY;
     System_Diag_Fault_Flag = 0;
     Motor_Diag_Fault_Flag = 0;

@@ -6,6 +6,7 @@
 #include "Observer.h"
 #include "Speed_Loop.h"
 #include "System_Loop.h"
+#include "Parameter_Identify.h"
 
 extern Motor_Config_t PMSM_42JS_Config;
 extern struct SMO_Parameter SMO_OB;
@@ -52,6 +53,7 @@ void Current_Loop_Init(void)
 int32_t MOTOR_IDLE_TASK(void);
 int32_t MOTOR_READY_TASK(void);
 int32_t MOTOR_OFFSET_CHECK_TASK(void);
+int32_t MOTOR_RS_IDENTIFY_TASK(void);
 int32_t MOTOR_RUN_TASK(void);
 void Current_Loop_Switch(void);
 
@@ -266,13 +268,13 @@ void Speed_Switch(void)
     {
         Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->motor_param->pole_pairs * Current_Loop.Loop_time_s;
         Current_Loop.theta = Limit_2PI(Current_Loop.theta);
-        if (my_abs(SMO_OB.tPLL.theta - Current_Loop.theta) < 0.10)
+        if (my_abs(NonFlux_OB.tPLL.theta - Current_Loop.theta) < 0.10)
         {
             Speed_Loop.Speed_Switch_Cnt++;
             if (Speed_Loop.Speed_Switch_Cnt > 10)
             {
                 Speed_Loop.Speed_Switch_Flag = 1;
-                Current_Loop.theta = SMO_OB.tPLL.theta;
+                Current_Loop.theta = NonFlux_OB.tPLL.theta;
             }
         }
         break;
@@ -386,6 +388,10 @@ void Current_Loop_Switch(void)
                 // Handle offset check state
                 MOTOR_OFFSET_CHECK_TASK();
                 break;
+            case MOTOR_RS_IDENTIFY:
+                // Handle Rs identification state
+                MOTOR_RS_IDENTIFY_TASK();
+                break;
             case MOTOR_RUN:
                 // Handle run state
                 MOTOR_RUN_TASK();
@@ -470,9 +476,59 @@ int32_t MOTOR_OFFSET_CHECK_TASK(void)
         Current_Loop.Ia_fb_offset /= (float)Current_Loop.offset_check_cnt; // Calculate average for ADC1 injected channel 1
         Current_Loop.Ib_fb_offset /= (float)Current_Loop.offset_check_cnt; // Calculate average for ADC2 injected channel 1
         Current_Loop.Ic_fb_offset /= (float)Current_Loop.offset_check_cnt; // Calculate average for ADC1 injected channel 2
-        Current_Loop.Motor_State = MOTOR_RUN;
+        Current_Loop.Motor_State = MOTOR_RS_IDENTIFY;
+        Rs_Identify_Init();
         Current_PWM_Switch(PWM_OPEN);
     }
+    return 0;
+}
+
+int32_t MOTOR_RS_IDENTIFY_TASK(void)
+{
+    if (Rs_Identify.state == RS_WRITE_BACK)
+    {
+        if (Rs_Identify.identified_Rs > 0.0f)
+        {
+            /* 辨识成功：写入电机参数 */
+            Current_Loop.pMotor->motor_param->Rs = Rs_Identify.identified_Rs;
+            Current_Loop.pMotor->motor_param->rs_identified = 1;
+        }
+        /* 失败则保持默认Rs, rs_identified = 0 */
+
+        /* 清零PI积分和观测器状态, 准备切RUN */
+        Current_Loop.Id_PI.integral = 0.0f;
+        Current_Loop.Iq_PI.integral = 0.0f;
+        NonFlux_OB.tPLL.PLL_PI.integral = 0.0f;
+        Current_Loop.Id_fb = 0.0f;
+        Current_Loop.Iq_fb = 0.0f;
+        Current_Loop.Id_Ref = 0.0f;
+        Current_Loop.Iq_Ref = 0.0f;
+        Current_Loop.Motor_State = MOTOR_RUN;
+    }
+    /* 用补偿后的相电流计算 Ialpha
+     * 注入 α 轴电压时, Iβ ≈ 0, Iα = Ia (Clarke变换) */
+    Current_Loop.Ia_fb = Current_Loop_Input.Ia_fb_raw - Current_Loop.Ia_fb_offset;
+    Current_Loop.Ib_fb = Current_Loop_Input.Ib_fb_raw - Current_Loop.Ib_fb_offset;
+    Current_Loop.Ic_fb = Current_Loop_Input.Ic_fb_raw - Current_Loop.Ic_fb_offset;
+    float Ialpha, Ibeta;
+    // arm_clarke_f32(Current_Loop.Ia_fb, Current_Loop.Ib_fb, &Ialpha, &Ibeta);
+    arm_clarke_f32(Current_Loop.Ia_fb, Current_Loop.Ib_fb, &Current_Loop.ialpha_fb, &Current_Loop.ibeta_fb);
+    /* 驱Rs辨识状态机 */
+    Rs_Identify_Run(Current_Loop.ialpha_fb, Current_Loop_Input.Udc_ADISR);
+
+    /* 手动设电压矢量: Uα = 辨识算法要求的电压, Uβ = 0 */
+    Current_Loop.Ualpha_Ref = Rs_Identify.V_alpha;
+    Current_Loop.Ubeta_Ref = 0.0f;
+
+    /* 计算SVPWM并输出 */
+    SVPWM_Calculate(1, Current_Loop_Input.Udc_ADISR,
+                    Current_Loop.Ualpha_Ref, Current_Loop.Ubeta_Ref,
+                    &Current_Loop_Output.PWM_duty_a, &Current_Loop_Output.PWM_duty_b, &Current_Loop_Output.PWM_duty_c, 
+                    &Current_Loop.sector);
+    Bsp_STM32G431_PWM_SetDuty();
+
+    /* 辨识完成后的处理 */
+
     return 0;
 }
 
@@ -480,6 +536,6 @@ int32_t MOTOR_RUN_TASK(void)
 {
     /* Code for MOTOR_RUN state */
     Current_Loop_Run();
-    Bsp_STM32G431_PWM_SetDuty();    
+    Bsp_STM32G431_PWM_SetDuty();
     return 0;
 }

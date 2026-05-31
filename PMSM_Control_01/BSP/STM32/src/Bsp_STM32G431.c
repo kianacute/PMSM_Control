@@ -54,6 +54,7 @@ void my_task2(void *argument)
 }
 
 extern void MOTOR_Run_flag_UPDOWN(void);
+extern uint8_t MOTOR_Run_flag;
 
 void my_task3(void *argument)
 {
@@ -67,7 +68,14 @@ void my_task3(void *argument)
         // vTaskList((char *)&load_send_buffer);  //获取任务运行时间信息
         // sprintf((char *)load_send_buffer, "adc: %d  %d\r\n", cup_adc_1, cup_adc_2);
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)load_send_buffer, strlen((char *)load_send_buffer));
-        vTaskDelayUntil(&lasttick, 20000); // 每20000ms执行一次
+        if(MOTOR_Run_flag == 1)
+        {
+            vTaskDelayUntil(&lasttick, 10000); // 每5000ms执行一次
+        }
+        else
+        {
+            vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
+        }
         MOTOR_Run_flag_UPDOWN();
     }
 }

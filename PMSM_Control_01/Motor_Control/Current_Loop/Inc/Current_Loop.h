@@ -15,6 +15,7 @@ enum Motor_State{
     MOTOR_IDLE = 0,
     MOTOR_READY,
     MOTOR_OFFSET_CHECK,
+    MOTOR_RS_IDENTIFY,      // 定子电阻离线辨识
     MOTOR_RUN,
     MOTOR_default,
 };

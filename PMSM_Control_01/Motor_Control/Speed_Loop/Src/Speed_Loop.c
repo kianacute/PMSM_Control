@@ -131,15 +131,15 @@ void Speed_Loop_ALIGN_Task()
     Speed_Loop.target_iq = 0;
     Speed_Loop.Speed_Ref = 0;
     Current_Loop.theta = 0; // Align to d-axis
-    // vTaskDelay(100);
+    // vTaskDelay(5000);
     // Speed_Loop.target_id = 1.0f;
     // align_done = 1;
-    // vTaskDelay(500);
-    // Speed_Loop.target_id = 0.0f;
-    // vTaskDelay(10);
+    // vTaskDelay(5000);
+    // Speed_Loop.target_id = 1.5f;
+    // vTaskDelay(5000);
     // align_done = 0;
     // Speed_Loop.target_id = 0.0f;
-    // vTaskDelay(500);
+    // vTaskDelay(5000);
     // Current_Loop.theta = 0.17*6;
     // vTaskDelay(5000);
     // Current_Loop.theta = 0.17*12;
@@ -182,8 +182,8 @@ void Speed_Loop_RUN_Task(void)
 {
     Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command, Speed_Loop.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
     Hysteresis_Comp_Process_Add(&Speed_Loop.Weak_Control_Hcomp, Speed_Loop.Voltage_err);
-    Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
-    // Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
+    // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
+    Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
     if (Speed_Loop.Speed_Ref < 1000 && Speed_Loop.Speed_Ref >= -600)
     {
         Speed_Loop.target_id = Oblique_Wave(0.5f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
@@ -223,10 +223,10 @@ void Paramater_update(void)
     SMO_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.SMO_PLL_Kp_Lookup);
     SMO_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.SMO_PLL_Ki_Lookup);
 
-    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Kp_Lookup);
-    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
-    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
-    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
+    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Kp_Lookup)/1;
+    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Ki_Lookup)/1;
+    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Kp_Lookup)/1;
+    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Ki_Lookup)/1;
 }
 
 /* ==================================================================

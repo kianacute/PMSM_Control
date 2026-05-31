@@ -30,7 +30,7 @@ static void MOTOR_Over_Speed_Update(Diag_Node_t *node)
 static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
 {
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
-    if(System.system_state == SYSTEM_WAIT)
+    if(Speed_Loop.spd_ctrl_state == Speed_Loop_IDLE)
     {
         Motor_Phase_A_Lock.hcomp.reset = 1;
         Motor_Phase_B_Lock.hcomp.reset = 1;
@@ -42,7 +42,7 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
         Motor_Phase_B_Lock.hcomp.reset = 0;
         Motor_Phase_C_Lock.hcomp.reset = 0;
     }
-    if(System.system_state == SYSTEM_RUN)
+    if(Speed_Loop.spd_ctrl_state == Speed_Loop_RUN)
     {
         Motor_Phase_A_Lock.hcomp.enable = 1;
         Motor_Phase_B_Lock.hcomp.enable = 1;
@@ -84,7 +84,7 @@ float emf_err = 0.0f;
 static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
 {
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
-    if(System.system_state == SYSTEM_WAIT)
+    if(Speed_Loop.spd_ctrl_state == Speed_Loop_IDLE)
     {
         item->hcomp.reset = 1; // 系统未运行时复位比较器
     }
