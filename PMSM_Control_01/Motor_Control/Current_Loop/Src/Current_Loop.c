@@ -276,7 +276,7 @@ int32_t MOTOR_OFFSET_CHECK_TASK(void)
 int32_t MOTOR_RUN_TASK(void)
 {
     /* Code for MOTOR_RUN state */
-    if (System.Run_flag == 0 && Speed_Loop.Speed_Fb < 500.0f)
+    if (System.Run_flag == 0 && Speed_Loop.Speed_Fb < 1000.0f)
     {
         Current_Loop.Motor_State = MOTOR_WAIT;
     }

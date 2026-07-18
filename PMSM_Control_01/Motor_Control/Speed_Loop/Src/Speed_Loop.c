@@ -157,7 +157,7 @@ void Speed_Loop_Align_Task()
     {
         #if defined(MOTOR_OPEN_SETUP)
         Speed_Loop.spd_ctrl_state = Speed_Loop_Open;
-        #else
+        #elif defined(MOTOR_CLOSE_SETUP)
         Speed_Loop.spd_ctrl_state = Speed_Loop_Low;
         #endif
     }
@@ -171,7 +171,7 @@ void Speed_Loop_Open_Task(void)
     Speed_Loop.target_id = 0;
     if (Speed_Loop.Speed_Ref >= 600)
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
+        // Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
     }
 }
 
@@ -216,7 +216,7 @@ void Speed_Loop_Middle_Task(void)
 void Speed_Loop_High_Task(void)
 {
     Speed_Loop.target_id = Oblique_Wave(0.0f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if(Speed_Loop.Speed_Ref < 1000)
+    if(Speed_Loop.Speed_Ref < 800)
     {
         Speed_Loop.spd_ctrl_state = Speed_Loop_Middle;
     }

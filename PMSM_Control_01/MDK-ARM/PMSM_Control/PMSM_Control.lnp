@@ -63,7 +63,7 @@
 "pmsm_control\diag_list.o"
 "pmsm_control\motor_diag.o"
 "pmsm_control\system_diag.o"
-"pmsm_control\parameter_identify_1.o"
+"pmsm_control\parameter_identify.o"
 --strict --scatter "PMSM_Control\PMSM_Control.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

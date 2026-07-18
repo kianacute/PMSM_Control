@@ -58,7 +58,7 @@ typedef struct Motor_Config
 // #define Dead_TIME_DUTY         (0/MOTOR_CURRENT_LOOP_HZ)
 
 /*电机启动方式*/
-//#define MOTOR_OPEN_SETUP                    // 电机开环启动
+// #define MOTOR_OPEN_SETUP                    // 电机开环启动
 #define MOTOR_CLOSE_SETUP                     // 电机闭环启动
 
 /*电机观测器选择*/

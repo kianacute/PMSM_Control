@@ -36,17 +36,15 @@ Motor_Config_t PMSM_42JS_Config;
 
 void Motor_Parameter_Init(void)
 {
-    PMSM_42JS_Parameter.pole_pairs = 2;
-    PMSM_42JS_Parameter.max_rpm = 5000.0f;
+    PMSM_42JS_Parameter.pole_pairs = 4.0f;
     PMSM_42JS_Parameter.max_current_a = 20.0f;
     PMSM_42JS_Parameter.voltage_limit_v = 50.0f;
     PMSM_42JS_Parameter.flux_rpm_per_v = 4.3f;
-    PMSM_42JS_Parameter.Rs = 0.4f;
+    PMSM_42JS_Parameter.Rs = 1.05f;
     PMSM_42JS_Parameter.rs_identified = 0;
     PMSM_42JS_Parameter.Ld = 0.00050f;
     PMSM_42JS_Parameter.Lq = 0.00059f;
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
-    PMSM_42JS_Parameter.flux_rpm_per_v = 1.3f;
     PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
                          / 100.0f / PI * 3.0f); 
     /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */
