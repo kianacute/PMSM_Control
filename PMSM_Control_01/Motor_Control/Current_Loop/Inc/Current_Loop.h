@@ -17,7 +17,8 @@ enum Motor_State{
     MOTOR_OFFSET_CHECK,
     MOTOR_RS_IDENTIFY,      // 定子电阻离线辨识
     MOTOR_RUN,
-    MOTOR_default,
+    MOTOR_FAULT,
+    MOTOR_WAIT,
 };
 
 typedef struct Current_Loop_Input
@@ -54,6 +55,7 @@ typedef struct Current_Loop
     uint32_t Phase_check_cnt;
     uint8_t sector;
     enum Motor_State Motor_State;
+    uint32_t Motor_Wait_Cnt;
     uint8_t PWM_OPEN_Flag;
     float Speed_fb_1ms;
     uint8_t avg_count;
@@ -62,6 +64,5 @@ typedef struct Current_Loop
 
 
 void Current_Loop_Init(void);
-void Current_Loop_run(void);
 
 #endif // SVPWM_H

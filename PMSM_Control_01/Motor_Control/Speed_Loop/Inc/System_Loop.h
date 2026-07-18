@@ -14,7 +14,6 @@ enum SYSTEM_State_t
 {
     SYSTEM_LV_STANDY = 0,
     SYSTEM_HV_STANDY,
-    SYSTEM_CMD_STANDY,
     SYSTEM_RUN,
     SYSTEM_FAULT,
     SYSTEM_WAIT,
@@ -22,9 +21,10 @@ enum SYSTEM_State_t
 
 typedef struct SYSTEM_Ctrl
 {
-    uint32_t FREQ_Hz;                               // 循环周期
+    uint32_t FREQ_Hz;                            // 循环周期
     enum SYSTEM_State_t system_state;  
     uint32_t Fault_cnt;                          // 系统状态
+    uint8_t Run_flag;                            // 在Run状态下管理运行指令
 } SYSTEM_t;
 
 void SYSTEM_Init(void);

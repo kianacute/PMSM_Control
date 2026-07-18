@@ -12,11 +12,13 @@
 
 enum Speed_LoopState_t
 {
-    Speed_Loop_IDLE = 0,
-    Speed_Loop_ALIGN,
-    Speed_Loop_OPEN,
-    Speed_Loop_SWITCH,
-    Speed_Loop_RUN,
+    Speed_Loop_Idle = 0,
+    Speed_Loop_Align,
+    Speed_Loop_Open,
+    Speed_Loop_Switch,
+    Speed_Loop_Low,
+    Speed_Loop_Middle,
+    Speed_Loop_High,
 };
 
 /* 一阶LADRC控制器
@@ -43,8 +45,7 @@ typedef struct Speed_Loop
 {
     uint32_t FREQ_Hz;                               // 循环周期
     enum Speed_LoopState_t spd_ctrl_state;          // 速度控制状态
-    uint32_t spd_ctrl_timer;                        // 速度控制状态计时器
-    uint32_t tick_count_idle;                       // 进入空闲状态的时间戳
+    uint64_t spd_ctrl_timer;                        // 速度控制非空闲状态计时器
     float target_iq, target_id, target_is;          // 目标电流
     float Speed_Command;                            // 速度命令
     float Speed_Ref, Speed_Fb;                      // 速度参考值和反馈值
@@ -58,6 +59,7 @@ typedef struct Speed_Loop
     Hysteresis_Comp_TypeDef Weak_Control_Hcomp;     // 弱磁滞回比较器
     Hal_PI_t Weak_Pi;                               // 弱磁PI控制器参数
     LADRC_FirstOrder_t Speed_LADRC;                 // 一阶LADRC控制器
+    uint8_t Align_Finish_Flag;                      // 对准完成标志
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);

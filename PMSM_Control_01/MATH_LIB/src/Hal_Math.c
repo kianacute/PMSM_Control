@@ -1,4 +1,3 @@
-#include "arm_math.h"
 #include "Hal_Math.h"
 
 /// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间

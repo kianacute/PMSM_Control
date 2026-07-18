@@ -32,13 +32,15 @@ void SYSTEM_Init(void)
     Motor_Diag_Init();
     System_Diag_Init();
     Motor_Config_Init();
-    Speed_Command = 500.0f;
+    Speed_Command = 2000.0f;
+    System.Run_flag = 0;
 }
 
 void SYSTEM_LV_Standy()
 {
     vTaskDelay(SYSTEM_LV_INIT_TIME);
     System.system_state = SYSTEM_HV_STANDY;
+    System.Run_flag = 0;
 }
 
 void SYSTEM_HV_Standy()
@@ -46,41 +48,33 @@ void SYSTEM_HV_Standy()
     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
         vTaskDelay(SYSTEM_HV_STANDY_TIME);
-        System.system_state = SYSTEM_CMD_STANDY;
+        System.system_state = SYSTEM_RUN;
+        System.Run_flag = 0;
     }
 }
 
-void SYSTEM_CMD_Standy()
-{
-    if (MOTOR_Run_flag == 1 && Speed_Command > 50.0f) // Check if the motor run command is received and speed command is valid
-    {
-        System.system_state = SYSTEM_RUN;
-    }
-}
 
 extern uint8_t System_Diag_Fault_Flag;
 extern uint8_t Motor_Diag_Fault_Flag;
 
 void SYSTEM_Run()
 {
-    System_Fault_Flag = System_Diag_Fault_Flag | Motor_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
+    System_Fault_Flag = System_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
     if(System_Fault_Flag != 0)
     {
         System.system_state = SYSTEM_FAULT;
         Speed_Loop.Speed_Command = 0;
         return;
     }
-    if(MOTOR_Run_flag == 1)
+    if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
     {
         Speed_Loop.Speed_Command = Speed_Command; 
+        System.Run_flag = 1;
     }
     else 
     {
         Speed_Loop.Speed_Command = 0;
-        if(Speed_Loop.Speed_Ref < 50.0f || Speed_Loop.spd_ctrl_state < Speed_Loop_RUN)
-        {
-            System.system_state = SYSTEM_WAIT;
-        }
+        System.Run_flag = 0;
     }
     return;
 }
@@ -88,16 +82,18 @@ void SYSTEM_Run()
 void SYSTEM_Fault()
 {
     System.Fault_cnt++;
+    System.Run_flag = 0;
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_WAIT;
 }
 
 void SYSTEM_Wait()
 {
-    // vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_CMD_STANDY;
+    vTaskDelay(SYSTEM_WAIT_TIME);
+    System.system_state = SYSTEM_HV_STANDY;
     System_Diag_Fault_Flag = 0;
     Motor_Diag_Fault_Flag = 0;
+    System.Run_flag = 0;
 }
 
 uint32_t System_cnt;
@@ -112,9 +108,6 @@ void SYSTEM_Task(void)
         break;
     case SYSTEM_HV_STANDY:
         SYSTEM_HV_Standy();
-        break;
-    case SYSTEM_CMD_STANDY:
-        SYSTEM_CMD_Standy();
         break;
     case SYSTEM_RUN:
         SYSTEM_Run();

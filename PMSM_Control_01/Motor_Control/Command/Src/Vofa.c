@@ -39,7 +39,7 @@ void Vofa_Task_Run(void)
     extern float Udc_1ms;
     vofa_buffer.data[0] = Speed_Loop.Speed_Ref;
     vofa_buffer.data[1] = Speed_Loop.Speed_Fb;
-    vofa_buffer.data[2] = (float32_t)(NonFlux_OB.tPLL.theta);
+//    vofa_buffer.data[2] = (float32_t)(NonFlux_OB.tPLL.theta);
 //    vofa_buffer.data[3] = (float32_t)(Udc_ADISR);
     vofa_buffer.data[4] = (float32_t)(Current_Loop.Id_fb);
     vofa_buffer.data[5] = (float32_t)(Current_Loop.Iq_fb);

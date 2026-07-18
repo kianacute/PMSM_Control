@@ -48,7 +48,8 @@ void Motor_Parameter_Init(void)
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
     PMSM_42JS_Parameter.flux_rpm_per_v = 1.3f;
     PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
-                         / 1000.0f * 7.79f * 1.414f);
+                         / 100.0f / PI * 3.0f); 
+    /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */
 }
 
 void Motor_Config_Init(void)

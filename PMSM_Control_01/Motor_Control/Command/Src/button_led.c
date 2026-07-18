@@ -66,6 +66,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
     else if (GPIO_Pin == GPIO_PIN_8)
     {
-        Encode_ABZ.z_flag = 1 - Encode_ABZ.z_flag;
+        // Encode_ABZ.z_flag = 1 - Encode_ABZ.z_flag;
     }
 }

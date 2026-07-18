@@ -59,7 +59,7 @@ void System_Diag_Init(void)
 
 void System_Diag_Task(void)
 {
-    if (System.system_state >= SYSTEM_CMD_STANDY)
+    if (System.system_state >= SYSTEM_RUN)
     {
         Diag_List_Traverse(System_Diag_Head);
     }

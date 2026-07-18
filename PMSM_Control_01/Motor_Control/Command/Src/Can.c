@@ -52,8 +52,8 @@ void fdcan_transmit_data(void)
     tx_Head.FDFormat = FDCAN_CLASSIC_CAN;            // Use classic CAN format
     tx_Head.TxEventFifoControl = FDCAN_NO_TX_EVENTS; // No Tx events
     tx_Head.MessageMarker = 0;                       // Message marker for identification
-    can_dbc_list1.Signal_1 = (float)SMO_OB.ia_mat_k;
-    can_dbc_list1.Signal_2 = (float)SMO_OB.ib_mat_k;
+//    can_dbc_list1.Signal_1 = (float)SMO_OB.ia_mat_k;
+//    can_dbc_list1.Signal_2 = (float)SMO_OB.ib_mat_k;
     CAN_Pack_Motor_List1(send_buffer, &can_dbc_list1);
     // Transmit the data over FDCAN
     HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &tx_Head, (uint8_t *)send_buffer);

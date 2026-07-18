@@ -30,7 +30,7 @@ static void MOTOR_Over_Speed_Update(Diag_Node_t *node)
 static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
 {
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
-    if(Speed_Loop.spd_ctrl_state == Speed_Loop_IDLE)
+    if(Current_Loop.Motor_State == MOTOR_WAIT || Current_Loop.Motor_State == MOTOR_IDLE)
     {
         Motor_Phase_A_Lock.hcomp.reset = 1;
         Motor_Phase_B_Lock.hcomp.reset = 1;
@@ -42,7 +42,7 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
         Motor_Phase_B_Lock.hcomp.reset = 0;
         Motor_Phase_C_Lock.hcomp.reset = 0;
     }
-    if(Speed_Loop.spd_ctrl_state == Speed_Loop_RUN)
+    if(Current_Loop.Motor_State == MOTOR_RUN)
     {
         Motor_Phase_A_Lock.hcomp.enable = 1;
         Motor_Phase_B_Lock.hcomp.enable = 1;
@@ -84,7 +84,7 @@ float emf_err = 0.0f;
 static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
 {
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
-    if(Speed_Loop.spd_ctrl_state == Speed_Loop_IDLE)
+    if(Current_Loop.Motor_State == MOTOR_WAIT || Current_Loop.Motor_State == MOTOR_IDLE)
     {
         item->hcomp.reset = 1; // 系统未运行时复位比较器
     }
@@ -92,9 +92,9 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
     {
         item->hcomp.reset = 0; // 系统运行时正常工作
     }
-    if(System.system_state == SYSTEM_RUN)
+    if(Current_Loop.Motor_State == MOTOR_RUN)
     {
-        item->hcomp.enable = 0; // 系统运行时使能比较器
+        item->hcomp.enable = 1; // 系统运行时使能比较器
     }
     emf_err = my_abs(Speed_Loop.Speed_Fb * Speed_Loop.pMotor->motor_param->flux_rpm_per_v / 1000.0f - EMF_Cal.EMF);
     Hysteresis_Comp_Process_Add(&item->hcomp, emf_err);
@@ -107,7 +107,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
 void Motor_Diag_Init(void)
 {
     Hysteresis_Comp_Init(&Motor_Over_Speed_Diag.hcomp, MOTOR_OVER_SPEED_THRESHOLD, 0, MOTOR_OVER_SPEED_THRESHOLD_DELAY);
-    Diag_List_Register(&Motor_Diag_Head, &Motor_Over_Speed_Diag.node, MOTOR_Over_Speed_Update);
+    // Diag_List_Register(&Motor_Diag_Head, &Motor_Over_Speed_Diag.node, MOTOR_Over_Speed_Update);
 
     Hysteresis_Comp_Init(&Motor_Phase_A_Lock.hcomp, 0.5, 0.1, 500);
     Hysteresis_Comp_Init(&Motor_Phase_B_Lock.hcomp, 0.5, 0.1, 500);

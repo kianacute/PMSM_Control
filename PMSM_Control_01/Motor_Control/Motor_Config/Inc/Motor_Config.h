@@ -5,16 +5,6 @@
 #include <stdint.h>
 #include "Hal_Math.h"
 
-#define MOTOR_POLE_PAIRS       4U
-#define MOTOR_MAX_RPM          6000.0f
-#define MOTOR_MAX_CURRENT_A    20.0f
-#define MOTOR_VOLTAGE_LIMIT_V  48.0f
-#define MOTOR_PHASE_RESISTANCE_OHM  0.2f    
-#define MOTOR_PHASE_INDUCTANCE_D_H    0.00050f
-#define MOTOR_PHASE_INDUCTANCE_Q_H    0.00059f
-#define MOTOR_FLUX_RPM_PER_V      4.3f
-#define MOTOR_FLUX_LINKAGE_Wb      (MOTOR_FLUX_RPM_PER_V / MOTOR_POLE_PAIRS / 1000.0f * 7.79f * 1.414f)
-
 typedef struct Motor_Parameter
 {
     float pole_pairs;      // 电机极对数
@@ -67,6 +57,16 @@ typedef struct Motor_Config
 #define Dead_TIME_DUTY                      (120.0f/160.0f*1e-6/MOTOR_CURRENT_LOOP_CYCLE_TIME_S)
 // #define Dead_TIME_DUTY         (0/MOTOR_CURRENT_LOOP_HZ)
 
+/*电机启动方式*/
+//#define MOTOR_OPEN_SETUP                    // 电机开环启动
+#define MOTOR_CLOSE_SETUP                     // 电机闭环启动
+
+/*电机观测器选择*/
+// #define MOTOR_SMO_OBSERVER                 // 滑模观测器
+// #define MOTOR_NONFLUX_OBSERVER             // 非磁链观测器
+#define MOTOR_EFFECTIVE_FLUX_OBSERVER         // 有效磁链观测器
+// #define MOTOR_ENCODER_OBSERVER             // 编码器观测器
+// #define MOTOR_HFI_OBSERVER                 // 高频注入观测器
 
 // #define U_base   25.0f
 // #define I_base   10.0f
