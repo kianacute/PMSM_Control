@@ -100,7 +100,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
     Hysteresis_Comp_Process_Add(&item->hcomp, emf_err);
     if(item->hcomp.comp_out == 1)
     {
-        Motor_Diag_Fault_Flag |= 0x02; // 设置堵转故障标志
+        // Motor_Diag_Fault_Flag |= 0x02; // 设置堵转故障标志
     }
 }
 

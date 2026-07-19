@@ -390,7 +390,7 @@ void Current_Loop_Run(void)
 /// @param Ib_fb b相电流重构值
 /// @param Ic_fb c相电流重构值
 /// @param sector sector值，范围1-6
-void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
+inline void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
                            float32_t *Ia_fb, float32_t *Ib_fb, float32_t *Ic_fb, uint8_t sector)
 {
     uint8_t sector_re = rewrite_phase_index[sector - 1];
@@ -426,7 +426,7 @@ void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t I
     return;
 }
 
-void Phase_Min_Max(float A, float B, float C)
+inline void Phase_Min_Max(float A, float B, float C)
 {
     if (Current_Loop.Phase_check_cnt > (int)(20000 / (Speed_Loop.Speed_Ref / 60.0f * 4.0f + 1)))
     {
@@ -479,19 +479,19 @@ void Phase_Min_Max(float A, float B, float C)
 /// @param Duty_A_Comp
 /// @param Duty_B_Comp
 /// @param Duty_C_Comp
-void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
+inline void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                             float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
                             float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp)
 {
     float Ialpha_tmp, Ibeta_tmp;
     float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * (2.0f);
     arm_inv_park_f32(Id, Iq, &Ialpha_tmp, &Ibeta_tmp, arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
-    float Ia_pre, Ib_pre, Ic_pre;
+    float Ia_pre = 0.0f, Ib_pre = 0.0f , Ic_pre = 0.0f;
 
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
-    if (we > (2000000 / 60 * 6.24f * 4))
+    if (we > (200 / 60 * 6.24f * 4))
     {
-        if (Ia_pre > 0.1f)
+        if (Ia_pre > MOTOR_DEAD_ZONE_THD)
         {
             *Duty_A_Comp = Duty_A_Raw + Dead_TIME_DUTY;
             if (*Duty_A_Comp > 1)
@@ -499,7 +499,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                 *Duty_A_Comp = 1;
             }
         }
-        else if (Ia_pre < -0.1f)
+        else if (Ia_pre < -MOTOR_DEAD_ZONE_THD)
         {
             *Duty_A_Comp = Duty_A_Raw - Dead_TIME_DUTY;
             if (*Duty_A_Comp < 0)
@@ -511,7 +511,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
         {
             *Duty_A_Comp = Duty_A_Raw;
         }
-        if (Ib_pre > 0.1f)
+        if (Ib_pre > MOTOR_DEAD_ZONE_THD)
         {
             *Duty_B_Comp = Duty_B_Raw + Dead_TIME_DUTY;
             if (*Duty_B_Comp > 1)
@@ -519,7 +519,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                 *Duty_B_Comp = 1;
             }
         }
-        else if (Ib_pre < -0.1f)
+        else if (Ib_pre < -MOTOR_DEAD_ZONE_THD)
         {
             *Duty_B_Comp = Duty_B_Raw - Dead_TIME_DUTY;
             if (*Duty_B_Comp < 0)
@@ -531,7 +531,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
         {
             *Duty_B_Comp = Duty_B_Raw;
         }
-        if (Ic_pre > 0.1f)
+        if (Ic_pre > MOTOR_DEAD_ZONE_THD)
         {
             *Duty_C_Comp = Duty_C_Raw + Dead_TIME_DUTY;
             if (*Duty_C_Comp > 1)
@@ -539,7 +539,7 @@ void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                 *Duty_C_Comp = 1;
             }
         }
-        else if (Ic_pre < -0.1f)
+        else if (Ic_pre < -MOTOR_DEAD_ZONE_THD)
         {
             *Duty_C_Comp = Duty_C_Raw - Dead_TIME_DUTY;
             if (*Duty_C_Comp < 0)
