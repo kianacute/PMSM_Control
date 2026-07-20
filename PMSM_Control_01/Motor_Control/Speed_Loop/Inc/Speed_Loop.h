@@ -43,29 +43,29 @@ typedef struct LADRC_FirstOrder
 
 typedef struct Speed_Loop
 {
-    uint32_t FREQ_Hz;                               // 循环周期
-    enum Speed_LoopState_t spd_ctrl_state;          // 速度控制状态
-    uint64_t spd_ctrl_timer;                        // 速度控制非空闲状态计时器
-    float target_iq, target_id, target_is;          // 目标电流
-    float Speed_Command;                            // 速度命令
-    float Speed_Ref, Speed_Fb;                      // 速度参考值和反馈值
-    float Speed_Sub_Step, Speed_Add_Step;           // 速度增减步长
-    Motor_Config_t *pMotor;                         // 电机参数指针 
-    Hal_PI_t Speed_PI;                              // 速度PI控制器参数
-    uint32_t Speed_Switch_Cnt;                      // IF模式切换计数器
-    uint8_t Speed_Switch_Flag;                      // 速度闭环标志  
-    float Vs;  
+    uint32_t FREQ_Hz;                      // 循环周期
+    enum Speed_LoopState_t spd_ctrl_state; // 速度控制状态
+    uint64_t spd_ctrl_timer;               // 速度控制非空闲状态计时器
+    float target_iq, target_id, target_is; // 目标电流
+    float Speed_Command;                   // 速度命令
+    float Speed_Ref, Speed_Fb;             // 速度参考值和反馈值
+    float Speed_Sub_Step, Speed_Add_Step;  // 速度增减步长
+    Motor_Config_t *pMotor;                // 电机参数指针
+    Hal_PI_t Speed_PI;                     // 速度PI控制器参数
+    uint32_t Speed_Switch_Cnt;             // IF模式切换计数器
+    uint8_t Speed_Switch_Flag;             // 速度闭环标志
+    float Vs;
     float Voltage_err;
-    Hysteresis_Comp_TypeDef Weak_Control_Hcomp;     // 弱磁滞回比较器
-    Hal_PI_t Weak_Pi;                               // 弱磁PI控制器参数
-    LADRC_FirstOrder_t Speed_LADRC;                 // 一阶LADRC控制器
-    uint8_t Align_Finish_Flag;                      // 对准完成标志
+    Hysteresis_Comp_TypeDef Weak_Control_Hcomp;      // 弱磁滞回比较器
+    Hal_PI_t Weak_Pi;                                // 弱磁PI控制器参数
+    LADRC_FirstOrder_t Speed_LADRC;                  // 一阶LADRC控制器
+    uint8_t Align_Finish_Flag;                       // 对准完成标志
+    Hysteresis_Comp_TypeDef Speed_Middle_High_Hcomp; // 中高档速度滞回比较器
+    Hal_PI_t Derating_Pi;                            // 限功率PI控制器参数
+    float Derating_Factor;
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);
 void Speed_Loop_Task(void);
-
-void LADRC_FirstOrder_Init(LADRC_FirstOrder_t *ladrc, float h, float b0, float wo, float wc, float out_max, float out_min);
-float LADRC_FirstOrder_Update(LADRC_FirstOrder_t *ladrc, float ref, float y);
 
 #endif // __Speed_Loop_H__

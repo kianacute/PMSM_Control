@@ -16,6 +16,19 @@ extern SYSTEM_t System;
 
 Speed_Loop_t Speed_Loop;
 
+void Speed_Run(void);
+void Speed_Loop_Idle_Task(void);
+void Speed_Loop_Align_Task();
+void Speed_Loop_Open_Task(void);
+void Speed_Loop_Switch_Task(void);
+void Speed_Loop_Low_Task(void);
+void Speed_Loop_Middle_Task(void);
+void Speed_Loop_High_Task(void);
+void Speed_Loop_Run_Task(void);
+void Paramater_update(void);
+void Power_Derating_Init(void);
+float Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit);
+
 void Speed_Loop_Init(void)
 {
     Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
@@ -52,18 +65,13 @@ void Speed_Loop_Init(void)
     Speed_Loop.target_is = 0;
     Speed_Loop.Speed_Fb = 0;
 
-    LADRC_FirstOrder_Init(&Speed_Loop.Speed_LADRC, 0.001f, 100000.0f, 200.0f, 20.0f, 8.0f, -8.0f);
+    // LADRC_FirstOrder_Init(&Speed_Loop.Speed_LADRC, 0.001f, 100000.0f, 200.0f, 20.0f, 8.0f, -8.0f);
+
+    Hysteresis_Comp_Init(&Speed_Loop.Speed_Middle_High_Hcomp, 1000.0f, 800.0f, 1000);
+    Speed_Loop.Speed_Middle_High_Hcomp.enable = 1;
+
+    Power_Derating_Init();
 }
-void Speed_Run(void);
-void Speed_Loop_Idle_Task(void);
-void Speed_Loop_Align_Task();
-void Speed_Loop_Open_Task(void);
-void Speed_Loop_Switch_Task(void);
-void Speed_Loop_Low_Task(void);
-void Speed_Loop_Middle_Task(void);
-void Speed_Loop_High_Task(void);
-void Speed_Loop_Run_Task(void);
-void Paramater_update(void);
 
 
 void Speed_Loop_Task(void)
@@ -122,9 +130,10 @@ void Speed_Run(void)
 
 void Speed_Loop_Idle_Task(void)
 {
-    Speed_Loop_Init();
+    
     if (System.Run_flag == 1)
     {
+        Speed_Loop_Init();
         Speed_Loop.spd_ctrl_state = Speed_Loop_Align;
     }
 }
@@ -165,13 +174,13 @@ void Speed_Loop_Align_Task()
 
 void Speed_Loop_Open_Task(void)
 {
-    float tick_count = ((float)Speed_Loop.spd_ctrl_timer) / 1000.0f;
+    float tick_count = ((float)(Speed_Loop.spd_ctrl_timer) / Speed_Loop.FREQ_Hz);
     Speed_Loop.Speed_Ref = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Speed_Lookup);
     Speed_Loop.target_iq = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Iq_Lookup);
     Speed_Loop.target_id = 0;
     if (Speed_Loop.Speed_Ref >= 600)
     {
-        // Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
+        Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
     }
 }
 
@@ -206,26 +215,30 @@ void Speed_Loop_Low_Task(void)
 void Speed_Loop_Middle_Task(void)
 {
     Speed_Loop.target_id = Oblique_Wave(0.2f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if(Speed_Loop.Speed_Ref > 1000)
+    Speed_Loop_Run_Task();    
+    Hysteresis_Comp_Process_Add(&Speed_Loop.Speed_Middle_High_Hcomp, Speed_Loop.Speed_Ref);
+    if(Speed_Loop.Speed_Middle_High_Hcomp.comp_out == 1)
     {
         Speed_Loop.spd_ctrl_state = Speed_Loop_High;
     }
-    Speed_Loop_Run_Task();
 }
 
 void Speed_Loop_High_Task(void)
 {
     Speed_Loop.target_id = Oblique_Wave(0.0f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if(Speed_Loop.Speed_Ref < 800)
+    Speed_Loop_Run_Task();
+    Hysteresis_Comp_Process_Add(&Speed_Loop.Speed_Middle_High_Hcomp, Speed_Loop.Speed_Ref);
+    if(Speed_Loop.Speed_Middle_High_Hcomp.comp_out == 0)
     {
         Speed_Loop.spd_ctrl_state = Speed_Loop_Middle;
     }
-    Speed_Loop_Run_Task();
 }
 
 void Speed_Loop_Run_Task(void)
 {
-    Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command, Speed_Loop.Speed_Ref, SPEED_ADD_STEP, SPEED_SUB_STEP);
+    Power_Derating(Current_Loop.Bus_Current_LPF, Current_Loop_Input.Udc_ADISR, PMSM_42JS_Config.motor_param->Power_Limit);
+    Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command * Speed_Loop.Derating_Factor, Speed_Loop.Speed_Ref, 
+                            SPEED_ADD_STEP, SPEED_SUB_STEP);
     Hysteresis_Comp_Process_Add(&Speed_Loop.Weak_Control_Hcomp, Speed_Loop.Voltage_err);
     // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
     Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
@@ -234,15 +247,17 @@ void Speed_Loop_Run_Task(void)
         Speed_Loop.target_id = Hal_PI_f32(&Speed_Loop.Weak_Pi, (Speed_Loop.Weak_Control_Hcomp.threshold_high - Speed_Loop.Voltage_err));
     }
     arm_sqrt_f32(Current_Loop.Ud_Target * Current_Loop.Ud_Target + Current_Loop.Uq_Target * Current_Loop.Uq_Target, &Speed_Loop.Vs);
-    Speed_Loop.Voltage_err = Speed_Loop.Vs - 24.0f * WEAK_VOLTAGE_COMPENSATION;
-    arm_sqrt_f32(Speed_Loop.target_is * Speed_Loop.target_is - Speed_Loop.target_id * Speed_Loop.target_id,
+    Speed_Loop.Voltage_err = Speed_Loop.Vs - Current_Loop_Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION;
+    if (Speed_Loop.target_is > Speed_Loop.target_id)
+    {
+        arm_sqrt_f32(Speed_Loop.target_is * Speed_Loop.target_is - Speed_Loop.target_id * Speed_Loop.target_id,
                  &Speed_Loop.target_iq);  
-      
-}
-
-extern struct SMO_Parameter SMO_OB;
-extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern struct EffFluxObserver_Parameter EffFlux_OB;
+    }
+    else
+    {
+        Speed_Loop.target_iq = 0;
+    }
+} 
 
 
 void Paramater_update(void)
@@ -313,6 +328,25 @@ float LADRC_FirstOrder_Update(LADRC_FirstOrder_t *ladrc, float ref, float y)
         ladrc->u = ladrc->out_min;
 
     return ladrc->u;
+}
+
+void Power_Derating_Init(void)
+{
+    Speed_Loop.Derating_Pi.kp = 1e-5f;
+    Speed_Loop.Derating_Pi.ki = 1e-5f;
+    Speed_Loop.Derating_Pi.Kd = 0.1f;
+    Speed_Loop.Derating_Pi.out_max = 1.0f;
+    Speed_Loop.Derating_Pi.out_min = 0.0f;
+    Speed_Loop.Derating_Factor = 1.0f;
+}
+
+
+float Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit)
+{
+    float Power = Bus_Current * Bus_Voltage;
+    float Error = Power_Limit - Power;
+    Speed_Loop.Derating_Factor = Hal_PI_f32(&Speed_Loop.Derating_Pi, Error);
+    return Speed_Loop.Derating_Factor;
 }
 
 

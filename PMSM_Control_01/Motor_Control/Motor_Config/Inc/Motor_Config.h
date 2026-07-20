@@ -16,6 +16,7 @@ typedef struct Motor_Parameter
     float max_current_a;   // 最大电流
     float voltage_limit_v; // 电压限制，单位为V
     uint8_t rs_identified; // Rs离线辨识标志: 0=未辨识, 1=已辨识成功
+    float Power_Limit; // 功率限制参数
 } Motor_Parameter_t;
 
 typedef struct Motor_Config

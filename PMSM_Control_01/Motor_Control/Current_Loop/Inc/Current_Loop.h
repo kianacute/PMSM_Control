@@ -57,6 +57,8 @@ typedef struct Current_Loop
     enum Motor_State Motor_State;
     uint32_t Motor_Wait_Cnt;
     uint8_t PWM_OPEN_Flag;
+    uint8_t Dead_Zone_Enable_Flag;
+    float Bus_Current, Bus_Current_LPF;
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint32_t Loop_count;
@@ -64,5 +66,8 @@ typedef struct Current_Loop
 
 
 void Current_Loop_Init(void);
+
+extern Current_Loop_Input_t Current_Loop_Input;
+extern Current_Loop_Output_t Current_Loop_Output;
 
 #endif // SVPWM_H

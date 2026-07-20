@@ -55,7 +55,6 @@ void SYSTEM_HV_Standy()
 
 
 extern uint8_t System_Diag_Fault_Flag;
-extern uint8_t Motor_Diag_Fault_Flag;
 
 void SYSTEM_Run()
 {
@@ -92,7 +91,6 @@ void SYSTEM_Wait()
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_HV_STANDY;
     System_Diag_Fault_Flag = 0;
-    Motor_Diag_Fault_Flag = 0;
     System.Run_flag = 0;
 }
 

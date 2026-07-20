@@ -60,6 +60,15 @@ void Current_Loop_Init(void)
     Current_Loop.B_Min = 0.0f;
     Current_Loop.C_Max = 0.0f;
     Current_Loop.C_Min = 0.0f;
+
+    Current_Loop.Ia_fb_offset = 0;
+    Current_Loop.Ib_fb_offset = 0;
+    Current_Loop.Ic_fb_offset = 0;
+    Current_Loop.offset_check_cnt = 0;
+    Current_Loop.Id_PI.integral = 0;
+    Current_Loop.Iq_PI.integral = 0;
+
+    Current_Loop.Dead_Zone_Enable_Flag = 1;
 }
 
 int32_t MOTOR_IDLE_TASK(void);
@@ -77,6 +86,7 @@ void Current_Loop_Switch(void);
 void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                             float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
                             float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp);
+void MOTOR_Bus_Current_Rewrite(void);                        
 
 void Speed_Switch(void)
 {
@@ -198,7 +208,6 @@ int32_t MOTOR_IDLE_TASK(void)
     {
         Current_PWM_Switch(PWM_CLOSE);
         Current_Loop.Motor_State = MOTOR_IDLE;
-        Current_Loop_Init();
     }
     return 0;
 }
@@ -215,14 +224,9 @@ int32_t MOTOR_READY_TASK(void)
         }
         else
         {
+            Current_Loop_Init();
             Current_Loop.Motor_State = MOTOR_OFFSET_CHECK;
         }
-        Current_Loop.Ia_fb_offset = 0;
-        Current_Loop.Ib_fb_offset = 0;
-        Current_Loop.Ic_fb_offset = 0;
-        Current_Loop.offset_check_cnt = 0;
-        Current_Loop.Id_PI.integral = 0;
-        Current_Loop.Iq_PI.integral = 0;
     }
     else
     {
@@ -255,7 +259,7 @@ int32_t MOTOR_OFFSET_CHECK_TASK(void)
                     Current_Loop.Ib_fb_offset > MOTOR_PHASE_LOCK_THRESHOLD || Current_Loop.Ib_fb_offset < -MOTOR_PHASE_LOCK_THRESHOLD ||
                     Current_Loop.Ic_fb_offset > MOTOR_PHASE_LOCK_THRESHOLD || Current_Loop.Ic_fb_offset < -MOTOR_PHASE_LOCK_THRESHOLD)
                 {
-                    Motor_Diag_Fault_Flag = 1;
+                    Motor_Diag_Fault_Flag |= MOTOR_CURRENT_OFFSET_OVER_FLAG_MASK;
                     Current_Loop.Motor_State = MOTOR_FAULT;
                 }
                 else
@@ -374,12 +378,21 @@ void Current_Loop_Run(void)
 
     Current_Loop.Id_PI.out_max = Current_Loop_Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * 1.02f;
     Current_Loop.Id_PI.out_min = -Current_Loop.Id_PI.out_max;
-    arm_sqrt_f32(Current_Loop.Id_PI.out_max * Current_Loop.Id_PI.out_max - Current_Loop.Ud_Target * Current_Loop.Ud_Target,
-                 &Current_Loop.Iq_PI.out_max);
+    if (Current_Loop.Id_PI.out_max - Current_Loop.Ud_Target)
+    {
+        arm_sqrt_f32(Current_Loop.Id_PI.out_max * Current_Loop.Id_PI.out_max -
+                         Current_Loop.Ud_Target * Current_Loop.Ud_Target,
+                     &Current_Loop.Iq_PI.out_max);
+    }
+    else
+    {
+        Current_Loop.Iq_PI.out_max = 0.0f;
+    }
     Current_Loop.Iq_PI.out_min = -Current_Loop.Iq_PI.out_max;
     Dead_Zone_Compensation(Current_Loop.Id_fb, Current_Loop.Iq_fb, OBSERVE_GET_WE(), OBSERVE_GET_THETA(),
                            Current_Loop.PWM_duty_a, Current_Loop.PWM_duty_b, Current_Loop.PWM_duty_c,
                            &Current_Loop_Output.PWM_duty_a, &Current_Loop_Output.PWM_duty_b, &Current_Loop_Output.PWM_duty_c);
+    MOTOR_Bus_Current_Rewrite();
 }
 
 /// @brief 三相电流重构，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
@@ -391,7 +404,7 @@ void Current_Loop_Run(void)
 /// @param Ic_fb c相电流重构值
 /// @param sector sector值，范围1-6
 inline void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
-                           float32_t *Ia_fb, float32_t *Ib_fb, float32_t *Ic_fb, uint8_t sector)
+                                  float32_t *Ia_fb, float32_t *Ib_fb, float32_t *Ic_fb, uint8_t sector)
 {
     uint8_t sector_re = rewrite_phase_index[sector - 1];
     switch (sector_re)
@@ -426,6 +439,10 @@ inline void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, floa
     return;
 }
 
+/// @brief 检查相电流的最小值和最大值
+/// @param A
+/// @param B
+/// @param C
 inline void Phase_Min_Max(float A, float B, float C)
 {
     if (Current_Loop.Phase_check_cnt > (int)(20000 / (Speed_Loop.Speed_Ref / 60.0f * 4.0f + 1)))
@@ -468,7 +485,7 @@ inline void Phase_Min_Max(float A, float B, float C)
     }
 }
 
-/// @brief 这种死区补偿方式会引入振动，总之就是更加不稳定
+/// @brief 死区补偿，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
 /// @param Id
 /// @param Iq
 /// @param we
@@ -480,16 +497,18 @@ inline void Phase_Min_Max(float A, float B, float C)
 /// @param Duty_B_Comp
 /// @param Duty_C_Comp
 inline void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
-                            float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
-                            float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp)
+                                   float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
+                                   float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp)
 {
     float Ialpha_tmp, Ibeta_tmp;
     float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * (2.0f);
     arm_inv_park_f32(Id, Iq, &Ialpha_tmp, &Ibeta_tmp, arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
-    float Ia_pre = 0.0f, Ib_pre = 0.0f , Ic_pre = 0.0f;
-
+    float Ia_pre = 0.0f, Ib_pre = 0.0f, Ic_pre = 0.0f;
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
-    if (we > (200 / 60 * 6.24f * 4))
+    if (Current_Loop.Dead_Zone_Enable_Flag &&
+        (Speed_Loop.spd_ctrl_state == Speed_Loop_Low ||
+         Speed_Loop.spd_ctrl_state == Speed_Loop_Middle ||
+         Speed_Loop.spd_ctrl_state == Speed_Loop_High))
     {
         if (Ia_pre > MOTOR_DEAD_ZONE_THD)
         {
@@ -559,4 +578,14 @@ inline void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
         *Duty_C_Comp = Duty_C_Raw;
     }
     return;
+}
+
+/// @brief  母线电流重构
+/// @param
+void MOTOR_Bus_Current_Rewrite(void)
+{
+    Current_Loop.Bus_Current = -(Current_Loop.Ia_fb * Current_Loop_Output.PWM_duty_a +
+                                Current_Loop.Ib_fb * Current_Loop_Output.PWM_duty_b +
+                                Current_Loop.Ic_fb * Current_Loop_Output.PWM_duty_c);
+    Current_Loop.Bus_Current_LPF = 0.01f * Current_Loop.Bus_Current + 0.99f * Current_Loop.Bus_Current_LPF;
 }

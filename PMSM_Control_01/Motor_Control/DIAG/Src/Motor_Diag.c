@@ -15,7 +15,7 @@ static Motor_Diag_Item_t Motor_Over_Speed_Diag;
 static Motor_Diag_Item_t Motor_Phase_A_Lock, Motor_Phase_B_Lock, Motor_Phase_C_Lock;
 static Motor_Diag_Item_t Motor_Block_Detect_Diag;
 
-uint8_t Motor_Diag_Fault_Flag = 0;
+uint64_t Motor_Diag_Fault_Flag = 0;
 
 static void MOTOR_Over_Speed_Update(Diag_Node_t *node)
 {
@@ -23,7 +23,7 @@ static void MOTOR_Over_Speed_Update(Diag_Node_t *node)
     Hysteresis_Comp_Process_Add(&item->hcomp, Speed_Loop.Speed_Fb);
     if(item->hcomp.comp_out == 1)
     {
-        Motor_Diag_Fault_Flag |= 0x01; // 设置过速故障标志
+        Motor_Diag_Fault_Flag |= MOTOR_SPEED_OVER_FLAG_MASK; // 设置过速故障标志
     }
 }
 
@@ -61,20 +61,20 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node)
     Hysteresis_Comp_Process_Sub(&Motor_Phase_A_Lock.hcomp, err);
     if(Motor_Phase_A_Lock.hcomp.comp_out == 1)
     {
-        Motor_Diag_Fault_Flag |= 0x04; // 设置A相锁定故障标志
+        Motor_Diag_Fault_Flag |= MOTOR_PHASE_A_LOCK_FLAG_MASK; // 设置A相锁定故障标志
     }
 
     err = my_abs(Current_Loop.B_Max - 0);
     Hysteresis_Comp_Process_Sub(&Motor_Phase_B_Lock.hcomp, err);
     if(Motor_Phase_B_Lock.hcomp.comp_out == 1)
     {
-        Motor_Diag_Fault_Flag |= 0x08; // 设置B相锁定故障标志
+        Motor_Diag_Fault_Flag |= MOTOR_PHASE_B_LOCK_FLAG_MASK; // 设置B相锁定故障标志
     }
     err = my_abs(Current_Loop.C_Max - 0);
     Hysteresis_Comp_Process_Sub(&Motor_Phase_C_Lock.hcomp, err);
     if(Motor_Phase_C_Lock.hcomp.comp_out == 1)
     {
-        Motor_Diag_Fault_Flag |= 0x10; // 设置C相锁定故障标志
+        Motor_Diag_Fault_Flag |= MOTOR_PHASE_C_LOCK_FLAG_MASK; // 设置C相锁定故障标志
     }
 }
 
@@ -100,14 +100,14 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node)
     Hysteresis_Comp_Process_Add(&item->hcomp, emf_err);
     if(item->hcomp.comp_out == 1)
     {
-        // Motor_Diag_Fault_Flag |= 0x02; // 设置堵转故障标志
+        Motor_Diag_Fault_Flag |= MOTOR_BLOCK_DETECT_FLAG_MASK; // 设置堵转故障标志
     }
 }
 
 void Motor_Diag_Init(void)
 {
     Hysteresis_Comp_Init(&Motor_Over_Speed_Diag.hcomp, MOTOR_OVER_SPEED_THRESHOLD, 0, MOTOR_OVER_SPEED_THRESHOLD_DELAY);
-    // Diag_List_Register(&Motor_Diag_Head, &Motor_Over_Speed_Diag.node, MOTOR_Over_Speed_Update);
+    Diag_List_Register(&Motor_Diag_Head, &Motor_Over_Speed_Diag.node, MOTOR_Over_Speed_Update);
 
     Hysteresis_Comp_Init(&Motor_Phase_A_Lock.hcomp, 0.5, 0.1, 500);
     Hysteresis_Comp_Init(&Motor_Phase_B_Lock.hcomp, 0.5, 0.1, 500);
