@@ -24,6 +24,15 @@ typedef struct Lookup_Table
     uint32_t table_size;
 }Lookup_Table_t;
 
+typedef struct Lookup_Table_2D
+{
+    const float *x_table;   // x轴坐标数组，长度 nx
+    const float *y_table;   // y轴坐标数组，长度 ny
+    const float *z_table;   // z数据矩阵，按行主序存储，大小 nx * ny
+    uint32_t nx;            // x轴点数
+    uint32_t ny;            // y轴点数
+}Lookup_Table_2D_t;
+
 struct PLL
 {
     Hal_PI_t PLL_PI;
@@ -87,6 +96,8 @@ inline float my_abs(float num);
 inline float32_t Hal_LPF_f32(float coff, float input);
 
 inline float Lookup_Table_Linear(float x, Lookup_Table_t *table);
+
+inline float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table);
 
 inline int binary_search_float_first(const float* arr, uint32_t n, float target);
 

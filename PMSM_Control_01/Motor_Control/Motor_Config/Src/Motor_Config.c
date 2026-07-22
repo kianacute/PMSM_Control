@@ -49,6 +49,8 @@ void Motor_Parameter_Init(void)
                          / 100.0f / PI * 3.0f); 
     /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */
     PMSM_42JS_Parameter.Power_Limit = 50.0f; // 功率限制参数，单位为W
+    PMSM_42JS_Parameter.Flux_Flux  = PMSM_42JS_Parameter.flux_linkage_wb * PMSM_42JS_Parameter.flux_linkage_wb;
+    PMSM_42JS_Parameter.Ld_Lq = PMSM_42JS_Parameter.Ld - PMSM_42JS_Parameter.Lq;
 }
 
 void Motor_Config_Init(void)

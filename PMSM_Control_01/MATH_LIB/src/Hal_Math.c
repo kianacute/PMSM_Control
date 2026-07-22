@@ -94,6 +94,64 @@ float Lookup_Table_Linear(float x, Lookup_Table_t *table)
      return y0 + (y1 - y0) * (x - x0) / (x1 - x0);
 }
 
+/// @brief 二维双线性插值查表函数
+/// @param x x轴输入值
+/// @param y y轴输入值
+/// @param table 二维查找表结构体指针，包含x_table、y_table、z_table和各自的维度
+/// @return 双线性插值结果
+float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
+{
+    // x轴边界限幅
+    float x_clamped = x;
+    if (x_clamped <= table->x_table[0])
+    {
+        x_clamped = table->x_table[0];
+    }
+    else if (x_clamped >= table->x_table[table->nx - 1])
+    {
+        x_clamped = table->x_table[table->nx - 1];
+    }
+
+    // y轴边界限幅
+    float y_clamped = y;
+    if (y_clamped <= table->y_table[0])
+    {
+        y_clamped = table->y_table[0];
+    }
+    else if (y_clamped >= table->y_table[table->ny - 1])
+    {
+        y_clamped = table->y_table[table->ny - 1];
+    }
+
+    // 查找x轴和y轴的索引
+    int ix = binary_search_float_first(table->x_table, table->nx, x_clamped);
+    int iy = binary_search_float_first(table->y_table, table->ny, y_clamped);
+
+    // 确保索引在有效范围内（边界情况下取nx-2或ny-2）
+    if (ix >= (int)(table->nx - 1)) ix = table->nx - 2;
+    if (iy >= (int)(table->ny - 1)) iy = table->ny - 2;
+    if (ix < 0) ix = 0;
+    if (iy < 0) iy = 0;
+
+    // z_table按行主序存储: z[i][j] = z_table[i * ny + j]
+    float x0 = table->x_table[ix];
+    float x1 = table->x_table[ix + 1];
+    float y0 = table->y_table[iy];
+    float y1 = table->y_table[iy + 1];
+
+    float z00 = table->z_table[ix * table->ny + iy];
+    float z01 = table->z_table[ix * table->ny + (iy + 1)];
+    float z10 = table->z_table[(ix + 1) * table->ny + iy];
+    float z11 = table->z_table[(ix + 1) * table->ny + (iy + 1)];
+
+    // 先在x方向插值
+    float z0 = z00 + (z10 - z00) * (x_clamped - x0) / (x1 - x0);
+    float z1 = z01 + (z11 - z01) * (x_clamped - x0) / (x1 - x0);
+
+    // 再在y方向插值
+    return z0 + (z1 - z0) * (y_clamped - y0) / (y1 - y0);
+}
+
 /// @brief 将角度限制在0-2PI范围内
 /// @param theta 输入角度，单位为弧度
 /// @return 限制后的角度，单位为弧度

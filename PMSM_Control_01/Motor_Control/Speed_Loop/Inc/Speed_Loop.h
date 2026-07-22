@@ -63,6 +63,8 @@ typedef struct Speed_Loop
     Hysteresis_Comp_TypeDef Speed_Middle_High_Hcomp; // 中高档速度滞回比较器
     Hal_PI_t Derating_Pi;                            // 限功率PI控制器参数
     float Derating_Factor;
+    float MTPA_Id;
+    float Flux_Weak_Id;
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);
