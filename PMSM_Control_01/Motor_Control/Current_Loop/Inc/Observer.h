@@ -135,6 +135,7 @@ struct EffFluxObserver_Parameter
     Lookup_Table_t PLL_Kp_Lookup;
     Lookup_Table_t PLL_Ki_Lookup;
     Lookup_Table_t Gama_Lookup;
+    float Angle_Comp;
 };
 
 void Effective_FluxObserver_Init(void);
@@ -144,7 +145,7 @@ void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float3
 extern struct EffFluxObserver_Parameter EffFlux_OB;
 #define OBSERVE_Init() Effective_FluxObserver_Init()
 #define OBSERVE_Updata(Ualpha, Ubeta, Ialpha, Ibeta) Effective_FluxObserver_Updata(&EffFlux_OB, Ualpha, Ubeta, Ialpha, Ibeta)
-#define OBSERVE_GET_THETA()     (EffFlux_OB.tPLL.theta)
+#define OBSERVE_GET_THETA()     ((EffFlux_OB.tPLL.theta) + (EffFlux_OB.Angle_Comp))
 #define OBSERVE_GET_WE()        (EffFlux_OB.tPLL.we)
 
 #endif
@@ -177,6 +178,6 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 
 #endif
 
-void Observer_Param_Lookup_Updata(float Speed);
+void Observer_Param_Lookup_Updata(float Speed, float Is);
 
 #endif // __EST_H__

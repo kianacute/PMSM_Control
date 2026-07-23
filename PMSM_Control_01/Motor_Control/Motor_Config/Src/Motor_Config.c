@@ -1,34 +1,6 @@
 #include "Motor_Config.h"
 
-
-/*IF启动参数查表*/
-extern const float IF_Start_Ramp_Sec[10];
-extern const float IF_Start_Iq_A[10];
-extern const float IF_Start_Speed_RPM[10];
-
-// 速度环参数查表
-extern const float Speed_Loop_Speed_Index[10];
-extern const float Speed_Loop_Speed_PI_Kp_1D[10];
-extern const float Speed_Loop_Speed_PI_Ki_1D[10];
-
-// 电流环参数查表
-extern const float Current_Lookup_Speed_index[10];
-extern const float Current_ID_PI_Kp_Lookup_1D[10];
-extern const float Current_IQ_PI_Kp_Lookup_1D[10];
-extern const float Current_ID_PI_Ki_Lookup_1D[10];
-extern const float Current_IQ_PI_Ki_Lookup_1D[10];
-
-// 磁链观测器参数查表
-extern const float NonFlux_Lookup_Speed_index[10];
-extern const float NonFlux_Gama_Lookup_1D[10];
-extern const float NonFlux_PLL_Kp_Lookup_1D[10];
-extern const float NonFlux_PLL_Ki_Lookup_1D[10];
-
-// 滑模观测器参数查表
-extern const float SMO_Lookup_Speed_index[10];
-extern const float SMO_Gain_Lookup_1D[10];
-extern const float SMO_PLL_Kp_Lookup_1D[10];
-extern const float SMO_PLL_Ki_Lookup_1D[10];
+#include "Motor_Lookup_Tables.c"
 
 
 Motor_Parameter_t PMSM_42JS_Parameter;
@@ -101,6 +73,16 @@ void Motor_Config_Init(void)
     PMSM_42JS_Config.NonFlux_Gama_Lookup.x_table = NonFlux_Lookup_Speed_index;
     PMSM_42JS_Config.NonFlux_Gama_Lookup.y_table = NonFlux_Gama_Lookup_1D;
     PMSM_42JS_Config.NonFlux_Gama_Lookup.table_size = sizeof(NonFlux_Lookup_Speed_index) / sizeof(float);
+
+    PMSM_42JS_Config.EfFlux_Gama_Lookup.x_table = NonFlux_Lookup_Speed_index;
+    PMSM_42JS_Config.EfFlux_Gama_Lookup.y_table = EfFlux_Gama_Lookup_1D;
+    PMSM_42JS_Config.EfFlux_Gama_Lookup.table_size = sizeof(EfFlux_Gama_Lookup_1D) / sizeof(float);
+
+    PMSM_42JS_Config.EfFlux_Angle_Comp.x_table = NonFlux_Lookup_Speed_index;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.y_table = EfFlux_Lookup_Is_index;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.z_table = EFFlux_Angle_Comp_table_2D;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.nx_size = sizeof(NonFlux_Lookup_Speed_index) / sizeof(float);;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.ny_size = sizeof(EfFlux_Lookup_Is_index) / sizeof(float);;
 
     // SMO观测器查表初始化
     PMSM_42JS_Config.SMO_PLL_Kp_Lookup.x_table = SMO_Lookup_Speed_index;

@@ -107,9 +107,9 @@ float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
     {
         x_clamped = table->x_table[0];
     }
-    else if (x_clamped >= table->x_table[table->nx - 1])
+    else if (x_clamped >= table->x_table[table->nx_size - 1])
     {
-        x_clamped = table->x_table[table->nx - 1];
+        x_clamped = table->x_table[table->nx_size - 1];
     }
 
     // y轴边界限幅
@@ -118,31 +118,31 @@ float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
     {
         y_clamped = table->y_table[0];
     }
-    else if (y_clamped >= table->y_table[table->ny - 1])
+    else if (y_clamped >= table->y_table[table->ny_size - 1])
     {
-        y_clamped = table->y_table[table->ny - 1];
+        y_clamped = table->y_table[table->ny_size - 1];
     }
 
     // 查找x轴和y轴的索引
-    int ix = binary_search_float_first(table->x_table, table->nx, x_clamped);
-    int iy = binary_search_float_first(table->y_table, table->ny, y_clamped);
+    int ix = binary_search_float_first(table->x_table, table->nx_size, x_clamped);
+    int iy = binary_search_float_first(table->y_table, table->ny_size, y_clamped);
 
-    // 确保索引在有效范围内（边界情况下取nx-2或ny-2）
-    if (ix >= (int)(table->nx - 1)) ix = table->nx - 2;
-    if (iy >= (int)(table->ny - 1)) iy = table->ny - 2;
+    // 确保索引在有效范围内（边界情况下取nx_size-2或ny_size-2）
+    if (ix >= (int)(table->nx_size - 1)) ix = table->nx_size - 2;
+    if (iy >= (int)(table->ny_size - 1)) iy = table->ny_size - 2;
     if (ix < 0) ix = 0;
     if (iy < 0) iy = 0;
 
-    // z_table按行主序存储: z[i][j] = z_table[i * ny + j]
+    // z_table按行主序存储: z[i][j] = z_table[i * ny_size + j]
     float x0 = table->x_table[ix];
     float x1 = table->x_table[ix + 1];
     float y0 = table->y_table[iy];
     float y1 = table->y_table[iy + 1];
 
-    float z00 = table->z_table[ix * table->ny + iy];
-    float z01 = table->z_table[ix * table->ny + (iy + 1)];
-    float z10 = table->z_table[(ix + 1) * table->ny + iy];
-    float z11 = table->z_table[(ix + 1) * table->ny + (iy + 1)];
+    float z00 = table->z_table[ix * table->ny_size + iy];
+    float z01 = table->z_table[ix * table->ny_size + (iy + 1)];
+    float z10 = table->z_table[(ix + 1) * table->ny_size + iy];
+    float z11 = table->z_table[(ix + 1) * table->ny_size + (iy + 1)];
 
     // 先在x方向插值
     float z0 = z00 + (z10 - z00) * (x_clamped - x0) / (x1 - x0);

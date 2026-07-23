@@ -162,7 +162,7 @@ void Align_Task()
 
 void Speed_Loop_Align_Task()
 {
-    Speed_Loop.target_id = 0.5f;
+    Speed_Loop.target_id = 0.0f;
     if (System.Run_flag == 1)
     {
 #if defined(MOTOR_OPEN_SETUP)
@@ -206,7 +206,7 @@ void Speed_Loop_Low_Task(void)
 {
 
     // Speed_Loop.target_id = Oblique_Wave(0.5f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if (Speed_Loop.Speed_Ref > 500)
+    if (Speed_Loop.Speed_Ref > MOTOR_SPEED_MIDDLE_THD)
     {
         Speed_Loop.spd_ctrl_state = Speed_Loop_Middle;
     }
@@ -240,6 +240,7 @@ void Speed_Loop_Run_Task(void)
     Power_Derating(Current_Loop.Bus_Current_LPF, Current_Loop_Input.Udc_ADISR, PMSM_42JS_Config.motor_param->Power_Limit);
     Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command * Speed_Loop.Derating_Factor, Speed_Loop.Speed_Ref,
                                         SPEED_ADD_STEP, SPEED_SUB_STEP);
+    // Speed_Loop.Speed_Ref = Speed_Loop.Speed_Command;
     Hysteresis_Comp_Process_Add(&Speed_Loop.Weak_Control_Hcomp, Speed_Loop.Voltage_err);
     // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
     Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
@@ -269,15 +270,15 @@ void Speed_Loop_Run_Task(void)
 
 void Paramater_update(void)
 {
-    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Ref);
+    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb, Speed_Loop.target_is);
 
-    Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
-    Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
+    Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
+    Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
 
-    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Kp_Lookup);
-    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
-    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
-    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Ref, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
+    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.ID_PI_Kp_Lookup);
+    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
+    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
+    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
 }
 
 /* ==================================================================
@@ -351,7 +352,10 @@ void Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit)
 {
     float Power = Bus_Current * Bus_Voltage;
     float Error = Power_Limit - Power;
-    Speed_Loop.Derating_Factor = Hal_PI_f32(&Speed_Loop.Derating_Pi, Error);
+    if((Power_Limit - Power) < 10.0f)
+    {
+        Speed_Loop.Derating_Factor = Hal_PI_f32(&Speed_Loop.Derating_Pi, Error);
+    }
 }
 
 void MTPA_Cal(float Is)

@@ -235,6 +235,7 @@ void Effective_FluxObserver_Init(void)
     EffFlux_OB.Flux_beta = 0.0f;
     EffFlux_OB.tPLL.we = 0.0f;
     EffFlux_OB.tPLL.theta = 0.0f;
+    EffFlux_OB.Angle_Comp = 0.0f;
     EMF_CAL_Init();
 }
 
@@ -313,7 +314,7 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id)
 
 #endif
 
-void Observer_Param_Lookup_Updata(float Speed)
+void Observer_Param_Lookup_Updata(float Speed, float Is)
 {
 #ifdef MOTOR_NONFLUX_OBSERVER
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
@@ -324,6 +325,8 @@ void Observer_Param_Lookup_Updata(float Speed)
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
     EffFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
     EffFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Ki_Lookup);
+    EffFlux_OB.gama = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.EfFlux_Gama_Lookup);
+    EffFlux_OB.Angle_Comp = Lookup_Table_2D_Linear(Speed, Is, &PMSM_42JS_Config.EfFlux_Angle_Comp);
 #endif
 
 #ifdef MOTOR_SMO_OBSERVER

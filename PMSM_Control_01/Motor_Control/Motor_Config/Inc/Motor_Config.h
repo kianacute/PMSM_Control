@@ -43,12 +43,15 @@ typedef struct Motor_Config
     Lookup_Table_t NonFlux_PLL_Kp_Lookup;
     Lookup_Table_t NonFlux_PLL_Ki_Lookup;
     Lookup_Table_t NonFlux_Gama_Lookup;
+    Lookup_Table_t EfFlux_Gama_Lookup;
+    Lookup_Table_2D_t EfFlux_Angle_Comp; 
     
-
     //SMO观测器查表参数
     Lookup_Table_t SMO_PLL_Kp_Lookup;
     Lookup_Table_t SMO_PLL_Ki_Lookup;
     Lookup_Table_t SMO_Gain_Lookup;
+    
+
 
 } Motor_Config_t;
 
@@ -72,6 +75,9 @@ typedef struct Motor_Config
 #define MOTOR_EFFECTIVE_FLUX_OBSERVER         // 有效磁链观测器
 // #define MOTOR_ENCODER_OBSERVER             // 编码器观测器
 // #define MOTOR_HFI_OBSERVER                 // 高频注入观测器
+
+
+#define MOTOR_SPEED_MIDDLE_THD       (500.0f)
 
 // #define U_base   25.0f
 // #define I_base   10.0f

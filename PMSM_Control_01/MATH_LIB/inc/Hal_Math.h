@@ -29,8 +29,8 @@ typedef struct Lookup_Table_2D
     const float *x_table;   // x轴坐标数组，长度 nx
     const float *y_table;   // y轴坐标数组，长度 ny
     const float *z_table;   // z数据矩阵，按行主序存储，大小 nx * ny
-    uint32_t nx;            // x轴点数
-    uint32_t ny;            // y轴点数
+    uint32_t nx_size;            // x轴点数
+    uint32_t ny_size;            // y轴点数
 }Lookup_Table_2D_t;
 
 struct PLL

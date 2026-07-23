@@ -62,6 +62,7 @@ typedef struct Current_Loop
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint32_t Loop_count;
+
 }Current_Loop_t;
 
 
