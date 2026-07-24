@@ -39,6 +39,59 @@ def fmt_float(v):
     return s + '.0f'
 
 
+def _try_extract_2d_table(ws, var_row):
+    """尝试从工作表中提取二维查表数组。
+
+    预期的布局格式：
+      var_row:     列A 为 '变量名' 标记
+      var_row + 1: 列A 为 C 标识符（二维表变量名）
+      var_row + 2: 列B~... 为列索引头（数值，1..N）
+      var_row + 3+: 列A 为行索引（数值），列B~... 为数据（N列）
+
+    返回 (var_name, 2d_values) 或 None。
+    """
+    # 检查 (var_row + 1, 列A) 是否为 C 标识符
+    name_cell = ws.cell(row=var_row + 1, column=1).value
+    if not isinstance(name_cell, str) or not _RE_C_IDENTIFIER.match(name_cell.strip()):
+        return None
+
+    var_name = name_cell.strip()
+
+    # 从 var_row + 2 的列B开始读取列数
+    col_count = 0
+    for col in range(2, ws.max_column + 1):
+        val = ws.cell(row=var_row + 2, column=col).value
+        if isinstance(val, (int, float)):
+            col_count += 1
+        else:
+            break
+
+    if col_count == 0:
+        return None
+
+    # 从 var_row + 3 开始读取数据行
+    rows_data = []
+    for row_idx in range(var_row + 3, ws.max_row + 1):
+        row_header = ws.cell(row=row_idx, column=1).value
+        if not isinstance(row_header, (int, float)):
+            break
+
+        row_values = []
+        for col in range(2, 2 + col_count):
+            val = ws.cell(row=row_idx, column=col).value
+            row_values.append(float(val) if isinstance(val, (int, float)) else 0.0)
+
+        if len(row_values) == col_count:
+            rows_data.append(row_values)
+        else:
+            break
+
+    if not rows_data:
+        return None
+
+    return var_name, rows_data
+
+
 def extract_tables(xlsx_path):
     """从 Excel 中提取所有带变量名的查表数组。"""
     wb = openpyxl.load_workbook(xlsx_path, data_only=True)
@@ -90,7 +143,16 @@ def extract_tables(xlsx_path):
                 var_defs[col] = cell.value.strip()
 
         if not var_defs:
-            print(f"  Skip '{sheet_name}': no variable names in row {var_row}")
+            # 尝试二维表提取（变量名在列A下方，数据在右侧网格中）
+            result_2d = _try_extract_2d_table(ws, var_row)
+            if result_2d:
+                var_name, values_2d = result_2d
+                if var_name in all_tables:
+                    print(f"    Warning: '{var_name}' redefined, overwriting")
+                all_tables[var_name] = values_2d
+                print(f"  {sheet_name}: 2D table '{var_name}' [{len(values_2d)}][{len(values_2d[0])}]")
+            else:
+                print(f"  Skip '{sheet_name}': no variable names in row {var_row}")
             continue
 
         # 查找数据行：从 var_row-1 往上，跳过紧邻的空行（间距行），
@@ -116,7 +178,16 @@ def extract_tables(xlsx_path):
                     break
 
         if not data_rows:
-            print(f"  Skip '{sheet_name}': no data rows found")
+            # 也尝试二维表（可能变量名行正下方就是数据）
+            result_2d = _try_extract_2d_table(ws, var_row)
+            if result_2d:
+                var_name, values_2d = result_2d
+                if var_name in all_tables:
+                    print(f"    Warning: '{var_name}' redefined, overwriting")
+                all_tables[var_name] = values_2d
+                print(f"  {sheet_name}: 2D table '{var_name}' [{len(values_2d)}][{len(values_2d[0])}]")
+            else:
+                print(f"  Skip '{sheet_name}': no data rows found")
             continue
 
         print(f"  {sheet_name}: {len(data_rows)} rows, {len(var_defs)} vars")
@@ -149,19 +220,34 @@ def generate_c(tables, output_path):
 
     for var_name in sorted(tables.keys()):
         values = tables[var_name]
-        count = len(values)
 
-        # 每行 6 个元素，每行末尾加逗号
-        formatted_lines = []
-        for i in range(0, len(values), 6):
-            chunk = values[i:i + 6]
-            formatted_lines.append(
-                '    ' + ', '.join(fmt_float(v) for v in chunk) + ','
-            )
+        if values and isinstance(values[0], list):
+            # 二维数组
+            rows = len(values)
+            cols = len(values[0])
+            formatted_rows = []
+            for row in values:
+                formatted_vals = ', '.join(fmt_float(v) for v in row)
+                formatted_rows.append(f'    {{{formatted_vals}}},')
 
-        lines.append(f'const float {var_name}[{count}] = {{')
-        lines.extend(formatted_lines)
-        lines.append('};')
+            lines.append(f'const float {var_name}[{rows}][{cols}] = {{')
+            lines.extend(formatted_rows)
+            lines.append('};')
+        else:
+            # 一维数组
+            count = len(values)
+
+            # 每行 6 个元素，每行末尾加逗号
+            formatted_lines = []
+            for i in range(0, len(values), 6):
+                chunk = values[i:i + 6]
+                formatted_lines.append(
+                    '    ' + ', '.join(fmt_float(v) for v in chunk) + ','
+                )
+
+            lines.append(f'const float {var_name}[{count}] = {{')
+            lines.extend(formatted_lines)
+            lines.append('};')
         lines.append('')
         
     lines.append('#endif')
@@ -192,7 +278,11 @@ def main():
 
     print(f"\nTotal {len(tables)} tables:")
     for name in sorted(tables.keys()):
-        print(f"  {name}[{len(tables[name])}]")
+        values = tables[name]
+        if values and isinstance(values[0], list):
+            print(f"  {name}[{len(values)}][{len(values[0])}]")
+        else:
+            print(f"  {name}[{len(values)}]")
 
     generate_c(tables, output_path)
 

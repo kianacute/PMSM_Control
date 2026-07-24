@@ -79,10 +79,10 @@ void Motor_Config_Init(void)
     PMSM_42JS_Config.EfFlux_Gama_Lookup.table_size = sizeof(EfFlux_Gama_Lookup_1D) / sizeof(float);
 
     PMSM_42JS_Config.EfFlux_Angle_Comp.x_table = NonFlux_Lookup_Speed_index;
-    PMSM_42JS_Config.EfFlux_Angle_Comp.y_table = EfFlux_Lookup_Is_index;
-    PMSM_42JS_Config.EfFlux_Angle_Comp.z_table = EFFlux_Angle_Comp_table_2D;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.y_table = NonFlux_Lookup_Is_index;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.z_table = (const float *)EFFlux_Angle_Comp_table_2D;
     PMSM_42JS_Config.EfFlux_Angle_Comp.nx_size = sizeof(NonFlux_Lookup_Speed_index) / sizeof(float);;
-    PMSM_42JS_Config.EfFlux_Angle_Comp.ny_size = sizeof(EfFlux_Lookup_Is_index) / sizeof(float);;
+    PMSM_42JS_Config.EfFlux_Angle_Comp.ny_size = sizeof(NonFlux_Lookup_Is_index) / sizeof(float);;
 
     // SMO观测器查表初始化
     PMSM_42JS_Config.SMO_PLL_Kp_Lookup.x_table = SMO_Lookup_Speed_index;
