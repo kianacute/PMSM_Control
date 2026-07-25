@@ -18,7 +18,7 @@ void Motor_Parameter_Init(void)
     PMSM_42JS_Parameter.Rs = 1.05f;
     PMSM_42JS_Parameter.Ld = 0.0005f;
     PMSM_42JS_Parameter.Lq = 0.00059f;
-    PMSM_42JS_Parameter.Power_Limit = 50.0f;
+    PMSM_42JS_Parameter.Power_Limit = 100.0f;
     PMSM_42JS_Parameter.rs_identified = 0;
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
     PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
