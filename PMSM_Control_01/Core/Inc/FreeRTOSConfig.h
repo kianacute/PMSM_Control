@@ -166,8 +166,8 @@ standard names. */
 /* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 
-#define configGENERATE_RUN_TIME_STATS           1
-#define configUSE_STATS_FORMATTING_FUNCTIONS    1
+#define configGENERATE_RUN_TIME_STATS           0
+#define configUSE_STATS_FORMATTING_FUNCTIONS    0
 extern volatile uint32_t CPU_RunTime;
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()     (CPU_RunTime = 0ul)

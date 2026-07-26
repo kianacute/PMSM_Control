@@ -1,0 +1,80 @@
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\Keil\ARM\ARMCC\Bin'
+Build target 'PMSM_Control'
+Before Build - User command #1: python.exe ..\Motor_Para\generate.py
+CSV 目录: D:\STM32\Motor\PMSM_Control\Project\PMSM_Control_01\Motor_Para
+输出目录: D:\STM32\Motor\PMSM_Control\Project\PMSM_Control_01\Motor_Control\Motor_Config\Src
+
+  MotorBase.csv: 10 params
+    pole_pairs = 4.0
+    max_current_a = 20.0
+    voltage_limit_v = 50.0
+    flux_rpm_per_v = 4.3
+    Rs = 1.05
+    Ld = 0.0005
+    Lq = 0.00059
+    power_limit_w = 100.0
+    current_loop_hz = 20000.0
+    rs_identified = 0.0
+  AngleComp.csv: 2D table -> EFFlux_Angle_Comp_table_2D[10][10]
+  CurrentLoop.csv: 10 rows -> 5 output vars
+    Current_Lookup_Speed_index[10]
+    Current_ID_PI_Kp_Lookup_1D[10]
+    Current_ID_PI_Ki_Lookup_1D[10]
+    Current_IQ_PI_Kp_Lookup_1D[10]
+    Current_IQ_PI_Ki_Lookup_1D[10]
+  IFStartup.csv: 3 vars (raw values)
+    IF_Start_Ramp_Sec[10]
+    IF_Start_Speed_RPM[10]
+    IF_Start_Iq_A[10]
+  NonFluxObserver.csv: 10 rows -> 6 output vars
+    NonFlux_Lookup_Speed_index[10]
+    NonFlux_PLL_Kp_Lookup_1D[10]
+    NonFlux_PLL_Ki_Lookup_1D[10]
+    NonFlux_Gama_Lookup_1D[10]
+    EfFlux_Gama_Lookup_1D[10]
+    NonFlux_Lookup_Is_index[10]
+  SMOObserver.csv: 10 rows -> 4 output vars
+    SMO_Lookup_Speed_index[10]
+    SMO_PLL_Kp_Lookup_1D[10]
+    SMO_PLL_Ki_Lookup_1D[10]
+    SMO_Gain_Lookup_1D[10]
+  SpeedLoop.csv: 3 vars (raw values)
+    Speed_Loop_Speed_Index[10]
+    Speed_Loop_Speed_PI_Kp_1D[10]
+    Speed_Loop_Speed_PI_Ki_1D[10]
+
+  [WARN] duplicate X value '500.0' in 'CurrentLookup'
+  [WARN] duplicate X value '500.0' in 'SpeedLoop'
+  [WARN] duplicate X value '500.0' in 'NonFluxObserver'
+  [WARN] duplicate X value '500.0' in 'SMOObserver'
+Generated: D:\STM32\Motor\PMSM_Control\Project\PMSM_Control_01\Motor_Control\Motor_Config\Src\Motor_Lookup_Tables.c
+Generated: D:\STM32\Motor\PMSM_Control\Project\PMSM_Control_01\Motor_Control\Motor_Config\Src\Motor_Config.c
+compiling Motor_Lookup_Tables.c...
+compiling Motor_Config.c...
+compiling stm32g4xx_it.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Core/Src/stm32g4xx_it.c: 1 warning, 0 errors
+compiling main.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+../Core/Src/main.c(120): warning:  #223-D: function "Bsp_Init" declared implicitly
+    Bsp_Init();
+../Core/Src/main.c: 2 warnings, 0 errors
+compiling Bsp_STM32G431.c...
+../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h(51): warning:  #47-D: incompatible redefinition of macro "__FPU_PRESENT" 
+  #define __FPU_PRESENT             1U       /*!< FPU present                                   */
+..\BSP\STM32\inc\Bsp_STM32G431.h(38): warning:  #1-D: last line of file ends without a newline
+  #endif /* __BSP_STM32G431_H__ */
+..\Motor_Control\Current_Loop\Inc\Current_Loop.h(74): warning:  #1-D: last line of file ends without a newline
+  #endif // SVPWM_H
+..\BSP\STM32\src\Bsp_STM32G431.c(166): warning:  #223-D: function "Current_Loop_Switch" declared implicitly
+          Current_Loop_Switch();
+..\BSP\STM32\src\Bsp_STM32G431.c(202): warning:  #1-D: last line of file ends without a newline
+  }
+..\BSP\STM32\src\Bsp_STM32G431.c: 5 warnings, 0 errors
+linking...
+Program Size: Code=37676 RO-data=3932 RW-data=280 ZI-data=15800  
+FromELF: creating hex file...
+"PMSM_Control\PMSM_Control.axf" - 0 Error(s), 8 Warning(s).
+Build Time Elapsed:  00:00:03

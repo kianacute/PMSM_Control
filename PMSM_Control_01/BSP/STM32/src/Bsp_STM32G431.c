@@ -27,19 +27,30 @@ adc_adjustment_t adc_adjustment = {0};
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;
 
+/* Profiler 全局变量 (ISR-aware 运行时间统计) */
+volatile uint32_t g_isr_accumulated_cycles = 0;
+volatile uint32_t g_isr_nest_level = 0;
+Profiler_Slot_t g_profiler_slots[PROFILER_SLOT_COUNT] = {0};
+
 void my_task1(void *argument)
 {
+    uint32_t isr_before, start, net_cycles;
+
     for (;;)
     {
-        // memset(send_buffer, 0, 100); // 信息缓冲区清零
-        // vTaskGetRunTimeStats((char *)&send_buffer);
-        // // vTaskList((char *)&send_buffer);  //获取任务运行时间信息
-        // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)send_buffer, strlen((char *)send_buffer));
+        /* ---- ISR-aware 任务时间测量 ---- */
+        Profiler_TaskBegin(&isr_before, &start);
+
         lasttick = xTaskGetTickCount();
         Speed_Loop_Task();
         Motor_Diag_Task();
-        vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
-        // osDelay(1);
+
+        net_cycles = Profiler_TaskEnd(isr_before, start);
+
+        /* 记录到 profiler 槽位 + 更新兼容变量 (us) */
+        Profiler_Record(CPU_TASK1_INDEX, net_cycles);
+
+        vTaskDelayUntil(&lasttick, 1); /* 每1ms执行一次 */
     }
 }
 
@@ -131,6 +142,7 @@ int Bsp_Init(void)
     // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
     xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     SYSTEM_Init();
+    Profiler_Init();
     return 0;
 }
 
@@ -138,6 +150,9 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
     if (hadc->Instance == ADC1)
     {
+        /* DWT 周期计数器 — 不受中断优先级影响, 精度 6.25ns @160MHz */
+        uint32_t cb_start = DWT->CYCCNT;
+
         adc_adjustment.ADC_j1 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1) ; // Read injected channel value
         adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
@@ -149,6 +164,9 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
 
         /*调用电流环切换函数*/
         Current_Loop_Switch();
+
+        uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
+        Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
     }
     else if (hadc->Instance == ADC2)
     {

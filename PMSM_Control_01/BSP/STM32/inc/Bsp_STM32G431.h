@@ -1,10 +1,28 @@
 #ifndef __BSP_STM32G431_H__
 #define __BSP_STM32G431_H__
 #include "stdint.h"
+#include "Profiler.h"
 
 #define ADC_OPAMP_GAIN          (0.02197265625f)
 #define PWM_MAX_DUTY            (8000.0f)
 #define ADC_VDDA_REF            ((float)4096)
+
+
+/* Profiler 槽位索引
+ * 基于 DWT CYCCNT 做 ISR-aware 任务/中断运行时间统计
+ * 任务净时间: 扣除 ISR 累积时间后的纯任务代码耗时
+ * 使用 Profiler_CyclesToUs() 可将 CPU cycles 转换为 us (160MHz)
+ */
+#define CPU_ADC_INT_INDEX       (0u)   /* ADC ISR -- FOC 电流环耗时           */
+#define CPU_TASK1_INDEX         (1u)   /* my_task1 -- 速度环 + 电机诊断       */
+#define CPU_TASK2_INDEX         (2u)   /* my_task2 -- 系统状态机              */
+#define CPU_TASK3_INDEX         (3u)   /* my_task3 -- 预留                    */
+#define CPU_TASK4_INDEX         (4u)   /* my_task4 -- 系统诊断 (10ms)         */
+#define CPU_TASK5_INDEX         (5u)
+#define CPU_TASK6_INDEX         (6u)
+#define CPU_TASK7_INDEX         (7u)
+#define CPU_TASK8_INDEX         (8u)
+#define CPU_TASK9_INDEX         (9u)
 
 typedef struct adc_adjustment
 {

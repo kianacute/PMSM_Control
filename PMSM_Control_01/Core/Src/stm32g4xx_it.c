@@ -22,6 +22,7 @@
 #include "stm32g4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "Profiler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -201,12 +202,12 @@ void DMA1_Channel2_IRQHandler(void)
 void ADC1_2_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC1_2_IRQn 0 */
-
+  uint32_t _pf_entry = Profiler_ISR_Enter();
   /* USER CODE END ADC1_2_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc1);
   HAL_ADC_IRQHandler(&hadc2);
   /* USER CODE BEGIN ADC1_2_IRQn 1 */
-
+  Profiler_ISR_Exit(_pf_entry);
   /* USER CODE END ADC1_2_IRQn 1 */
 }
 
@@ -275,7 +276,7 @@ void TIM1_BRK_TIM15_IRQHandler(void)
 void TIM1_UP_TIM16_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
-
+  uint32_t _pf_entry = Profiler_ISR_Enter();
   /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
   if (htim1.Instance != NULL)
   {
@@ -286,7 +287,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
     HAL_TIM_IRQHandler(&htim16);
   }
   /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
-
+  Profiler_ISR_Exit(_pf_entry);
   /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }
 
@@ -296,7 +297,7 @@ void TIM1_UP_TIM16_IRQHandler(void)
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_TRG_COM_TIM17_IRQn 0 */
-
+  uint32_t _pf_entry = Profiler_ISR_Enter();
   /* USER CODE END TIM1_TRG_COM_TIM17_IRQn 0 */
   if (htim1.Instance != NULL)
   {
@@ -307,7 +308,7 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
     HAL_TIM_IRQHandler(&htim17);
   }
   /* USER CODE BEGIN TIM1_TRG_COM_TIM17_IRQn 1 */
-
+  Profiler_ISR_Exit(_pf_entry);
   /* USER CODE END TIM1_TRG_COM_TIM17_IRQn 1 */
 }
 
