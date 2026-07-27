@@ -288,6 +288,7 @@ void Paramater_update(void)
     Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
     Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
     Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
+    Current_Loop.Phase_check_cnt_THD = (uint32_t)(MOTOR_CURRENT_LOOP_HZ / (Speed_Loop.Speed_Fb_1s) * 60);
 }
 
 /* ==================================================================

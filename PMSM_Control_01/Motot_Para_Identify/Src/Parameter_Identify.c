@@ -87,7 +87,7 @@ int32_t Rs_Identify_Run(float Ialpha, float Udc)
                 /* 稳定后开始累加采样 */
                 if (Rs_Identify.sample_index < RS_IDENTIFY_SAMPLE_CNT)
                 {
-                    Rs_Identify.I_alpha_sum += my_abs(Ialpha);  /* 用绝对值, 方向已知 */
+                    Rs_Identify.I_alpha_sum += MY_ABS(Ialpha);  /* 用绝对值, 方向已知 */
                     Rs_Identify.sample_index++;
                 }
                 else
@@ -146,7 +146,7 @@ int32_t Rs_Identify_Run(float Ialpha, float Udc)
             float N = (float)RS_IDENTIFY_VOLTAGE_STEPS;
             float denominator = N * sum_I2 - sum_I * sum_I;
 
-            if (my_abs(denominator) > 1e-9f)
+            if (MY_ABS(denominator) > 1e-9f)
             {
                 Rs_Identify.identified_Rs = (N * sum_VI - sum_V * sum_I) / denominator;
                 Rs_Identify.state = RS_WRITE_BACK;

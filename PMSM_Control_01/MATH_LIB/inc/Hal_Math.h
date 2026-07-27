@@ -4,6 +4,9 @@
 
 #include "arm_math.h"
 
+#define MY_ABS(x) (((x)>0)?(x):(-(x)))
+#define Limit_2PI(theta) { while (*theta > 6.283185f) {*theta -= 6.283185f;} while (*theta < -6.283185f) {*theta += 6.283185f;}}
+
 typedef struct Hal_PI_f32
 {
     float32_t kp;        // Proportional gain
@@ -91,8 +94,6 @@ typedef struct {
 
 inline float32_t Hal_PI_f32(Hal_PI_t* controller, float error);
 
-inline float my_abs(float num);
-
 inline float32_t Hal_LPF_f32(float coff, float input);
 
 inline float Lookup_Table_Linear(float x, Lookup_Table_t *table);
@@ -100,8 +101,6 @@ inline float Lookup_Table_Linear(float x, Lookup_Table_t *table);
 inline float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table);
 
 inline int binary_search_float_first(const float* arr, uint32_t n, float target);
-
-inline float Limit_2PI(float theta);
 
 inline float Oblique_Wave(float end_value, float cur_value, float Sub_Step, float Add_Step);
 

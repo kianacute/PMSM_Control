@@ -19,6 +19,7 @@ typedef struct Motor_Parameter
     float Power_Limit; // 功率限制参数
     float Flux_Flux;
     float Ld_Lq;
+    float One_per_Flux;
 } Motor_Parameter_t;
 
 typedef struct Motor_Config
@@ -72,7 +73,7 @@ typedef struct Motor_Config
 /*电机观测器选择*/
 // #define MOTOR_SMO_OBSERVER                 // 滑模观测器
 // #define MOTOR_NONFLUX_OBSERVER             // 非磁链观测器
-#define MOTOR_EFFECTIVE_FLUX_OBSERVER         // 有效磁链观测器
+#define MOTOR_EFFECTIVE_FLUX_OBSERVER      // 有效磁链观测器
 // #define MOTOR_ENCODER_OBSERVER             // 编码器观测器
 // #define MOTOR_HFI_OBSERVER                 // 高频注入观测器
 

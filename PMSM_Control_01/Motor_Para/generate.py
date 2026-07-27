@@ -463,6 +463,7 @@ def gen_motor_config_c(motor_params, all_1d, all_2d):
         '    /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */',
         '    PMSM_42JS_Parameter.Flux_Flux  = PMSM_42JS_Parameter.flux_linkage_wb * PMSM_42JS_Parameter.flux_linkage_wb;',
         '    PMSM_42JS_Parameter.Ld_Lq = PMSM_42JS_Parameter.Ld - PMSM_42JS_Parameter.Lq;',
+        '    PMSM_42JS_Parameter.One_per_Flux = 1 / PMSM_42JS_Parameter.flux_linkage_wb;',
         '}',
         '',
         'void Motor_Config_Init(void)',

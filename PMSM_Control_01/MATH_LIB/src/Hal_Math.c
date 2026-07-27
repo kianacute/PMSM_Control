@@ -61,15 +61,6 @@ int binary_search_float_first(const float* arr, uint32_t n, float target)
      return result;
 }
 
-float my_abs(float num)
-{
-    if (num < 0)
-    {
-        return -num;
-    }
-    return num;
-}
-
 /// @brief 一维线性插值函数，输入x和对应的查找表x_table和y_table，输出插值结果
 /// @param x 输入值
 /// @param x_table 查找表的x坐标数组
@@ -152,22 +143,6 @@ float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
     return z0 + (z1 - z0) * (y_clamped - y0) / (y1 - y0);
 }
 
-/// @brief 将角度限制在0-2PI范围内
-/// @param theta 输入角度，单位为弧度
-/// @return 限制后的角度，单位为弧度
-float Limit_2PI(float theta)
-{
-     while (theta > 6.283185f)
-     {
-          theta -= 6.283185f;
-     }
-     while (theta < -6.283185f)
-     {
-          theta += 6.283185f;
-     }
-     return theta;
-}
-
 /// @brief 斜波函数，cur_value向end_value以Sub_Step和Add_Step的速度靠近
 /// @param end_value 目标值
 /// @param cur_value 当前值
@@ -206,7 +181,7 @@ void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time)
      float deta = alpha * arm_cos_f32(pPLL->theta) - beta * arm_sin_f32(pPLL->theta);
      pPLL->we = Hal_PI_f32(&pPLL->PLL_PI, deta);
      pPLL->theta = (pPLL->theta + pPLL->we * Discrete_time);
-     pPLL->theta = Limit_2PI(pPLL->theta);
+     Limit_2PI(&pPLL->theta);
      return;
 }
 

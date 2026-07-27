@@ -97,26 +97,19 @@ void Speed_Switch(void)
         break;
     case Speed_Loop_Align:
     {
-        // theta = 0;
-        // extern uint8_t align_done;
-        // if (align_done == 1)
-        // {
-        //     Encode_ABZ_Get_Offset();
-        // }
-        // Current_Loop.theta = Limit_2PI(HFSW_OB.tPLL.theta);
         break;
     }
     case Speed_Loop_Open:
     {
         Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->motor_param->pole_pairs * Current_Loop.Loop_time_s;
-        Current_Loop.theta = Limit_2PI(Current_Loop.theta);
+        Limit_2PI(&Current_Loop.theta);
         break;
     }
     case Speed_Loop_Switch:
     {
         Current_Loop.theta += Speed_Loop.Speed_Ref / 60 * 2 * PI * Current_Loop.pMotor->motor_param->pole_pairs * Current_Loop.Loop_time_s;
-        Current_Loop.theta = Limit_2PI(Current_Loop.theta);
-        if (my_abs(OBSERVE_GET_THETA() - Current_Loop.theta) < 0.10)
+        Limit_2PI(&Current_Loop.theta);
+        if (MY_ABS(OBSERVE_GET_THETA() - Current_Loop.theta) < 0.10)
         {
             Speed_Loop.Speed_Switch_Cnt++;
             if (Speed_Loop.Speed_Switch_Cnt > 10)
@@ -131,7 +124,8 @@ void Speed_Switch(void)
     case Speed_Loop_Middle:
     case Speed_Loop_Low:
     {
-        Current_Loop.theta = Limit_2PI(OBSERVE_GET_THETA());
+        Current_Loop.theta = OBSERVE_GET_THETA();
+        Limit_2PI(&Current_Loop.theta);
         break;
     }
     default:
@@ -337,14 +331,14 @@ void Current_Avg_Filt()
     if (Current_Loop.avg_count >= (Current_Loop.FREQ_HZ / Speed_Loop.FREQ_Hz))
     {
         Current_Loop.avg_count = 0;
-        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->motor_param->pole_pairs * 60 / 20.0f;
+        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->motor_param->pole_pairs * 3.0f;
         Current_Loop.Speed_fb_1ms = 0;
     }
     Current_Loop.avg_count++;
     Current_Loop.Speed_fb_1ms += OBSERVE_GET_WE();
 }
 
-void Current_Loop_Run(void)
+inline void Current_Loop_Run(void)
 {
     // Encode_ABZ_UpDate();
     Speed_Switch();
@@ -355,7 +349,7 @@ void Current_Loop_Run(void)
                           &Current_Loop.Ia_fb, &Current_Loop.Ib_fb, &Current_Loop.Ic_fb,
                           Current_Loop.sector);
 
-    Phase_Min_Max(my_abs(Current_Loop.Ia_fb), my_abs(Current_Loop.Ib_fb), my_abs(Current_Loop.Ic_fb));
+    Phase_Min_Max(MY_ABS(Current_Loop.Ia_fb), MY_ABS(Current_Loop.Ib_fb), MY_ABS(Current_Loop.Ic_fb));
 
     arm_clarke_f32(Current_Loop.Ia_fb, Current_Loop.Ib_fb, &Current_Loop.ialpha_fb, &Current_Loop.ibeta_fb);
 
@@ -445,7 +439,7 @@ inline void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, floa
 /// @param C
 inline void Phase_Min_Max(float A, float B, float C)
 {
-    if (Current_Loop.Phase_check_cnt > (int)(20000 / (Speed_Loop.Speed_Ref / 60.0f * 4.0f + 1)))
+    if (Current_Loop.Phase_check_cnt > (int)Current_Loop.Phase_check_cnt_THD)
     {
         Current_Loop.Phase_check_cnt = 0;
         Current_Loop.A_Max = 0;
@@ -463,25 +457,13 @@ inline void Phase_Min_Max(float A, float B, float C)
     {
         Current_Loop.A_Max = A;
     }
-    if (A < Current_Loop.A_Min)
-    {
-        Current_Loop.A_Min = A;
-    }
     if (B > Current_Loop.B_Max)
     {
         Current_Loop.B_Max = B;
     }
-    if (B < Current_Loop.B_Min)
-    {
-        Current_Loop.B_Min = B;
-    }
     if (C > Current_Loop.C_Max)
     {
         Current_Loop.C_Max = C;
-    }
-    if (C < Current_Loop.C_Min)
-    {
-        Current_Loop.C_Min = C;
     }
 }
 
@@ -582,7 +564,7 @@ inline void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
 
 /// @brief  母线电流重构
 /// @param
-void MOTOR_Bus_Current_Rewrite(void)
+inline void MOTOR_Bus_Current_Rewrite(void)
 {
     Current_Loop.Bus_Current = -(Current_Loop.Ia_fb * Current_Loop_Output.PWM_duty_a +
                                 Current_Loop.Ib_fb * Current_Loop_Output.PWM_duty_b +

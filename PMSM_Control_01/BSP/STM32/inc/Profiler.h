@@ -39,7 +39,7 @@ typedef struct {
     uint32_t count;       /* 测量次数                           */
     uint32_t net_min;     /* 最小净运行时间 (CPU cycles)         */
     uint32_t net_max;     /* 最大净运行时间 (CPU cycles)         */
-    uint64_t net_sum;     /* 累计净运行时间 (CPU cycles)         */
+    uint64_t net_cur;     /* 累计净运行时间 (CPU cycles)         */
 } Profiler_Slot_t;
 
 /* ======================================================================== */
@@ -152,7 +152,7 @@ static inline void Profiler_Record(uint8_t slot, uint32_t net_cycles)
 
     Profiler_Slot_t *s = &g_profiler_slots[slot];
     s->count++;
-    s->net_sum += net_cycles;
+    s->net_cur = net_cycles;
     if (net_cycles > s->net_max) s->net_max = net_cycles;
     if (s->count == 1 || net_cycles < s->net_min) s->net_min = net_cycles;
 }

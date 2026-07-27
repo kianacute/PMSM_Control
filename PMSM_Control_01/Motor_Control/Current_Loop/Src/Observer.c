@@ -15,11 +15,11 @@ void EMF_CAL_Init(void)
 }
 
 void EMF_CAL_Updata(struct EMF_Cal_Parameter *EMF_Cal, float32_t Ualpha, float32_t Ubeta,
-                    float32_t Ialpha, float32_t Ibeta, float discrete_time)
+                    float32_t Ialpha, float32_t Ibeta, float freq)
 {
 
-    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
-    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) * freq) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) * freq) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
 
     EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ialpha;
     EMF_Cal->EMF_beta = Ubeta - Ibeta * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ibeta;
@@ -166,6 +166,7 @@ struct NonFluxObserver_Parameter NonFlux_OB = {0};
 void Nonlinear_FluxObserver_Init(void)
 {
     NonFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+    NonFlux_OB.freq = MOTOR_CURRENT_LOOP_HZ;
     NonFlux_OB.Flux_alpha = 0.0f;
     NonFlux_OB.Flux_beta = 0.0f;
     NonFlux_OB.tPLL.PLL_PI.kp = 200.1f / 1.0f;
@@ -200,10 +201,10 @@ void Nonlinear_FluxObserver_Updata(struct NonFluxObserver_Parameter *NFO, float3
     NFO->Eta_alpha = NFO->x_alpha_hat - NFO->pMotor->motor_param->Ls * Ialpha;
     NFO->Eta_beta = NFO->x_beta_hat - NFO->pMotor->motor_param->Ls * Ibeta;
     NFO->Flux_hat = NFO->Eta_alpha * NFO->Eta_alpha + NFO->Eta_beta * NFO->Eta_beta;
-    NFO->Flux_alpha = NFO->Eta_alpha / NFO->pMotor->motor_param->flux_linkage_wb;
-    NFO->Flux_beta = NFO->Eta_beta / NFO->pMotor->motor_param->flux_linkage_wb;
+    NFO->Flux_alpha = NFO->Eta_alpha * NFO->pMotor->motor_param->One_per_Flux;
+    NFO->Flux_beta = NFO->Eta_beta * NFO->pMotor->motor_param->One_per_Flux;
     PLL_Update(&NFO->tPLL, NFO->Flux_beta, NFO->Flux_alpha, NFO->discrete_time);
-    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, NFO->discrete_time);
+    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, NFO->freq);
 }
 
 #endif
@@ -216,6 +217,7 @@ struct EffFluxObserver_Parameter EffFlux_OB = {0};
 void Effective_FluxObserver_Init(void)
 {
     EffFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+    EffFlux_OB.freq = MOTOR_CURRENT_LOOP_HZ;
     EffFlux_OB.Flux_alpha = 0.0f;
     EffFlux_OB.Flux_beta = 0.0f;
     EffFlux_OB.tPLL.PLL_PI.kp = 200.1f / 1.0f;
@@ -250,12 +252,15 @@ void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float3
     EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
     EFO->y_alpha_hat = EFO->x_alpha_hat - EFO->pMotor->motor_param->Lq * Ialpha;
     EFO->y_beta_hat = EFO->x_beta_hat - EFO->pMotor->motor_param->Lq * Ibeta;
-    EFO->Eta_alpha = EFO->y_alpha_hat / EFO->pMotor->motor_param->flux_linkage_wb;
-    EFO->Eta_beta = EFO->y_beta_hat / EFO->pMotor->motor_param->flux_linkage_wb;
-    PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
+    EFO->Eta_alpha = EFO->y_alpha_hat * EFO->pMotor->motor_param->One_per_Flux;
+    EFO->Eta_beta = EFO->y_beta_hat * EFO->pMotor->motor_param->One_per_Flux;
+    // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
+    EFO->tPLL.we = Hal_PI_f32(&EFO->tPLL.PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
+    EFO->tPLL.theta = (EFO->tPLL.theta + EFO->tPLL.we * EFO->discrete_time);
+    Limit_2PI(&EFO->tPLL.theta);
     EFO->Sin = arm_sin_f32(EFO->tPLL.theta);
     EFO->Cos = arm_cos_f32(EFO->tPLL.theta);
-    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
+    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->freq);
 }
 
 #endif

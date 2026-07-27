@@ -117,6 +117,7 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 struct EffFluxObserver_Parameter
 {
     float discrete_time;
+    float freq;
     float gama;
     struct PLL tPLL;
     float Sin, Cos;
@@ -139,7 +140,7 @@ struct EffFluxObserver_Parameter
 };
 
 void Effective_FluxObserver_Init(void);
-void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float32_t Ualpha, float32_t Ubeta,
+inline void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float32_t Ualpha, float32_t Ubeta,
                                    float32_t Ialpha, float32_t Ibeta);
 
 extern struct EffFluxObserver_Parameter EffFlux_OB;
@@ -157,6 +158,7 @@ struct HFSWInjection_Parameter
     float alpha, beta;
     float U_hfj;
     float discrete_time;
+    float freq;
     uint32_t PSR;
     uint32_t hfj_cnt;
     float Ialpha_hfj;

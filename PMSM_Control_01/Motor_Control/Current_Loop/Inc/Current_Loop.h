@@ -53,6 +53,7 @@ typedef struct Current_Loop
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
     float A_Max, A_Min, B_Max, B_Min, C_Max, C_Min;
     uint32_t Phase_check_cnt;
+    uint32_t Phase_check_cnt_THD;
     uint8_t sector;
     enum Motor_State Motor_State;
     uint32_t Motor_Wait_Cnt;
@@ -62,7 +63,6 @@ typedef struct Current_Loop
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint32_t Loop_count;
-
 }Current_Loop_t;
 
 
