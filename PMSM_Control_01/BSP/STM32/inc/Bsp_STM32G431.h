@@ -4,8 +4,8 @@
 #include "Profiler.h"
 
 #define ADC_OPAMP_GAIN          (0.02197265625f)
-#define PWM_MAX_DUTY            (8000.0f)
-#define ADC_VDDA_REF            ((float)4096)
+#define PWM_MAX_DUTY            (4000.0f)
+#define ADC_VDDA_REF            ((float)4096/2)
 
 
 /* Profiler 槽位索引
@@ -18,11 +18,6 @@
 #define CPU_TASK2_INDEX         (2u)   /* my_task2 -- 系统状态机              */
 #define CPU_TASK3_INDEX         (3u)   /* my_task3 -- 预留                    */
 #define CPU_TASK4_INDEX         (4u)   /* my_task4 -- 系统诊断 (10ms)         */
-#define CPU_TASK5_INDEX         (5u)
-#define CPU_TASK6_INDEX         (6u)
-#define CPU_TASK7_INDEX         (7u)
-#define CPU_TASK8_INDEX         (8u)
-#define CPU_TASK9_INDEX         (9u)
 
 typedef struct adc_adjustment
 {

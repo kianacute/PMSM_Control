@@ -69,6 +69,8 @@ void Current_Loop_Init(void)
     Current_Loop.Iq_PI.integral = 0;
 
     Current_Loop.Dead_Zone_Enable_Flag = 1;
+
+    Current_Loop.PWM_FREQ_Coeff = 1.0f;
 }
 
 int32_t MOTOR_IDLE_TASK(void);
@@ -367,7 +369,7 @@ inline void Current_Loop_Run(void)
     arm_sqrt_f32(Current_Loop.Id_fb * Current_Loop.Id_fb + Current_Loop.Iq_fb * Current_Loop.Iq_fb, &Current_Loop.Is_fb);
     arm_inv_park_f32(Current_Loop.Ud_Target, Current_Loop.Uq_Target, &Current_Loop.Ualpha_Ref,
                      &Current_Loop.Ubeta_Ref, Current_Loop.sinVal, Current_Loop.cosVal);
-    SVPWM_Calculate(1, Current_Loop_Input.Udc_ADISR, Current_Loop.Ualpha_Ref, Current_Loop.Ubeta_Ref,
+    SVPWM_Calculate(2, Current_Loop_Input.Udc_ADISR, Current_Loop.Ualpha_Ref, Current_Loop.Ubeta_Ref,
                     &Current_Loop.PWM_duty_a, &Current_Loop.PWM_duty_b, &Current_Loop.PWM_duty_c, &Current_Loop.sector);
 
     Current_Loop.Id_PI.out_max = Current_Loop_Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * 1.02f;
@@ -387,6 +389,8 @@ inline void Current_Loop_Run(void)
                            Current_Loop.PWM_duty_a, Current_Loop.PWM_duty_b, Current_Loop.PWM_duty_c,
                            &Current_Loop_Output.PWM_duty_a, &Current_Loop_Output.PWM_duty_b, &Current_Loop_Output.PWM_duty_c);
     MOTOR_Bus_Current_Rewrite();
+    Current_Loop_Output.PWM_HZ_Coeff = Current_Loop.PWM_FREQ_Coeff;
+
 }
 
 /// @brief 三相电流重构，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
@@ -467,7 +471,7 @@ inline void Phase_Min_Max(float A, float B, float C)
     }
 }
 
-/// @brief 死区补偿，前提：一个桥臂的电流采样值是不准确的，但是其他两个桥臂的电流采样值是准确的
+/// @brief 死区补偿
 /// @param Id
 /// @param Iq
 /// @param we
@@ -570,4 +574,15 @@ inline void MOTOR_Bus_Current_Rewrite(void)
                                 Current_Loop.Ib_fb * Current_Loop_Output.PWM_duty_b +
                                 Current_Loop.Ic_fb * Current_Loop_Output.PWM_duty_c);
     Current_Loop.Bus_Current_LPF = 0.01f * Current_Loop.Bus_Current + 0.99f * Current_Loop.Bus_Current_LPF;
+}
+
+
+void Current_Para_Updata(float speed, float Ts)
+{
+    Current_Loop.Loop_time_s = Ts;
+    Current_Loop_Output.PWM_HZ_Coeff = 1.0f / Ts / Current_Loop.FREQ_HZ;
+    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
+    Current_Loop.Iq_PI.ki = Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
+    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
+    Current_Loop.Phase_check_cnt_THD = (uint32_t)(MOTOR_CURRENT_LOOP_HZ / (Speed_Loop.Speed_Fb_1s) * 60);
 }

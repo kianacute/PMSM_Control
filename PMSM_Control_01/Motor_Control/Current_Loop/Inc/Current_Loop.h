@@ -29,6 +29,7 @@ typedef struct Current_Loop_Input
 
 typedef struct Current_Loop_Output
 {
+    float PWM_HZ_Coeff;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
 } Current_Loop_Output_t;
 
@@ -37,6 +38,8 @@ typedef struct Current_Loop
     // Define any necessary variables and structures for the current task
     uint32_t FREQ_HZ;                                       //电流环频率
     float Loop_time_s;                                      //电流环循环时间
+    enum Motor_State Motor_State;
+    /*电压电流，PI控制*/
     Motor_Config_t *pMotor;                             //电机参数指针  
     Hal_PI_t Id_PI;                                     //d轴电流PI控制器参数
     Hal_PI_t Iq_PI;                                     //q轴电流PI控制器参数
@@ -49,13 +52,17 @@ typedef struct Current_Loop
     float ialpha_fb, ibeta_fb;
     float Ia_fb, Ib_fb, Ic_fb;
     float Ia_fb_offset, Ib_fb_offset, Ic_fb_offset;
-    uint32_t offset_check_cnt;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
+    uint8_t sector;
+    float PWM_FREQ_Coeff;                               //变载频系数，PWM_FREQ_Coeff = CUR_HZ / FREQ_HZ
+
+    /*缺相诊断*/
+    uint32_t offset_check_cnt;
     float A_Max, A_Min, B_Max, B_Min, C_Max, C_Min;
     uint32_t Phase_check_cnt;
     uint32_t Phase_check_cnt_THD;
-    uint8_t sector;
-    enum Motor_State Motor_State;
+
+    /*其他参数*/
     uint32_t Motor_Wait_Cnt;
     uint8_t PWM_OPEN_Flag;
     uint8_t Dead_Zone_Enable_Flag;
@@ -63,10 +70,12 @@ typedef struct Current_Loop
     float Speed_fb_1ms;
     uint8_t avg_count;
     uint32_t Loop_count;
+
 }Current_Loop_t;
 
 
 void Current_Loop_Init(void);
+void Current_Para_Updata(float speed, float Ts);
 
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;

@@ -6,7 +6,7 @@ void SVPWM_Init(void)
 }
 
 // 修正后的SVPWM实现
-static inline uint8_t SVPWM_Sector_Predict(float U_alpha, float U_beta)
+inline uint8_t SVPWM_Sector_Predict(float U_alpha, float U_beta)
 {
     float V1 = U_beta;
     float V2 = 0.8660254f * U_alpha - 0.5f * U_beta;
@@ -57,10 +57,10 @@ void SVPWM_Calculate(float T_s, float V_dc, float U_alpha, float U_beta,
     float T0 = T_s - T1 - T2;
     
     // 计算七段式SVPWM的比较点
-    float T0_half = T0 / 4.0f;
+    float T0_half = T0 * 0.25f;
     float Ta = T0_half;
-    float Tb = Ta + T1 / 2.0f;
-    float Tc = Tb + T2 / 2.0f;
+    float Tb = Ta + T1 * 0.5f;
+    float Tc = Tb + T2 * 0.5f;
     
     // 根据扇区分配比较值
     switch (sector)

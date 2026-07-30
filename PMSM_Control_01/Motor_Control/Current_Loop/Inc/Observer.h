@@ -180,6 +180,7 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 
 #endif
 
-void Observer_Param_Lookup_Updata(float Speed, float Is);
+
+void Observer_Param_Lookup_Updata(float Speed, float Is, float Ts);
 
 #endif // __EST_H__

@@ -12,7 +12,6 @@ extern float Speed_Command;
 extern Motor_Config_t PMSM_42JS_Config;
 extern struct NonFluxObserver_Parameter NonFlux_OB;
 extern Current_Loop_t Current_Loop;
-;
 extern SYSTEM_t System;
 
 Speed_Loop_t Speed_Loop;
@@ -73,6 +72,8 @@ void Speed_Loop_Init(void)
 
     Hysteresis_Comp_Init(&Speed_Loop.Speed_Middle_High_Hcomp, 1000.0f, 800.0f, 1000);
     Speed_Loop.Speed_Middle_High_Hcomp.enable = 1;
+
+    Speed_Loop.PWM_SWITCH_FREQ = 20000.0f;
 
     Power_Derating_Init();
 }
@@ -279,17 +280,11 @@ void Speed_Loop_Run_Task(void)
 
 void Paramater_update(void)
 {
-    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb_1s, Speed_Loop.target_is);
-
+    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb_1s, Speed_Loop.target_is, 1/Speed_Loop.PWM_SWITCH_FREQ);
     Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
     Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
-
-    Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Kp_Lookup);
-    Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
-    Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Kp_Lookup);
-    Current_Loop.Iq_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Ki_Lookup);
-    Current_Loop.Phase_check_cnt_THD = (uint32_t)(MOTOR_CURRENT_LOOP_HZ / (Speed_Loop.Speed_Fb_1s) * 60);
-}
+    Current_Para_Updata(Speed_Loop.Speed_Fb_1s, 1/Speed_Loop.PWM_SWITCH_FREQ);
+}                     
 
 /* ==================================================================
  * 一阶LADRC (线性自抗扰控制)

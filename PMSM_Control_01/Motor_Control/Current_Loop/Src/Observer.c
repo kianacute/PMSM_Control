@@ -15,11 +15,11 @@ void EMF_CAL_Init(void)
 }
 
 void EMF_CAL_Updata(struct EMF_Cal_Parameter *EMF_Cal, float32_t Ualpha, float32_t Ubeta,
-                    float32_t Ialpha, float32_t Ibeta, float freq)
+                    float32_t Ialpha, float32_t Ibeta, float discrete_time)
 {
 
-    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) * freq) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
-    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) * freq) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
 
     EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ialpha;
     EMF_Cal->EMF_beta = Ubeta - Ibeta * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ibeta;
@@ -260,7 +260,7 @@ void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float3
     Limit_2PI(&EFO->tPLL.theta);
     EFO->Sin = arm_sin_f32(EFO->tPLL.theta);
     EFO->Cos = arm_cos_f32(EFO->tPLL.theta);
-    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->freq);
+    EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }
 
 #endif
@@ -319,7 +319,7 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id)
 
 #endif
 
-void Observer_Param_Lookup_Updata(float Speed, float Is)
+void Observer_Param_Lookup_Updata(float Speed, float Is, float Ts)
 {
 #ifdef MOTOR_NONFLUX_OBSERVER
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
@@ -332,6 +332,7 @@ void Observer_Param_Lookup_Updata(float Speed, float Is)
     EffFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Ki_Lookup);
     EffFlux_OB.gama = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.EfFlux_Gama_Lookup);
     EffFlux_OB.Angle_Comp = Lookup_Table_2D_Linear(Speed, Is, &PMSM_42JS_Config.EfFlux_Angle_Comp);
+    EffFlux_OB.discrete_time = Ts;
 #endif
 
 #ifdef MOTOR_SMO_OBSERVER

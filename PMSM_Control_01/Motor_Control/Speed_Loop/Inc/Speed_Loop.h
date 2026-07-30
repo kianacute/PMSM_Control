@@ -66,6 +66,7 @@ typedef struct Speed_Loop
     float Derating_Factor;
     float MTPA_Id;
     float Flux_Weak_Id;
+    float PWM_SWITCH_FREQ;
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);

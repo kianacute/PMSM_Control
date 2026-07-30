@@ -157,9 +157,9 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
         adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
-        Current_Loop_Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF/2) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
-        Current_Loop_Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF/2) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
-        Current_Loop_Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF/2) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
+        Current_Loop_Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
+        Current_Loop_Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
+        Current_Loop_Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
         Current_Loop_Input.Udc_ADISR = adc_adjustment.ADC_j4 * 1.1f * 0.019842f;
 
         /*调用电流环切换函数*/
@@ -195,8 +195,10 @@ void Bsp_STM32G431_PWM_Disable(void)
 
 void Bsp_STM32G431_PWM_SetDuty()
 {
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Loop_Output.PWM_duty_a*PWM_MAX_DUTY);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Loop_Output.PWM_duty_b*PWM_MAX_DUTY);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Loop_Output.PWM_duty_c*PWM_MAX_DUTY);
+    __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Loop_Output.PWM_duty_a*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Loop_Output.PWM_duty_b*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Loop_Output.PWM_duty_c*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, Current_Loop_Output.PWM_duty_d);
 }
