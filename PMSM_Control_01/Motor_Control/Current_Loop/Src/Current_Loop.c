@@ -32,8 +32,8 @@ void Current_Loop_Init(void)
     // e.g., setting up filters, initializing variables, etc.
     Current_Loop.theta = 0.0f;
     Current_Loop.pMotor = &PMSM_42JS_Config;
-    Current_Loop.FREQ_HZ = 20000;
-    Current_Loop.Loop_time_s = 1.0f / 20000.0f;
+    Current_Loop.FREQ_HZ = MOTOR_CURRENT_LOOP_HZ;
+    Current_Loop.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
     /* 计算电流环参数 */
     Current_Loop.Id_PI.Kd = 0.1f;
     Current_Loop.Iq_PI.Kd = 0.1f;
@@ -316,7 +316,7 @@ int32_t MOTOR_WAIT_TASK()
     /* Code for MOTOR_WAIT state */
     Current_PWM_Switch(PWM_CLOSE);
     Current_Loop.Motor_Wait_Cnt++;
-    if (Current_Loop.Motor_Wait_Cnt > 20000 * 5) // 5s
+    if (Current_Loop.Motor_Wait_Cnt > ((uint32_t)(Current_Loop.FREQ_HZ * 5))) // 5s
     {
         Current_Loop.Motor_State = MOTOR_IDLE;
         Current_Loop.Motor_Wait_Cnt = 0;
@@ -330,11 +330,11 @@ int32_t MOTOR_WAIT_TASK()
 
 void Current_Avg_Filt()
 {
-    if (Current_Loop.avg_count >= (Current_Loop.FREQ_HZ / Speed_Loop.FREQ_Hz))
+    if (Current_Loop.avg_count >= ((uint32_t)(Current_Loop.FREQ_HZ / Speed_Loop.FREQ_Hz)))
     {
-        Current_Loop.avg_count = 0;
-        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->motor_param->pole_pairs * 3.0f;
+        Speed_Loop.Speed_Fb = Current_Loop.Speed_fb_1ms / 2 / PI / Current_Loop.pMotor->motor_param->pole_pairs * 60.0f / Current_Loop.avg_count;
         Current_Loop.Speed_fb_1ms = 0;
+        Current_Loop.avg_count = 0;
     }
     Current_Loop.avg_count++;
     Current_Loop.Speed_fb_1ms += OBSERVE_GET_WE();
@@ -580,9 +580,10 @@ inline void MOTOR_Bus_Current_Rewrite(void)
 void Current_Para_Updata(float speed, float Ts)
 {
     Current_Loop.Loop_time_s = Ts;
-    Current_Loop.PWM_FREQ_Coeff = 1.0f / Ts / Current_Loop.FREQ_HZ;
+    Current_Loop.FREQ_HZ = 1.0f / Ts;
+    Current_Loop.PWM_FREQ_Coeff = Current_Loop.FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
     Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
     Current_Loop.Iq_PI.ki = Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
     Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
-    Current_Loop.Phase_check_cnt_THD = (uint32_t)(MOTOR_CURRENT_LOOP_HZ / (Speed_Loop.Speed_Fb_1s) * 60);
+    Current_Loop.Phase_check_cnt_THD = (uint32_t)(Current_Loop.FREQ_HZ / (Speed_Loop.Speed_Fb_1s) * 60);
 }

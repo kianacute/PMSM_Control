@@ -36,7 +36,7 @@ typedef struct Current_Loop_Output
 typedef struct Current_Loop
 {
     // Define any necessary variables and structures for the current task
-    uint32_t FREQ_HZ;                                       //电流环频率
+    float FREQ_HZ;                                       //电流环频率
     float Loop_time_s;                                      //电流环循环时间
     enum Motor_State Motor_State;
     /*电压电流，PI控制*/

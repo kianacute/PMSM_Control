@@ -48,7 +48,7 @@ typedef struct LADRC_FirstOrder
 
 typedef struct Speed_Loop
 {
-    uint32_t FREQ_Hz;                      // 循环周期
+    float FREQ_Hz;                      // 循环周期
     enum Speed_LoopState_t spd_ctrl_state; // 速度控制状态
     uint64_t spd_ctrl_timer;               // 速度控制非空闲状态计时器
     float target_iq, target_id, target_is; // 目标电流
