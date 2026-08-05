@@ -74,7 +74,7 @@ void Speed_Loop_Init(void)
     Speed_Loop.Speed_Middle_High_Hcomp.enable = 1;
 
     Speed_Loop.PWM_SWITCH_FREQ = 20000.0f;
-
+    Speed_Loop.PWM_CUR_FREQ = 20000.0f;
     Power_Derating_Init();
 }
 
@@ -278,12 +278,22 @@ void Speed_Loop_Run_Task(void)
     }
 }
 
+
 void Paramater_update(void)
 {
-    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb_1s, Speed_Loop.target_is, 1/Speed_Loop.PWM_SWITCH_FREQ);
+    if (Speed_Loop.PWM_CUR_FREQ < PWM_SWITH_FREQ_MIN)
+    {
+        Speed_Loop.PWM_CUR_FREQ = PWM_SWITH_FREQ_MIN;
+    }
+    else if (Speed_Loop.PWM_CUR_FREQ > PWM_SWITH_FREQ_MAX)
+    {
+        Speed_Loop.PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
+    }
+    Speed_Loop.PWM_CUR_FREQ = Oblique_Wave(Speed_Loop.PWM_SWITCH_FREQ, Speed_Loop.PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
+    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb_1s, Speed_Loop.target_is, 1/Speed_Loop.PWM_CUR_FREQ);
+    Current_Para_Updata(Speed_Loop.Speed_Fb_1s, 1/Speed_Loop.PWM_CUR_FREQ);    
     Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
     Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
-    Current_Para_Updata(Speed_Loop.Speed_Fb_1s, 1/Speed_Loop.PWM_SWITCH_FREQ);
 }                     
 
 /* ==================================================================

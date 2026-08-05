@@ -10,6 +10,11 @@
 #define SPEED_ID_SUB_STEP (1.0 / 1000.0f)
 #define SPEED_SWITCH_ID_SUB_STEP (0.001f)
 
+
+#define PWM_SWITH_FREQ_MAX  (20000.0f)
+#define PWM_SWITH_FREQ_MIN  (6000.0f)
+#define PWM_SWITH_FREQ_STEP    (200.0f/1000.0f)
+
 enum Speed_LoopState_t
 {
     Speed_Loop_Idle = 0,
@@ -67,6 +72,7 @@ typedef struct Speed_Loop
     float MTPA_Id;
     float Flux_Weak_Id;
     float PWM_SWITCH_FREQ;
+    float PWM_CUR_FREQ;
 } Speed_Loop_t;
 
 void Speed_Loop_Init(void);

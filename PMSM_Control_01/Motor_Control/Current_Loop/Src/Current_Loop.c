@@ -580,7 +580,7 @@ inline void MOTOR_Bus_Current_Rewrite(void)
 void Current_Para_Updata(float speed, float Ts)
 {
     Current_Loop.Loop_time_s = Ts;
-    Current_Loop_Output.PWM_HZ_Coeff = 1.0f / Ts / Current_Loop.FREQ_HZ;
+    Current_Loop.PWM_FREQ_Coeff = 1.0f / Ts / Current_Loop.FREQ_HZ;
     Current_Loop.Id_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
     Current_Loop.Iq_PI.ki = Current_Loop.Id_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.ID_PI_Ki_Lookup);
     Current_Loop.Iq_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.IQ_PI_Kp_Lookup) * Current_Loop_Output.PWM_HZ_Coeff;
