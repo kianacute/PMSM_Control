@@ -2188,16 +2188,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Motot_Para_Identify</GroupName>
-          <Files>
-            <File>
-              <FileName>Parameter_Identify.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motot_Para_Identify\Src\Parameter_Identify.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>

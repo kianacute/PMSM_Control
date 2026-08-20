@@ -55,11 +55,8 @@ void Current_Loop_Init(void)
     Current_Loop.Iq_PI.integral = 0.0f;
     EMF_Cal.EMF = 0.0f;
     Current_Loop.A_Max = 0.0f;
-    Current_Loop.A_Min = 0.0f;
     Current_Loop.B_Max = 0.0f;
-    Current_Loop.B_Min = 0.0f;
     Current_Loop.C_Max = 0.0f;
-    Current_Loop.C_Min = 0.0f;
 
     Current_Loop.Ia_fb_offset = 0;
     Current_Loop.Ib_fb_offset = 0;
@@ -73,12 +70,12 @@ void Current_Loop_Init(void)
     Current_Loop.PWM_FREQ_Coeff = 1.0f;
 }
 
-int32_t MOTOR_IDLE_TASK(void);
-int32_t MOTOR_READY_TASK(void);
-int32_t MOTOR_OFFSET_CHECK_TASK(void);
-int32_t MOTOR_RUN_TASK(void);
-int32_t MOTOR_FAULT_TASK(void);
-int32_t MOTOR_WAIT_TASK(void);
+void MOTOR_IDLE_TASK(void);
+void MOTOR_READY_TASK(void);
+void MOTOR_OFFSET_CHECK_TASK(void);
+void MOTOR_RUN_TASK(void);
+void MOTOR_FAULT_TASK(void);
+void MOTOR_WAIT_TASK(void);
 void Current_Avg_Filt();
 void Current_Loop_Run(void);
 void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
@@ -88,6 +85,8 @@ void Current_Loop_Switch(void);
 void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                             float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
                             float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp);
+
+
 void MOTOR_Bus_Current_Rewrite(void);                        
 
 void Speed_Switch(void)
@@ -193,7 +192,7 @@ void Current_Loop_Switch(void)
     Current_Loop.Loop_count++;
 }
 
-int32_t MOTOR_IDLE_TASK(void)
+void MOTOR_IDLE_TASK(void)
 {
     // Code for MOTOR_IDLE state
     if (System.Run_flag == 1)
@@ -205,10 +204,10 @@ int32_t MOTOR_IDLE_TASK(void)
         Current_PWM_Switch(PWM_CLOSE);
         Current_Loop.Motor_State = MOTOR_IDLE;
     }
-    return 0;
+    return;
 }
 
-int32_t MOTOR_READY_TASK(void)
+void MOTOR_READY_TASK(void)
 {
     // Code for MOTOR_READY state
 
@@ -228,10 +227,10 @@ int32_t MOTOR_READY_TASK(void)
     {
         Current_Loop.Motor_State = MOTOR_WAIT;
     }
-    return 0;
+    return;
 }
 
-int32_t MOTOR_OFFSET_CHECK_TASK(void)
+void MOTOR_OFFSET_CHECK_TASK(void)
 {
     if (System.Run_flag == 1)
     {
@@ -270,10 +269,10 @@ int32_t MOTOR_OFFSET_CHECK_TASK(void)
     {
         Current_Loop.Motor_State = MOTOR_WAIT;
     }
-    return 0;
+    return;
 }
 
-int32_t MOTOR_RUN_TASK(void)
+void MOTOR_RUN_TASK(void)
 {
     /* Code for MOTOR_RUN state */
     if (System.Run_flag == 0 && Speed_Loop.Speed_Fb < 1000.0f)
@@ -292,10 +291,10 @@ int32_t MOTOR_RUN_TASK(void)
             Bsp_STM32G431_PWM_SetDuty();
         }
     }
-    return 0;
+    return;
 }
 
-int32_t MOTOR_FAULT_TASK()
+void MOTOR_FAULT_TASK()
 {
     /* Code for MOTOR_FAULT state */
     Current_PWM_Switch(PWM_CLOSE);
@@ -308,10 +307,9 @@ int32_t MOTOR_FAULT_TASK()
     {
         Current_Loop.Motor_State = MOTOR_FAULT;
     }
-    return 0;
 }
 
-int32_t MOTOR_WAIT_TASK()
+void MOTOR_WAIT_TASK()
 {
     /* Code for MOTOR_WAIT state */
     Current_PWM_Switch(PWM_CLOSE);
@@ -325,7 +323,7 @@ int32_t MOTOR_WAIT_TASK()
     {
         Current_Loop.Motor_State = MOTOR_WAIT;
     }
-    return 0;
+    return;
 }
 
 void Current_Avg_Filt()
@@ -374,7 +372,7 @@ inline void Current_Loop_Run(void)
 
     Current_Loop.Id_PI.out_max = Current_Loop_Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * 1.02f;
     Current_Loop.Id_PI.out_min = -Current_Loop.Id_PI.out_max;
-    if (Current_Loop.Id_PI.out_max - Current_Loop.Ud_Target)
+    if (Current_Loop.Id_PI.out_max > Current_Loop.Ud_Target)
     {
         arm_sqrt_f32(Current_Loop.Id_PI.out_max * Current_Loop.Id_PI.out_max -
                          Current_Loop.Ud_Target * Current_Loop.Ud_Target,
@@ -447,11 +445,8 @@ inline void Phase_Min_Max(float A, float B, float C)
     {
         Current_Loop.Phase_check_cnt = 0;
         Current_Loop.A_Max = 0;
-        Current_Loop.A_Min = 0;
-        Current_Loop.B_Max = 0;
-        Current_Loop.B_Min = 0;
         Current_Loop.C_Max = 0;
-        Current_Loop.C_Min = 0;
+        Current_Loop.B_Max = 0;
     }
     else
     {

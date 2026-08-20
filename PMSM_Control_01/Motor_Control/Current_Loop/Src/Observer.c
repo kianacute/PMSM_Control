@@ -18,7 +18,7 @@ void EMF_CAL_Updata(struct EMF_Cal_Parameter *EMF_Cal, float32_t Ualpha, float32
                     float32_t Ialpha, float32_t Ibeta, float discrete_time)
 {
 
-    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Rs * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
+    EMF_Cal->Ls_Ialpha = (EMF_Cal->pMotor->motor_param->Ls * (Ialpha - EMF_Cal->ialpha_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ialpha * (1 - EMF_Cal->EMF_LPF_Coff);
     EMF_Cal->Ls_Ibeta = (EMF_Cal->pMotor->motor_param->Ls * (Ibeta - EMF_Cal->ibeta_last) / discrete_time) * EMF_Cal->EMF_LPF_Coff + EMF_Cal->Ls_Ibeta * (1 - EMF_Cal->EMF_LPF_Coff);
 
     EMF_Cal->EMF_alpha = Ualpha - Ialpha * EMF_Cal->pMotor->motor_param->Rs - EMF_Cal->Ls_Ialpha;
@@ -212,7 +212,12 @@ void Nonlinear_FluxObserver_Updata(struct NonFluxObserver_Parameter *NFO, float3
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
 
 /*有效磁链观测器*/
-struct EffFluxObserver_Parameter EffFlux_OB = {0};
+struct EffFluxObserver_Parameter EffFlux_OB = 
+{
+    .discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S,
+    .freq = MOTOR_CURRENT_LOOP_HZ,
+    .Angle_Comp = 0.0f,
+};
 
 void Effective_FluxObserver_Init(void)
 {

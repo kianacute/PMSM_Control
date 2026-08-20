@@ -12,8 +12,8 @@
 
 
 #define PWM_SWITH_FREQ_MAX  (20000.0f)
-#define PWM_SWITH_FREQ_MIN  (6000.0f)
-#define PWM_SWITH_FREQ_STEP    (200.0f/1000.0f)
+#define PWM_SWITH_FREQ_MIN  (1000.0f)
+#define PWM_SWITH_FREQ_STEP    (2000.0f/1000.0f)
 
 enum Speed_LoopState_t
 {

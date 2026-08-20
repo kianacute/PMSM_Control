@@ -58,7 +58,7 @@ typedef struct Current_Loop
 
     /*缺相诊断*/
     uint32_t offset_check_cnt;
-    float A_Max, A_Min, B_Max, B_Min, C_Max, C_Min;
+    float A_Max, B_Max, C_Max;
     uint32_t Phase_check_cnt;
     uint32_t Phase_check_cnt_THD;
 
@@ -80,4 +80,4 @@ void Current_Para_Updata(float speed, float Ts);
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;
 
-#endif // SVPWM_H
+#endif // __Current_Loop_H__
