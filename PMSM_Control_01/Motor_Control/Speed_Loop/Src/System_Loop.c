@@ -32,7 +32,7 @@ void SYSTEM_Init(void)
     Motor_Diag_Init();
     System_Diag_Init();
     Motor_Config_Init();
-    Speed_Command = 3000.0f;
+    Speed_Command = 1000.0f;
     System.Run_flag = 0;
 }
 

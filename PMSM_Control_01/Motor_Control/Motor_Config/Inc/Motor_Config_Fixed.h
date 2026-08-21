@@ -54,7 +54,7 @@ typedef struct Motor_Config
     
 
 
-} Motor_Config_t;
+} Motor_Config_Fixed_t;
 
 /*current parameters*/
 #define MOTOR_CURRENT_LOOP_HZ               (20000.0f)

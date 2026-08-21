@@ -44,8 +44,8 @@ const float IF_Start_Ramp_Sec[10] = {
 };
 
 const float IF_Start_Speed_RPM[10] = {
-    20.0f, 50.0f, 100.0f, 200.0f, 400.0f, 600.0f,
-    700.0f, 750.0f, 800.0f, 800.0f,
+    5.0f, 10.0f, 30.0f, 50.0f, 60.0f, 70.0f,
+    80.0f, 85.0f, 90.0f, 100.0f,
 };
 
 const float NonFlux_Gama_Lookup_1D[10] = {

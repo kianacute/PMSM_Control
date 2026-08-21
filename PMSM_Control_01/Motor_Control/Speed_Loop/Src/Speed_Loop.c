@@ -191,7 +191,7 @@ void Speed_Loop_Open_Task(void)
     Speed_Loop.target_id = 0;
     if (Speed_Loop.Speed_Ref >= 600)
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
+        // Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
     }
 }
 

@@ -11,11 +11,13 @@
 #include "adc.h"
 #include "opamp.h"
 #include "Current_Loop.h"
+#include "Current_Loop_Fixed.h"
 #include "Speed_Loop.h"
 #include "Observer.h"
 #include "Motor_Diag.h"
 #include "System_Diag.h"
 #include "System_Loop.h"
+#include "Motor_Config.h"
 
 TickType_t lasttick = 0;
 uint16_t adc_v24;
@@ -26,6 +28,7 @@ adc_adjustment_t adc_adjustment = {0};
 
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;
+extern Current_Loop_Input_Fixed_t Current_Loop_Input_Fixed;
 
 /* Profiler 全局变量 (ISR-aware 运行时间统计) */
 volatile uint32_t g_isr_accumulated_cycles = 0;
@@ -161,6 +164,11 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         Current_Loop_Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
         Current_Loop_Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
         Current_Loop_Input.Udc_ADISR = adc_adjustment.ADC_j4 * 1.1f * 0.019842f;
+
+        Current_Loop_Input_Fixed.Ia_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read injected channel value
+        Current_Loop_Input_Fixed.Ib_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read another injected channel value
+        Current_Loop_Input_Fixed.Ic_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)) << 3) - 0x4000; // Read another injected channel value
+        Current_Loop_Input_Fixed.Udc_ADISR = (HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2)) << 3;
 
         /*调用电流环切换函数*/
         Current_Loop_Switch();
