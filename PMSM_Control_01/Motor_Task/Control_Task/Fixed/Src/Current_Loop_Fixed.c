@@ -67,7 +67,7 @@ void Current_Loop_Init(void)
 
     Current_Loop_Fixed.Dead_Zone_Enable_Flag = 1;
 
-    Current_Loop.PWM_FREQ_Coeff = 1.0f;
+    Current_Loop_Fixed.PWM_FREQ_Coeff = 1.0f;
 }
 
 void MOTOR_IDLE_TASK(void);
@@ -242,9 +242,9 @@ void MOTOR_OFFSET_CHECK_TASK(void)
         {
             // Code for MOTOR_OFFSET_CHECK state
             Current_Loop_Fixed.offset_check_cnt++;
-            Current_Loop_Fixed.Ia_fb_offset += Current_Loop_Fixed_Input_Fixed.Ia_fb_raw; // Accumulate ADC1 injected channel 1 value
-            Current_Loop_Fixed.Ib_fb_offset += Current_Loop_Fixed_Input_Fixed.Ib_fb_raw; // Accumulate ADC2 injected channel 1 value
-            Current_Loop_Fixed.Ic_fb_offset += Current_Loop_Fixed_Input_Fixed.Ic_fb_raw; // Accumulate ADC1 injected channel 2 value
+            Current_Loop_Fixed.Ia_fb_offset += Current_Loop_Input_Fixed.Ia_fb_raw; // Accumulate ADC1 injected channel 1 value
+            Current_Loop_Fixed.Ib_fb_offset += Current_Loop_Input_Fixed.Ib_fb_raw; // Accumulate ADC2 injected channel 1 value
+            Current_Loop_Fixed.Ic_fb_offset += Current_Loop_Input_Fixed.Ic_fb_raw; // Accumulate ADC1 injected channel 2 value
             if (Current_Loop_Fixed.offset_check_cnt >= MOTOR_ADC_OFFSET_SAMPLE_CNT)
             {
                 Current_Loop_Fixed.Ia_fb_offset /= Current_Loop_Fixed.offset_check_cnt; // Calculate average for ADC1 injected channel 1
@@ -346,7 +346,7 @@ inline void Current_Loop_Run(void)
     // Encode_ABZ_UpDate();
     Speed_Switch();
     // Current_Avg_Filt();
-    Phase_Current_Rewrite(Current_Loop_Input_Fixed.Ia_fb_raw - Current_Loop_Fixed.Ia_fb_offset,
+    Phase_Current_Rewrite_Fixed(Current_Loop_Input_Fixed.Ia_fb_raw - Current_Loop_Fixed.Ia_fb_offset,
                           Current_Loop_Input_Fixed.Ib_fb_raw - Current_Loop_Fixed.Ib_fb_offset,
                           Current_Loop_Input_Fixed.Ic_fb_raw - Current_Loop_Fixed.Ic_fb_offset,
                           &Current_Loop_Fixed.Ia_fb, &Current_Loop_Fixed.Ib_fb, &Current_Loop_Fixed.Ic_fb,
@@ -354,13 +354,13 @@ inline void Current_Loop_Run(void)
 
     // Phase_Min_Max(MY_ABS(Current_Loop_Fixed.Ia_fb), MY_ABS(Current_Loop_Fixed.Ib_fb), MY_ABS(Current_Loop_Fixed.Ic_fb));
 
-    arm_clarke_f32(Current_Loop_Fixed.Ia_fb, Current_Loop_Fixed.Ib_fb, &Current_Loop_Fixed.ialpha_fb, &Current_Loop_Fixed.ibeta_fb);
+    arm_clarke_q31(Current_Loop_Fixed.Ia_fb, Current_Loop_Fixed.Ib_fb, &Current_Loop_Fixed.ialpha_fb, &Current_Loop_Fixed.ibeta_fb);
 
     // OBSERVE_Updata(Current_Loop.Ualpha_Ref, Current_Loop.Ubeta_Ref, Current_Loop.ialpha_fb, Current_Loop.ibeta_fb);
 
-    Current_Loop_Fixed.sinVal = arm_sin_f32(Current_Loop_Fixed.theta);
-    Current_Loop_Fixed.cosVal = arm_cos_f32(Current_Loop_Fixed.theta);
-    arm_park_f32(Current_Loop_Fixed.ialpha_fb, Current_Loop_Fixed.ibeta_fb, &Current_Loop_Fixed.Id_fb,
+    Current_Loop_Fixed.sinVal = arm_sin_q31(Current_Loop_Fixed.theta);
+    Current_Loop_Fixed.cosVal = arm_cos_q31(Current_Loop_Fixed.theta);
+    arm_park_q31(Current_Loop_Fixed.ialpha_fb, Current_Loop_Fixed.ibeta_fb, &Current_Loop_Fixed.Id_fb,
                  &Current_Loop_Fixed.Iq_fb, Current_Loop_Fixed.sinVal, Current_Loop_Fixed.cosVal);
 
     // Current_Loop_Fixed.Id_Ref = Speed_Loop.target_id;
@@ -402,8 +402,8 @@ inline void Current_Loop_Run(void)
 /// @param Ib_fb b相电流重构值
 /// @param Ic_fb c相电流重构值
 /// @param sector sector值，范围1-6
-inline void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
-                                  float32_t *Ia_fb, float32_t *Ib_fb, float32_t *Ic_fb, uint8_t sector)
+inline void Phase_Current_Rewrite_Fixed(q31_t Ia_fb_raw, q31_t Ib_fb_raw, q31_t Ic_fb_raw,
+                                  q31_t *Ia_fb, q31_t *Ib_fb, q31_t *Ic_fb, uint8_t sector)
 {
     uint8_t sector_re = rewrite_phase_index[sector - 1];
     switch (sector_re)

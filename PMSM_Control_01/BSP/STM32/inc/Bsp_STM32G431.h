@@ -21,7 +21,7 @@
 
 typedef struct adc_adjustment
 {
-    float ADC_j1, ADC_j2, ADC_j3;
+    int32_t ADC_j1, ADC_j2, ADC_j3;
     uint32_t ADC_j4;
 } adc_adjustment_t;
 

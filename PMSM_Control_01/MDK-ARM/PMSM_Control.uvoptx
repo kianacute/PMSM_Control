@@ -904,6 +904,18 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>8</GroupNumber>
+      <FileNumber>51</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\MATH_LIB\src\Hal_Math_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>Hal_Math_Fixed.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -914,25 +926,13 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>51</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Current_Loop\Src\Current_Loop.c</PathWithFileName>
-      <FilenameWithoutPath>Current_Loop.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>9</GroupNumber>
       <FileNumber>52</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Current_Loop\Src\Observer.c</PathWithFileName>
-      <FilenameWithoutPath>Observer.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Current_Loop_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Current_Loop_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -943,8 +943,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Current_Loop\Src\SVPWM.c</PathWithFileName>
-      <FilenameWithoutPath>SVPWM.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Config_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -955,8 +955,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Speed_Loop\Src\Speed_Loop.c</PathWithFileName>
-      <FilenameWithoutPath>Speed_Loop.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Lookup_Tables_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -967,8 +967,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Speed_Loop\Src\System_Loop.c</PathWithFileName>
-      <FilenameWithoutPath>System_Loop.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Observer_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Observer_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -979,8 +979,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Motor_Config\Src\Motor_Config.c</PathWithFileName>
-      <FilenameWithoutPath>Motor_Config.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Speed_Loop_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -991,8 +991,20 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Motor_Config\Src\Motor_Lookup_Tables.c</PathWithFileName>
-      <FilenameWithoutPath>Motor_Lookup_Tables.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</PathWithFileName>
+      <FilenameWithoutPath>SVPWM_Float.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>9</GroupNumber>
+      <FileNumber>58</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</PathWithFileName>
+      <FilenameWithoutPath>System_Loop_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1006,24 +1018,12 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>10</GroupNumber>
-      <FileNumber>58</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Current_Loop\Src\Observer_Fixed.c</PathWithFileName>
-      <FilenameWithoutPath>Observer_Fixed.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>10</GroupNumber>
       <FileNumber>59</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Current_Loop\Src\Current_Loop_Fixed.c</PathWithFileName>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\Current_Loop_Fixed.c</PathWithFileName>
       <FilenameWithoutPath>Current_Loop_Fixed.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1035,8 +1035,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Speed_Loop\Src\Speed_Loop_Fixed.c</PathWithFileName>
-      <FilenameWithoutPath>Speed_Loop_Fixed.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\Motor_Config_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Config_Fixed.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1047,8 +1047,56 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Control\Motor_Config\Src\Motor_Config_Fixed.c</PathWithFileName>
-      <FilenameWithoutPath>Motor_Config_Fixed.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\Motor_Lookup_Tables_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Lookup_Tables_Fixed.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>10</GroupNumber>
+      <FileNumber>62</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\Observer_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>Observer_Fixed.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>10</GroupNumber>
+      <FileNumber>63</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\Speed_Loop_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>Speed_Loop_Fixed.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>10</GroupNumber>
+      <FileNumber>64</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\SVPWM_Fixed.c</PathWithFileName>
+      <FilenameWithoutPath>SVPWM_Fixed.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>10</GroupNumber>
+      <FileNumber>65</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Motor_Task\Control_Task\Fixed\Src\System_Loop_FIxed.c</PathWithFileName>
+      <FilenameWithoutPath>System_Loop_FIxed.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1062,7 +1110,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>62</FileNumber>
+      <FileNumber>66</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1074,7 +1122,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>63</FileNumber>
+      <FileNumber>67</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1086,7 +1134,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>64</FileNumber>
+      <FileNumber>68</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1098,7 +1146,7 @@
     </File>
     <File>
       <GroupNumber>11</GroupNumber>
-      <FileNumber>65</FileNumber>
+      <FileNumber>69</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1118,7 +1166,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>66</FileNumber>
+      <FileNumber>70</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1130,7 +1178,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>67</FileNumber>
+      <FileNumber>71</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1142,7 +1190,7 @@
     </File>
     <File>
       <GroupNumber>12</GroupNumber>
-      <FileNumber>68</FileNumber>
+      <FileNumber>72</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

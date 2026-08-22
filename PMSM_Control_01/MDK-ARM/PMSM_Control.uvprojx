@@ -70,7 +70,7 @@
             <nStopU2X>0</nStopU2X>
           </BeforeCompile>
           <BeforeMake>
-            <RunUserProg1>1</RunUserProg1>
+            <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>python.exe ..\Motor_Para\generate.py</UserProg1Name>
             <UserProg2Name></UserProg2Name>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G431xx,__TARGET_FPU_VFP,__FPU_PRESENT,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;..\MATH_LIB\inc;..\Motor_Control\Command\Inc;..\Motor_Control\Current_Loop\Inc;..\Motor_Control\DIAG\Inc;..\Motor_Control\Motor_Config\Inc;..\Motor_Control\Speed_Loop\Inc;..\BSP\STM32\inc;..\Motot_Para_Identify\Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;..\BSP\STM32\inc;..\Motor_Task\MATH_LIB\Inc;..\Motor_Task\Command\Inc;..\Motor_Task\Control_Task\Fixed\Inc;..\Motor_Task\Control_Task\Float\Inc;..\Motor_Task\DIAG\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2100,45 +2100,50 @@
               <FileType>1</FileType>
               <FilePath>..\MATH_LIB\src\Hal_Math.c</FilePath>
             </File>
+            <File>
+              <FileName>Hal_Math_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\MATH_LIB\src\Hal_Math_Fixed.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Motor_Control_Float</GroupName>
           <Files>
             <File>
-              <FileName>Current_Loop.c</FileName>
+              <FileName>Current_Loop_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Current_Loop\Src\Current_Loop.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Current_Loop_Float.c</FilePath>
             </File>
             <File>
-              <FileName>Observer.c</FileName>
+              <FileName>Motor_Config_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Current_Loop\Src\Observer.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</FilePath>
             </File>
             <File>
-              <FileName>SVPWM.c</FileName>
+              <FileName>Motor_Lookup_Tables_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Current_Loop\Src\SVPWM.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</FilePath>
             </File>
             <File>
-              <FileName>Speed_Loop.c</FileName>
+              <FileName>Observer_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Speed_Loop\Src\Speed_Loop.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Observer_Float.c</FilePath>
             </File>
             <File>
-              <FileName>System_Loop.c</FileName>
+              <FileName>Speed_Loop_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Speed_Loop\Src\System_Loop.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</FilePath>
             </File>
             <File>
-              <FileName>Motor_Config.c</FileName>
+              <FileName>SVPWM_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Motor_Config\Src\Motor_Config.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</FilePath>
             </File>
             <File>
-              <FileName>Motor_Lookup_Tables.c</FileName>
+              <FileName>System_Loop_Float.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Motor_Config\Src\Motor_Lookup_Tables.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2146,24 +2151,39 @@
           <GroupName>Motor_Control_Fixed</GroupName>
           <Files>
             <File>
-              <FileName>Observer_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Current_Loop\Src\Observer_Fixed.c</FilePath>
-            </File>
-            <File>
               <FileName>Current_Loop_Fixed.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Current_Loop\Src\Current_Loop_Fixed.c</FilePath>
-            </File>
-            <File>
-              <FileName>Speed_Loop_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Speed_Loop\Src\Speed_Loop_Fixed.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Current_Loop_Fixed.c</FilePath>
             </File>
             <File>
               <FileName>Motor_Config_Fixed.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Motor_Config\Src\Motor_Config_Fixed.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Motor_Config_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>Motor_Lookup_Tables_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Motor_Lookup_Tables_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>Observer_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Observer_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>Speed_Loop_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Speed_Loop_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>SVPWM_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\SVPWM_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>System_Loop_FIxed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\System_Loop_FIxed.c</FilePath>
             </File>
           </Files>
         </Group>

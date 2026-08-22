@@ -94,6 +94,8 @@ void my_task3(void *argument)
     }
 }
 
+q31_t sin_input1, sin_output1;
+
 void my_task4(void *argument)
 {
     for (;;)
@@ -106,6 +108,7 @@ void my_task4(void *argument)
         System_Diag_Task();
         vTaskDelayUntil(&lasttick, 10); // 每10ms执行一次
         // osDelay(1);
+        sin_output1 = arm_sin_q31(sin_input1);
     }
 }
 
