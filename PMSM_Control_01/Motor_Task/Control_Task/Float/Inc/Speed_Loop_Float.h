@@ -1,8 +1,8 @@
 #ifndef __Speed_LOOP_H__
 #define __Speed_LOOP_H__
 
-#include "Hal_Math.h"
-#include "Motor_Config.h"
+#include "Hal_Math_Float.h"
+#include "Motor_Config_Float.h"
 
 #define SPEED_ADD_STEP (1000 / 1000.0f)
 #define SPEED_SUB_STEP (1000 / 1000.0f)
@@ -14,37 +14,6 @@
 #define PWM_SWITH_FREQ_MAX  (20000.0f)
 #define PWM_SWITH_FREQ_MIN  (1000.0f)
 #define PWM_SWITH_FREQ_STEP    (2000.0f/1000.0f)
-
-enum Speed_LoopState_t
-{
-    Speed_Loop_Idle = 0,
-    Speed_Loop_Align,
-    Speed_Loop_Open,
-    Speed_Loop_Switch,
-    Speed_Loop_Low,
-    Speed_Loop_Middle,
-    Speed_Loop_High,
-};
-
-/* 一阶LADRC控制器
- * 参考: https://zhuanlan.zhihu.com/p/664345718
- * 一阶系统模型: dy/dt = f + b0*u
- * LESO (线性扩张状态观测器): 估计系统输出z1和总扰动z2
- * LSEF (线性误差反馈): u = (wc*(ref - z1) - z2) / b0
- * 参数整定: wo = (3~10)*wc, b0越大抗扰越弱
- */
-typedef struct LADRC_FirstOrder
-{
-    float h;       // 采样周期 (s)
-    float b0;      // 控制增益, 一阶系统: b0 = Kt/J (转矩常数/转动惯量)
-    float wo;      // 观测器带宽 (rad/s), beta1=2*wo, beta2=wo^2
-    float wc;      // 控制器带宽 (rad/s), kp = wc
-    float z1;      // 输出估计值 (速度观测)
-    float z2;      // 总扰动估计值 (负载+模型不确定性)
-    float u;       // 当前控制量
-    float out_max; // 输出上限
-    float out_min; // 输出下限
-} LADRC_FirstOrder_t;
 
 typedef struct Speed_Loop
 {
@@ -77,5 +46,14 @@ typedef struct Speed_Loop
 
 void Speed_Loop_Init(void);
 void Speed_Loop_Task(void);
+
+void Speed_Loop_Idle_Task(void);
+void Speed_Loop_Align_Task();
+void Speed_Loop_Open_Task(void);
+void Speed_Loop_Switch_Task(void);
+void Speed_Loop_Low_Task(void);
+void Speed_Loop_Middle_Task(void);
+void Speed_Loop_High_Task(void);
+void Speed_Loop_Run_Task(void);
 
 #endif // __Speed_Loop_H__

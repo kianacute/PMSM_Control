@@ -1,10 +1,10 @@
-#include "System_Loop.h"
+#include "System_Loop_Float.h"
 #include "arm_math.h"
-#include "Current_Loop.h"
-#include "Motor_Config.h"
-#include "Hal_Math.h"
-#include "Observer.h"
-#include "Speed_Loop.h"
+#include "Current_Loop_Float.h"
+#include "Motor_Config_Float.h"
+#include "Hal_Math_Float.h"
+#include "Observer_Float.h"
+#include "Speed_Loop_Float.h"
 #include "System_Diag.h"
 #include "Motor_Diag.h"
 
@@ -19,9 +19,18 @@ extern Current_Loop_Output_t Current_Loop_Output;
 
 uint8_t System_Fault_Flag = 0;
 
+
 SYSTEM_t System = {
     .FREQ_Hz = SYSTEM_HZ,
 };
+
+
+void SYSTEM_Init(void);
+void SYSTEM_LV_Standy(void);
+void SYSTEM_HV_Standy(void);
+void SYSTEM_Run(void);
+void SYSTEM_Fault(void);
+void SYSTEM_Wait(void);
 
 void SYSTEM_Init(void)
 {
@@ -36,14 +45,14 @@ void SYSTEM_Init(void)
     System.Run_flag = 0;
 }
 
-void SYSTEM_LV_Standy()
+void SYSTEM_LV_Standy(void)
 {
     vTaskDelay(SYSTEM_LV_INIT_TIME);
     System.system_state = SYSTEM_HV_STANDY;
     System.Run_flag = 0;
 }
 
-void SYSTEM_HV_Standy()
+void SYSTEM_HV_Standy(void)
 {
     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
@@ -56,7 +65,7 @@ void SYSTEM_HV_Standy()
 
 extern uint8_t System_Diag_Fault_Flag;
 
-void SYSTEM_Run()
+void SYSTEM_Run(void)
 {
     System_Fault_Flag = System_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
     if(System_Fault_Flag != 0)
@@ -78,7 +87,7 @@ void SYSTEM_Run()
     return;
 }
 
-void SYSTEM_Fault()
+void SYSTEM_Fault(void)
 {
     System.Fault_cnt++;
     System.Run_flag = 0;
@@ -86,39 +95,12 @@ void SYSTEM_Fault()
     System.system_state = SYSTEM_WAIT;
 }
 
-void SYSTEM_Wait()
+void SYSTEM_Wait(void)
 {
     vTaskDelay(SYSTEM_WAIT_TIME);
     System.system_state = SYSTEM_HV_STANDY;
     System_Diag_Fault_Flag = 0;
     System.Run_flag = 0;
-}
-
-uint32_t System_cnt;
-
-void SYSTEM_Task(void)
-{
-    System_cnt++;
-    switch (System.system_state)
-    {
-    case SYSTEM_LV_STANDY:
-        SYSTEM_LV_Standy();
-        break;
-    case SYSTEM_HV_STANDY:
-        SYSTEM_HV_Standy();
-        break;
-    case SYSTEM_RUN:
-        SYSTEM_Run();
-        break;
-    case SYSTEM_FAULT:
-        SYSTEM_Fault();
-        break;
-    case SYSTEM_WAIT:
-        SYSTEM_Wait();
-        break;
-    default:
-        break;
-    }
 }
 
 

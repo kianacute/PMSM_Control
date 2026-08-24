@@ -1,7 +1,7 @@
 #ifndef __MOTOR_DIAG_H__
 #define __MOTOR_DIAG_H__
 
-#include "Hal_Math.h"
+#include "Hal_Math_Float.h"
 #include "Diag_List.h"
 
 #define MOTOR_OVER_SPEED_THRESHOLD       (5000.0f)

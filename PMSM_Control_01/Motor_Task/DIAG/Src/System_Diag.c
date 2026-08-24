@@ -1,7 +1,7 @@
 #include "System_Diag.h"
-#include "Speed_Loop.h"
-#include "Current_Loop.h"
-#include "System_Loop.h"
+#include "Speed_Loop_Float.h"
+#include "Current_Loop_Float.h"
+#include "System_Loop_Float.h"
 
 extern Current_Loop_t Current_Loop;
 extern SYSTEM_t System;

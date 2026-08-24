@@ -3,7 +3,7 @@
 
 
 #include <stdint.h>
-#include "Hal_Math.h"
+#include "Hal_Math_Float.h"
 
 typedef struct Motor_Parameter
 {

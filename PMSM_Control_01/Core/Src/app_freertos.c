@@ -31,15 +31,9 @@
 #include "tim.h"
 #include "arm_math.h"
 #include <main.h>
-#include "Current_Loop.h"
 #include "adc.h"
-#include "Speed_Loop.h"
 #include "opamp.h"
-#include "Observer.h"
 #include "Can.h"
-#include "System_Loop.h"
-#include "System_Diag.h"
-#include "Motor_Diag.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

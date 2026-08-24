@@ -1,4 +1,4 @@
-#include "Hal_Math.h"
+#include "Hal_Math_Float.h"
 
 /// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间
 /// @param controller PI控制器对象，包含增益、积分项、输出限制等参数

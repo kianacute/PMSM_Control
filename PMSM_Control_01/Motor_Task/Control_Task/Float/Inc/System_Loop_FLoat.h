@@ -1,8 +1,8 @@
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__
 
-#include "Hal_Math.h"
-#include "Motor_Config.h"
+#include "Hal_Math_Float.h"
+#include "Motor_Config_Float.h"
 
 #define SYSTEM_HZ               (1000.0f)
 
@@ -28,6 +28,10 @@ typedef struct SYSTEM_Ctrl
 } SYSTEM_t;
 
 void SYSTEM_Init(void);
-void SYSTEM_Task(void);
+void SYSTEM_LV_Standy(void);
+void SYSTEM_HV_Standy(void);
+void SYSTEM_Run(void);
+void SYSTEM_Fault(void);
+void SYSTEM_Wait(void);
 
 #endif // __SYSTEM_H__

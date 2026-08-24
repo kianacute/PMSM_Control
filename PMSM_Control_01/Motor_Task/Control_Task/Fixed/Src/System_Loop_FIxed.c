@@ -1,125 +1,125 @@
-#include "System_Loop.h"
-#include "arm_math.h"
-#include "Current_Loop.h"
-#include "Motor_Config.h"
-#include "Hal_Math.h"
-#include "Observer.h"
-#include "Speed_Loop.h"
-#include "System_Diag.h"
-#include "Motor_Diag.h"
+// #include "System_Loop.h"
+// #include "arm_math.h"
+// #include "Current_Loop.h"
+// #include "Motor_Config.h"
+// #include "Hal_Math.h"
+// #include "Observer.h"
+// #include "Speed_Loop.h"
+// #include "System_Diag.h"
+// #include "Motor_Diag.h"
 
-extern uint8_t MOTOR_Run_flag;
-extern float Speed_Command;
-extern Motor_Config_t PMSM_42JS_Config;
-extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Current_Loop_t Current_Loop;
-extern Speed_Loop_t Speed_Loop;
-extern Current_Loop_Input_t Current_Loop_Input;
-extern Current_Loop_Output_t Current_Loop_Output;
+// extern uint8_t MOTOR_Run_flag;
+// extern float Speed_Command;
+// extern Motor_Config_t PMSM_42JS_Config;
+// extern struct NonFluxObserver_Parameter NonFlux_OB;
+// extern Current_Loop_t Current_Loop;
+// extern Speed_Loop_t Speed_Loop;
+// extern Current_Loop_Input_t Current_Loop_Input;
+// extern Current_Loop_Output_t Current_Loop_Output;
 
-uint8_t System_Fault_Flag = 0;
+// uint8_t System_Fault_Flag = 0;
 
-SYSTEM_t System = {
-    .FREQ_Hz = SYSTEM_HZ,
-};
+// SYSTEM_t System = {
+//     .FREQ_Hz = SYSTEM_HZ,
+// };
 
-void SYSTEM_Init(void)
-{
-    // Initialization code for the system
-    // e.g., setting up peripherals, initializing variables, etc.
-    Current_Loop_Init();
-    Speed_Loop_Init();
-    Motor_Diag_Init();
-    System_Diag_Init();
-    Motor_Config_Init();
-    Speed_Command = 1000.0f;
-    System.Run_flag = 0;
-}
+// void SYSTEM_Init(void)
+// {
+//     // Initialization code for the system
+//     // e.g., setting up peripherals, initializing variables, etc.
+//     Current_Loop_Init();
+//     Speed_Loop_Init();
+//     Motor_Diag_Init();
+//     System_Diag_Init();
+//     Motor_Config_Init();
+//     Speed_Command = 1000.0f;
+//     System.Run_flag = 0;
+// }
 
-void SYSTEM_LV_Standy()
-{
-    vTaskDelay(SYSTEM_LV_INIT_TIME);
-    System.system_state = SYSTEM_HV_STANDY;
-    System.Run_flag = 0;
-}
+// void SYSTEM_LV_Standy()
+// {
+//     vTaskDelay(SYSTEM_LV_INIT_TIME);
+//     System.system_state = SYSTEM_HV_STANDY;
+//     System.Run_flag = 0;
+// }
 
-void SYSTEM_HV_Standy()
-{
-    if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
-    {
-        vTaskDelay(SYSTEM_HV_STANDY_TIME);
-        System.system_state = SYSTEM_RUN;
-        System.Run_flag = 0;
-    }
-}
+// void SYSTEM_HV_Standy()
+// {
+//     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
+//     {
+//         vTaskDelay(SYSTEM_HV_STANDY_TIME);
+//         System.system_state = SYSTEM_RUN;
+//         System.Run_flag = 0;
+//     }
+// }
 
 
-extern uint8_t System_Diag_Fault_Flag;
+// extern uint8_t System_Diag_Fault_Flag;
 
-void SYSTEM_Run()
-{
-    System_Fault_Flag = System_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
-    if(System_Fault_Flag != 0)
-    {
-        System.system_state = SYSTEM_FAULT;
-        Speed_Loop.Speed_Command = 0;
-        return;
-    }
-    if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
-    {
-        Speed_Loop.Speed_Command = Speed_Command; 
-        System.Run_flag = 1;
-    }
-    else 
-    {
-        Speed_Loop.Speed_Command = 0;
-        System.Run_flag = 0;
-    }
-    return;
-}
+// void SYSTEM_Run()
+// {
+//     System_Fault_Flag = System_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
+//     if(System_Fault_Flag != 0)
+//     {
+//         System.system_state = SYSTEM_FAULT;
+//         Speed_Loop.Speed_Command = 0;
+//         return;
+//     }
+//     if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
+//     {
+//         Speed_Loop.Speed_Command = Speed_Command; 
+//         System.Run_flag = 1;
+//     }
+//     else 
+//     {
+//         Speed_Loop.Speed_Command = 0;
+//         System.Run_flag = 0;
+//     }
+//     return;
+// }
 
-void SYSTEM_Fault()
-{
-    System.Fault_cnt++;
-    System.Run_flag = 0;
-    vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_WAIT;
-}
+// void SYSTEM_Fault()
+// {
+//     System.Fault_cnt++;
+//     System.Run_flag = 0;
+//     vTaskDelay(SYSTEM_WAIT_TIME);
+//     System.system_state = SYSTEM_WAIT;
+// }
 
-void SYSTEM_Wait()
-{
-    vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_HV_STANDY;
-    System_Diag_Fault_Flag = 0;
-    System.Run_flag = 0;
-}
+// void SYSTEM_Wait()
+// {
+//     vTaskDelay(SYSTEM_WAIT_TIME);
+//     System.system_state = SYSTEM_HV_STANDY;
+//     System_Diag_Fault_Flag = 0;
+//     System.Run_flag = 0;
+// }
 
-uint32_t System_cnt;
+// uint32_t System_cnt;
 
-void SYSTEM_Task(void)
-{
-    System_cnt++;
-    switch (System.system_state)
-    {
-    case SYSTEM_LV_STANDY:
-        SYSTEM_LV_Standy();
-        break;
-    case SYSTEM_HV_STANDY:
-        SYSTEM_HV_Standy();
-        break;
-    case SYSTEM_RUN:
-        SYSTEM_Run();
-        break;
-    case SYSTEM_FAULT:
-        SYSTEM_Fault();
-        break;
-    case SYSTEM_WAIT:
-        SYSTEM_Wait();
-        break;
-    default:
-        break;
-    }
-}
+// void SYSTEM_Task(void)
+// {
+//     System_cnt++;
+//     switch (System.system_state)
+//     {
+//     case SYSTEM_LV_STANDY:
+//         SYSTEM_LV_Standy();
+//         break;
+//     case SYSTEM_HV_STANDY:
+//         SYSTEM_HV_Standy();
+//         break;
+//     case SYSTEM_RUN:
+//         SYSTEM_Run();
+//         break;
+//     case SYSTEM_FAULT:
+//         SYSTEM_Fault();
+//         break;
+//     case SYSTEM_WAIT:
+//         SYSTEM_Wait();
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 
 

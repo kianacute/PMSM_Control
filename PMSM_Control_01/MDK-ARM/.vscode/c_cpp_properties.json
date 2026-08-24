@@ -18,6 +18,7 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\Control_Task\\Fixed\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\Control_Task\\Float\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\DIAG\\Inc",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\System\\Inc",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MDK-ARM",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Core\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\ST\\ARM\\DSP\\Lib",
@@ -25,11 +26,12 @@
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\Third_Party\\FreeRTOS\\Source",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\MemMang",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\BSP\\STM32\\src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\MATH_LIB\\src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\System\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\Control_Task\\Float\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\MATH_LIB\\Src",
                 "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\Control_Task\\Fixed\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\Command\\Src",
-                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Control\\DIAG\\Src"
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\Command\\Src",
+                "d:\\STM32\\Motor\\PMSM_Control\\Project\\PMSM_Control_01\\Motor_Task\\DIAG\\Src"
             ],
             "defines": [
                 "USE_HAL_DRIVER",

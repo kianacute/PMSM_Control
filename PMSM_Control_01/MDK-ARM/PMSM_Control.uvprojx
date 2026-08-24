@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G431xx,__TARGET_FPU_VFP,__FPU_PRESENT,ARM_MATH_CM4</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;..\BSP\STM32\inc;..\Motor_Task\MATH_LIB\Inc;..\Motor_Task\Command\Inc;..\Motor_Task\Control_Task\Fixed\Inc;..\Motor_Task\Control_Task\Float\Inc;..\Motor_Task\DIAG\Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc;../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G4xx/Include;../Drivers/CMSIS/Include;../Middlewares/ST/ARM/DSP/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;..\BSP\STM32\inc;..\Motor_Task\MATH_LIB\Inc;..\Motor_Task\Command\Inc;..\Motor_Task\Control_Task\Fixed\Inc;..\Motor_Task\Control_Task\Float\Inc;..\Motor_Task\DIAG\Inc;..\System\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2093,22 +2093,22 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Math_LIB</GroupName>
+          <GroupName>Motor_Control</GroupName>
           <Files>
             <File>
-              <FileName>Hal_Math.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\MATH_LIB\src\Hal_Math.c</FilePath>
+              <FileName>Motor_FOC_Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\System\Inc\Motor_FOC_Config.h</FilePath>
             </File>
             <File>
-              <FileName>Hal_Math_Fixed.c</FileName>
+              <FileName>Motor_Control.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\MATH_LIB\src\Hal_Math_Fixed.c</FilePath>
+              <FilePath>..\System\Src\Motor_Control.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Motor_Control_Float</GroupName>
+          <GroupName>Motor_FOC_Float</GroupName>
           <Files>
             <File>
               <FileName>Current_Loop_Float.c</FileName>
@@ -2145,10 +2145,15 @@
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</FilePath>
             </File>
+            <File>
+              <FileName>Hal_Math_FLoat.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math_FLoat.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Motor_Control_Fixed</GroupName>
+          <GroupName>Motor_FOC_Fixed</GroupName>
           <Files>
             <File>
               <FileName>Current_Loop_Fixed.c</FileName>
@@ -2185,6 +2190,11 @@
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\System_Loop_FIxed.c</FilePath>
             </File>
+            <File>
+              <FileName>Hal_Math_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math_Fixed.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2193,22 +2203,7 @@
             <File>
               <FileName>button_led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Command\Src\button_led.c</FilePath>
-            </File>
-            <File>
-              <FileName>Can.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Command\Src\Can.c</FilePath>
-            </File>
-            <File>
-              <FileName>CAN_DBC_Messages.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Command\Src\CAN_DBC_Messages.c</FilePath>
-            </File>
-            <File>
-              <FileName>Vofa.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Control\Command\Src\Vofa.c</FilePath>
+              <FilePath>..\Motor_Task\Command\Src\button_led.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2218,17 +2213,17 @@
             <File>
               <FileName>Diag_List.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\DIAG\Src\Diag_List.c</FilePath>
+              <FilePath>..\Motor_Task\DIAG\Src\Diag_List.c</FilePath>
             </File>
             <File>
               <FileName>Motor_Diag.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\DIAG\Src\Motor_Diag.c</FilePath>
+              <FilePath>..\Motor_Task\DIAG\Src\Motor_Diag.c</FilePath>
             </File>
             <File>
               <FileName>System_Diag.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Control\DIAG\Src\System_Diag.c</FilePath>
+              <FilePath>..\Motor_Task\DIAG\Src\System_Diag.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,11 +1,11 @@
-#include "Speed_Loop.h"
+#include "Speed_Loop_Float.h"
 #include "arm_math.h"
-#include "Current_Loop.h"
-#include "Motor_Config.h"
-#include "Hal_Math.h"
-#include "Observer.h"
-#include "System_Loop.h"
-#include "Motor_Config.h"
+#include "Current_Loop_Float.h"
+#include "Motor_Config_Float.h"
+#include "Hal_Math_Float.h"
+#include "Observer_Float·.h"
+#include "System_Loop_Float.h"
+#include "Motor_Config_Float.h"
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
@@ -17,14 +17,6 @@ extern SYSTEM_t System;
 Speed_Loop_t Speed_Loop;
 
 void Speed_Run(void);
-void Speed_Loop_Idle_Task(void);
-void Speed_Loop_Align_Task();
-void Speed_Loop_Open_Task(void);
-void Speed_Loop_Switch_Task(void);
-void Speed_Loop_Low_Task(void);
-void Speed_Loop_Middle_Task(void);
-void Speed_Loop_High_Task(void);
-void Speed_Loop_Run_Task(void);
 void Paramater_update(void);
 void Power_Derating_Init(void);
 void Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit);
@@ -97,45 +89,6 @@ void Speed_Loop_Task(void)
         Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
         Speed_Loop.Speed_Fb = 0;
         Speed_Loop.spd_ctrl_timer = 0;
-    }
-}
-
-void Speed_Run(void)
-{
-    Speed_Loop.spd_ctrl_timer++;
-    switch (Speed_Loop.spd_ctrl_state)
-    {
-    case Speed_Loop_Idle:
-        // Handle idle state
-        Speed_Loop_Idle_Task();
-        break;
-    case Speed_Loop_Align:
-        // Handle align state
-        Speed_Loop_Align_Task();
-        break;
-    case Speed_Loop_Open:
-        // Handle open state
-        Speed_Loop_Open_Task();
-        break;
-    case Speed_Loop_Switch:
-        // Handle switch state
-        Speed_Loop_Switch_Task();
-        break;
-    case Speed_Loop_Low:
-        // Handle low state
-        Speed_Loop_Low_Task();
-        break;
-    case Speed_Loop_Middle:
-        // Handle middle state
-        Speed_Loop_Middle_Task();
-        break;
-    case Speed_Loop_High:
-        // Handle high state
-        Speed_Loop_High_Task();
-        break;
-    default:
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
-        break;
     }
 }
 

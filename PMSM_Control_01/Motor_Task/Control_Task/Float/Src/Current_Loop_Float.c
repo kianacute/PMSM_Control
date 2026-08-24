@@ -1,11 +1,11 @@
 #include "arm_math.h"
-#include "Current_Loop.h"
-#include "Hal_Math.h"
-#include "SVPWM.h"
-#include "Motor_Config.h"
-#include "Observer.h"
-#include "Speed_Loop.h"
-#include "System_Loop.h"
+#include "Current_Loop_Float.h"
+#include "Hal_Math_Float.h"
+#include "SVPWM_Float.h"
+#include "Motor_Config_Float.h"
+#include "Observer_Float.h"
+#include "Speed_Loop_Float.h"
+#include "System_Loop_Float.h"
 #include "Motor_Diag.h"
 
 extern Motor_Config_t PMSM_42JS_Config;
@@ -66,16 +66,8 @@ void Current_Loop_Init(void)
     Current_Loop.Iq_PI.integral = 0;
 
     Current_Loop.Dead_Zone_Enable_Flag = 1;
-
     Current_Loop.PWM_FREQ_Coeff = 1.0f;
 }
-
-void MOTOR_IDLE_TASK(void);
-void MOTOR_READY_TASK(void);
-void MOTOR_OFFSET_CHECK_TASK(void);
-void MOTOR_RUN_TASK(void);
-void MOTOR_FAULT_TASK(void);
-void MOTOR_WAIT_TASK(void);
 void Current_Avg_Filt();
 void Current_Loop_Run(void);
 void Phase_Current_Rewrite(float32_t Ia_fb_raw, float32_t Ib_fb_raw, float32_t Ic_fb_raw,
@@ -85,8 +77,6 @@ void Current_Loop_Switch(void);
 void Dead_Zone_Compensation(float Id, float Iq, float we, float theta,
                             float Duty_A_Raw, float Duty_B_Raw, float Duty_C_Raw,
                             float *Duty_A_Comp, float *Duty_B_Comp, float *Duty_C_Comp);
-
-
 void MOTOR_Bus_Current_Rewrite(void);                        
 
 void Speed_Switch(void)
@@ -145,51 +135,6 @@ void Current_PWM_Switch(uint8_t PWM_Flag)
         Bsp_STM32G431_PWM_Disable();
     }
     return;
-}
-
-void Current_Loop_Switch(void)
-{
-    // Code to switch current task states
-    if (System.system_state == SYSTEM_RUN)
-    {
-        switch (Current_Loop.Motor_State)
-        {
-        case MOTOR_IDLE:
-            // Handle idle state
-            MOTOR_IDLE_TASK();
-            break;
-        case MOTOR_READY:
-            // Handle ready state
-            MOTOR_READY_TASK();
-            break;
-        case MOTOR_OFFSET_CHECK:
-            // Handle offset check state
-            MOTOR_OFFSET_CHECK_TASK();
-            break;
-        case MOTOR_RUN:
-            // Handle run state
-            MOTOR_RUN_TASK();
-            break;
-        case MOTOR_FAULT:
-            // Handle fault state
-            // Add fault handling code here
-            MOTOR_FAULT_TASK();
-            break;
-        case MOTOR_WAIT:
-            // Handle wait state
-            MOTOR_WAIT_TASK();
-            break;
-        default:
-            break;
-        }
-    }
-    else
-    {
-        MOTOR_IDLE_TASK();
-        Current_Loop.Motor_State = MOTOR_IDLE;
-        Current_PWM_Switch(PWM_CLOSE);
-    }
-    Current_Loop.Loop_count++;
 }
 
 void MOTOR_IDLE_TASK(void)

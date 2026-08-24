@@ -1,5 +1,5 @@
-#include "Observer.h"
-#include "Motor_Config.h"
+#include "Observer_Float.h"
+#include "Motor_Config_Float.h"
 
 struct EMF_Cal_Parameter EMF_Cal = {0};
 extern Motor_Config_t PMSM_42JS_Config;

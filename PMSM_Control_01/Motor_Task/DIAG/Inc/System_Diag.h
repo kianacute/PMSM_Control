@@ -1,8 +1,8 @@
 #ifndef __SYSTEM_DIAG_H__
 #define __SYSTEM_DIAG_H__
 
-#include "System_Loop.h"
-#include "Hal_Math.h"
+#include "System_Loop_Float.h"
+#include "Hal_Math_Float.h"
 #include "Diag_List.h"
 
 /*高压传感器*/

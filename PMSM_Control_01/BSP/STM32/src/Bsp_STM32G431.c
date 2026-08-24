@@ -10,7 +10,7 @@
 #include "arm_math.h"
 #include "adc.h"
 #include "opamp.h"
-#include "Current_Loop.h"
+#include "Current_Loop_Float.h"
 #include "Current_Loop_Fixed.h"
 #include "Speed_Loop.h"
 #include "Observer.h"

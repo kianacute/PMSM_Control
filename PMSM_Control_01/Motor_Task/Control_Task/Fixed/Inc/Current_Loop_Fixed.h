@@ -10,17 +10,6 @@
 #define PWM_OPEN                                    (1U)
 #define PWM_CLOSE                                   (0U)
 
-
-enum Motor_State{
-    MOTOR_IDLE = 0,
-    MOTOR_READY,
-    MOTOR_OFFSET_CHECK,
-    MOTOR_RS_IDENTIFY,
-    MOTOR_RUN,
-    MOTOR_FAULT,
-    MOTOR_WAIT,
-};
-
 typedef struct Current_Loop_Input_Fixed
 {
     q15_t Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;

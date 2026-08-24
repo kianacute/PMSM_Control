@@ -2,24 +2,14 @@
 #define __Current_Loop_H__
 
 #include <stdint.h>
-#include "Hal_Math.h"
-#include "Motor_Config.h"
+#include "Hal_Math_Float.h"
+#include "Motor_Config_Float.h"
 
 #define MOTOR_ADC_OFFSET_SAMPLE_CNT                 (100U)
 #define WEAK_VOLTAGE_COMPENSATION                   (2.0f/3.0f)
 #define PWM_OPEN                                    (1U)
 #define PWM_CLOSE                                   (0U)
 
-
-enum Motor_State{
-    MOTOR_IDLE = 0,
-    MOTOR_READY,
-    MOTOR_OFFSET_CHECK,
-    MOTOR_RS_IDENTIFY,      // 定子电阻离线辨识
-    MOTOR_RUN,
-    MOTOR_FAULT,
-    MOTOR_WAIT,
-};
 
 typedef struct Current_Loop_Input
 {
@@ -76,6 +66,13 @@ typedef struct Current_Loop
 
 void Current_Loop_Init(void);
 void Current_Para_Updata(float speed, float Ts);
+
+void MOTOR_IDLE_TASK(void);
+void MOTOR_READY_TASK(void);
+void MOTOR_OFFSET_CHECK_TASK(void);
+void MOTOR_RUN_TASK(void);
+void MOTOR_FAULT_TASK(void);
+void MOTOR_WAIT_TASK(void);
 
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;
