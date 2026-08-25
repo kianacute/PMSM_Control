@@ -12,12 +12,12 @@
 #include "opamp.h"
 #include "Current_Loop_Float.h"
 #include "Current_Loop_Fixed.h"
-#include "Speed_Loop.h"
-#include "Observer.h"
+#include "Speed_Loop_Fixed.h"
+#include "Observer_Fixed.h"
 #include "Motor_Diag.h"
 #include "System_Diag.h"
-#include "System_Loop.h"
-#include "Motor_Config.h"
+#include "System_Loop_Fixed.h"
+#include "Motor_Config_Fixed.h"
 
 TickType_t lasttick = 0;
 uint16_t adc_v24;

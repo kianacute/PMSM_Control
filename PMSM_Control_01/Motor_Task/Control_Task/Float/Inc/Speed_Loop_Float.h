@@ -15,10 +15,9 @@
 #define PWM_SWITH_FREQ_MIN  (1000.0f)
 #define PWM_SWITH_FREQ_STEP    (2000.0f/1000.0f)
 
-typedef struct Speed_Loop
+typedef struct Speed_Loop_FLoat
 {
     float FREQ_Hz;                      // 循环周期
-    enum Speed_LoopState_t spd_ctrl_state; // 速度控制状态
     uint64_t spd_ctrl_timer;               // 速度控制非空闲状态计时器
     float target_iq, target_id, target_is; // 目标电流
     float Speed_Command;                   // 速度命令
@@ -33,7 +32,6 @@ typedef struct Speed_Loop
     float Voltage_err;
     Hysteresis_Comp_TypeDef Weak_Control_Hcomp;      // 弱磁滞回比较器
     Hal_PI_t Weak_Pi;                                // 弱磁PI控制器参数
-    LADRC_FirstOrder_t Speed_LADRC;                  // 一阶LADRC控制器
     uint8_t Align_Finish_Flag;                       // 对准完成标志
     Hysteresis_Comp_TypeDef Speed_Middle_High_Hcomp; // 中高档速度滞回比较器
     Hal_PI_t Derating_Pi;                            // 限功率PI控制器参数
@@ -42,7 +40,7 @@ typedef struct Speed_Loop
     float Flux_Weak_Id;
     float PWM_SWITCH_FREQ;
     float PWM_CUR_FREQ;
-} Speed_Loop_t;
+} Speed_Loop_Float_t;
 
 void Speed_Loop_Init(void);
 void Speed_Loop_Task(void);

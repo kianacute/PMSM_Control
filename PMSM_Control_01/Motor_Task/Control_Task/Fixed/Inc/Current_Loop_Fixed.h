@@ -10,18 +10,6 @@
 #define PWM_OPEN                                    (1U)
 #define PWM_CLOSE                                   (0U)
 
-typedef struct Current_Loop_Input_Fixed
-{
-    q15_t Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
-    q15_t Udc_ADISR;
-} Current_Loop_Input_Fixed_t;
-
-typedef struct Current_Loop_Output_Fixed
-{
-    float PWM_HZ_Coeff;
-    float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
-} Current_Loop_Output_Fixed_t;
-
 typedef struct Current_Loop_Fixed
 {
     // Define any necessary variables and structures for the current task

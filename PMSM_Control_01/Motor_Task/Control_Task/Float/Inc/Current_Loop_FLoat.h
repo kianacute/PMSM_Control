@@ -4,31 +4,18 @@
 #include <stdint.h>
 #include "Hal_Math_Float.h"
 #include "Motor_Config_Float.h"
+#include "Motor_Control.h"
 
 #define MOTOR_ADC_OFFSET_SAMPLE_CNT                 (100U)
 #define WEAK_VOLTAGE_COMPENSATION                   (2.0f/3.0f)
 #define PWM_OPEN                                    (1U)
 #define PWM_CLOSE                                   (0U)
 
-
-typedef struct Current_Loop_Input
-{
-    float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
-    float Udc_ADISR;
-} Current_Loop_Input_t;
-
-typedef struct Current_Loop_Output
-{
-    float PWM_HZ_Coeff;
-    float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
-} Current_Loop_Output_t;
-
-typedef struct Current_Loop
+typedef struct Current_Loop_Float
 {
     // Define any necessary variables and structures for the current task
     float FREQ_HZ;                                       //电流环频率
     float Loop_time_s;                                      //电流环循环时间
-    enum Motor_State Motor_State;
     /*电压电流，PI控制*/
     Motor_Config_t *pMotor;                             //电机参数指针  
     Hal_PI_t Id_PI;                                     //d轴电流PI控制器参数
@@ -59,20 +46,18 @@ typedef struct Current_Loop
     float Bus_Current, Bus_Current_LPF;
     float Speed_fb_1ms;
     uint8_t avg_count;
-    uint32_t Loop_count;
-
-}Current_Loop_t;
+}Current_Loop_Float_t;
 
 
-void Current_Loop_Init(void);
-void Current_Para_Updata(float speed, float Ts);
+void Current_Loop_Init_Float(Motor_Control_t *pControl);
+void Current_Para_Updata(Motor_Control_t *pControl, float speed, float Ts);
 
-void MOTOR_IDLE_TASK(void);
-void MOTOR_READY_TASK(void);
-void MOTOR_OFFSET_CHECK_TASK(void);
-void MOTOR_RUN_TASK(void);
-void MOTOR_FAULT_TASK(void);
-void MOTOR_WAIT_TASK(void);
+void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl);
+void MOTOR_READY_TASK_Float(Motor_Control_t *pControl);
+void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl);
+void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl);
+void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
+void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
 
 extern Current_Loop_Input_t Current_Loop_Input;
 extern Current_Loop_Output_t Current_Loop_Output;

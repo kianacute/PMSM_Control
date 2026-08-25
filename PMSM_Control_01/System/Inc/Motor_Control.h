@@ -14,6 +14,14 @@ enum Motor_State{
     MOTOR_WAIT,
 };
 
+
+typedef struct Current_Loop
+{
+    enum Motor_State Status;
+    uint64_t Loop_count; // Current loop execution count
+    void *pCurrent_Loop; // Pointer to the current loop structure (either float or fixed)
+}Current_Loop_t;
+
 enum Speed_LoopState_t
 {
     Speed_Loop_Idle = 0,
@@ -25,6 +33,12 @@ enum Speed_LoopState_t
     Speed_Loop_High,
 };
 
+typedef struct Speed_Loop
+{
+    enum Speed_LoopState_t Status; // 速度控制状态
+    uint64_t Loop_count; // Speed loop execution count
+    void *pSpeed_Loop;
+} Speed_Loop_t;
 
 enum SYSTEM_State_t
 {
@@ -35,7 +49,12 @@ enum SYSTEM_State_t
     SYSTEM_WAIT,
 };
 
-
+typedef struct SYSTEM_Loop
+{
+    enum SYSTEM_State_t Status;  
+    uint64_t Loop_count; // System loop execution count
+    void *pSystem_Loop;
+} SYSTEM_t_Loop_t;
 
     #ifdef MOTOR_CONTROL_FLOAT
 
@@ -48,13 +67,13 @@ enum SYSTEM_State_t
         {
             float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
             float Udc_ADISR;
-        } Current_Loop_Input_t;
+        } Motor_Control_Input_t;
 
         typedef struct Current_Loop_Output
         {
             float PWM_HZ_Coeff;
             float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
-        } Current_Loop_Output_t;
+        } Motor_Control_Output_t;
 
         /*电机状态机*/
         #define         MOTOR_IDLE_TASK               MOTOR_IDLE_TASK_FLoat                  
@@ -119,5 +138,16 @@ enum SYSTEM_State_t
         #define         SYSTEM_Wait              SYSTEM_Wait_Fixed
 
     #endif
+
+typedef struct Motor_Control    
+{
+    SYSTEM_t_Loop_t System;
+    Current_Loop_t Current_Loop;
+    Speed_Loop_t Speed_Loop;
+    Motor_Control_Input_t Input;
+    Motor_Control_Output_t Output;
+} Motor_Control_t;
+
+
 
 #endif

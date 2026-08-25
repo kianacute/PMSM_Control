@@ -3,7 +3,7 @@
 #include "Current_Loop_Float.h"
 #include "Motor_Config_Float.h"
 #include "Hal_Math_Float.h"
-#include "Observer_Float·.h"
+#include "Observer_Float.h"
 #include "System_Loop_Float.h"
 #include "Motor_Config_Float.h"
 

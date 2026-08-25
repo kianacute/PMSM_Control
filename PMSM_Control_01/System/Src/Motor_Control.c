@@ -1,11 +1,11 @@
 #include "Motor_Control.h"
 
-void Current_Loop_Switch(void)
+void Current_Loop_Switch(Motor_Control_t *pControl)
 {
     // Code to switch current task states
-    if (System.system_state == SYSTEM_RUN)
+    if (pControl->System.Status == SYSTEM_RUN)
     {
-        switch (Current_Loop.Motor_State)
+        switch (pControl->Current_Loop.Status)
         {
         case MOTOR_IDLE:
             // Handle idle state
@@ -39,16 +39,16 @@ void Current_Loop_Switch(void)
     else
     {
         MOTOR_IDLE_TASK();
-        Current_Loop.Motor_State = MOTOR_IDLE;
+        pControl->Current_Loop.Status = MOTOR_IDLE;
     }
-    Current_Loop.Loop_count++;
+    pControl->Current_Loop.Loop_count++;
 }
 
 
-void Speed_Run(void)
+void Speed_Run(Motor_Control_t *pControl)
 {
-    Speed_Loop.spd_ctrl_timer++;
-    switch (Speed_Loop.spd_ctrl_state)
+    pControl->Speed_Loop.Loop_count++;
+    switch (pControl->Speed_Loop.Status)
     {
     case Speed_Loop_Idle:
         // Handle idle state
@@ -79,15 +79,15 @@ void Speed_Run(void)
         SPEED_High_Task();
         break;
     default:
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
+        pControl->Speed_Loop.Status = Speed_Loop_Idle;
         break;
     }
 }
 
-void SYSTEM_Task(void)
+void SYSTEM_Task(Motor_Control_t *pControl)
 {
-    System.System_cnt++;
-    switch (System.system_state)
+    pControl->System.Loop_count++;
+    switch (pControl->System.Status)
     {
     case SYSTEM_LV_STANDY:
         SYSTEM_LV_Standy();

@@ -19,12 +19,6 @@ extern Current_Loop_Output_t Current_Loop_Output;
 
 uint8_t System_Fault_Flag = 0;
 
-
-SYSTEM_t System = {
-    .FREQ_Hz = SYSTEM_HZ,
-};
-
-
 void SYSTEM_Init(void);
 void SYSTEM_LV_Standy(void);
 void SYSTEM_HV_Standy(void);
