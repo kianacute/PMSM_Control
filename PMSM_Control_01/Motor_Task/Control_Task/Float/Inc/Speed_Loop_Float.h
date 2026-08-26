@@ -3,6 +3,7 @@
 
 #include "Hal_Math_Float.h"
 #include "Motor_Config_Float.h"
+#include "Motor_Control.h"
 
 #define SPEED_ADD_STEP (1000 / 1000.0f)
 #define SPEED_SUB_STEP (1000 / 1000.0f)
@@ -18,7 +19,7 @@
 typedef struct Speed_Loop_FLoat
 {
     float FREQ_Hz;                      // 循环周期
-    uint64_t spd_ctrl_timer;               // 速度控制非空闲状态计时器
+    uint64_t IF_Start_Cnt;               // 速度控制非空闲状态计时器
     float target_iq, target_id, target_is; // 目标电流
     float Speed_Command;                   // 速度命令
     float Speed_Ref, Speed_Fb;             // 速度参考值和反馈值
@@ -42,16 +43,14 @@ typedef struct Speed_Loop_FLoat
     float PWM_CUR_FREQ;
 } Speed_Loop_Float_t;
 
-void Speed_Loop_Init(void);
-void Speed_Loop_Task(void);
-
-void Speed_Loop_Idle_Task(void);
-void Speed_Loop_Align_Task();
-void Speed_Loop_Open_Task(void);
-void Speed_Loop_Switch_Task(void);
-void Speed_Loop_Low_Task(void);
-void Speed_Loop_Middle_Task(void);
-void Speed_Loop_High_Task(void);
-void Speed_Loop_Run_Task(void);
+void Speed_Loop_Init_Float(Motor_Control_t *pControl);
+void SPEED_Idle_Task_Float(Motor_Control_t *pControl);
+void SPEED_Align_Task_Float(Motor_Control_t *pControl);
+void SPEED_Open_Task_Float(Motor_Control_t *pControl);
+void SPEED_Switch_Task_Float(Motor_Control_t *pControl);
+void SPEED_Low_Task_Float(Motor_Control_t *pControl);
+void SPEED_Middle_Task_Float(Motor_Control_t *pControl);
+void SPEED_High_Task_Float(Motor_Control_t *pControl);
+void SPEED_Run_Task_Float(Motor_Control_t *pControl);
 
 #endif // __Speed_Loop_H__

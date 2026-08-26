@@ -24,13 +24,13 @@ typedef struct Current_Loop
 
 enum Speed_LoopState_t
 {
-    Speed_Loop_Idle = 0,
-    Speed_Loop_Align,
-    Speed_Loop_Open,
-    Speed_Loop_Switch,
-    Speed_Loop_Low,
-    Speed_Loop_Middle,
-    Speed_Loop_High,
+    SPEED_IDLE = 0,
+    SPEED_ALIGN,
+    SPEED_OPEN,
+    SPEED_SWITCH,
+    SPEED_LOW,
+    SPEED_MIDDLE,
+    SPEED_HIGH,
 };
 
 typedef struct Speed_Loop
@@ -54,7 +54,7 @@ typedef struct SYSTEM_Loop
     enum SYSTEM_State_t Status;  
     uint64_t Loop_count; // System loop execution count
     void *pSystem_Loop;
-} SYSTEM_t_Loop_t;
+} System_Loop_t;
 
     #ifdef MOTOR_CONTROL_FLOAT
 
@@ -141,7 +141,7 @@ typedef struct SYSTEM_Loop
 
 typedef struct Motor_Control    
 {
-    SYSTEM_t_Loop_t System;
+    System_Loop_t System_Loop;
     Current_Loop_t Current_Loop;
     Speed_Loop_t Speed_Loop;
     Motor_Control_Input_t Input;

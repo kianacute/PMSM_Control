@@ -25,13 +25,13 @@ typedef struct SYSTEM_Ctrl
     enum SYSTEM_State_t system_state;  
     uint32_t Fault_cnt;                          // 系统状态
     uint8_t Run_flag;                            // 在Run状态下管理运行指令
-} SYSTEM_t;
+} System_Loop_FLoat_t;
 
-void SYSTEM_Init(void);
-void SYSTEM_LV_Standy(void);
-void SYSTEM_HV_Standy(void);
-void SYSTEM_Run(void);
-void SYSTEM_Fault(void);
-void SYSTEM_Wait(void);
+void SYSTEM_Init_Float(Motor_Control_t *pControl);
+void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl);
+void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl);
+void SYSTEM_Run_Float(Motor_Control_t *pControl);
+void SYSTEM_Fault_Float(Motor_Control_t *pControl);
+void SYSTEM_Wait_Float(Motor_Control_t *pControl);
 
 #endif // __SYSTEM_H__

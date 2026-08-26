@@ -7,105 +7,85 @@
 #include "System_Loop_Float.h"
 #include "Motor_Config_Float.h"
 
-extern uint8_t MOTOR_Run_flag;
-extern float Speed_Command;
-extern Motor_Config_t PMSM_42JS_Config;
-extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Current_Loop_t Current_Loop;
-extern SYSTEM_t System;
+Speed_Loop_Float_t Speed_Loop_Float;
 
-Speed_Loop_t Speed_Loop;
-
-void Speed_Run(void);
-void Paramater_update(void);
-void Power_Derating_Init(void);
-void Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit);
-void MTPA_Cal(float Is);
+void Paramater_update(Motor_Control_t *pControl);
+void Power_Derating_Float_Init(Motor_Control_t *pControl);
+void Power_Derating_Float(Motor_Control_t *pControl, float Bus_Current, float Bus_Voltage, float Power_Limit);
+void MTPA_Cal_Float(Motor_Control_t *pControl, float Is);
 void Speed_Input_LPF(void);
 
-void Speed_Loop_Init(void)
+void Speed_Loop_Init_Float(Motor_Control_t *pControl)
 {
-    Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
-    Speed_Loop.spd_ctrl_timer = 0;
-    Speed_Loop.Speed_Switch_Cnt = 0;
-    Speed_Loop.pMotor = &PMSM_42JS_Config;
-    Speed_Loop.FREQ_Hz = 1000;
-    Speed_Loop.Speed_Fb_1s = 0;
+    pControl->Speed_Loop.Status = SPEED_IDLE;
+    pControl->Speed_Loop.pSpeed_Loop = (void*)&Speed_Loop_Float;
+    Speed_Loop_Float.Speed_Switch_Cnt = 0;
+    Speed_Loop_Float.pMotor = &PMSM_42JS_Config;
+    Speed_Loop_Float.FREQ_Hz = 1000;
+    Speed_Loop_Float.Speed_Fb_1s = 0;
 
     /*速度环参数初始化*/
-    Speed_Loop.Speed_PI.Kd = 0.1f;
-    Speed_Loop.Speed_PI.out_max = 8.0f;
-    Speed_Loop.Speed_PI.out_min = -8.0f;
+    Speed_Loop_Float.Speed_PI.Kd = 0.1f;
+    Speed_Loop_Float.Speed_PI.out_max = 8.0f;
+    Speed_Loop_Float.Speed_PI.out_min = -8.0f;
 
     /*弱磁环参数初始化*/
-    Hysteresis_Comp_Init(&Speed_Loop.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
-    Speed_Loop.Weak_Control_Hcomp.enable = 1;
-    Speed_Loop.Weak_Pi.kp = 0.01f;
-    Speed_Loop.Weak_Pi.ki = 0.1f;
-    Speed_Loop.Weak_Pi.Kd = 0.1f;
-    // Speed_Loop.Weak_Pi.kp = 1.01f;
-    // Speed_Loop.Weak_Pi.ki = 1.01f;
-    Speed_Loop.Weak_Pi.out_max = 0.0f;
-    Speed_Loop.Weak_Pi.out_min = -8.0f;
+    Hysteresis_Comp_Init(&Speed_Loop_Float.Weak_Control_Hcomp, -0.0f, -1.0f, 50);
+    Speed_Loop_Float.Weak_Control_Hcomp.enable = 1;
+    Speed_Loop_Float.Weak_Pi.kp = 0.01f;
+    Speed_Loop_Float.Weak_Pi.ki = 0.1f;
+    Speed_Loop_Float.Weak_Pi.Kd = 0.1f;
+    // Speed_Loop_Float.Weak_Pi.kp = 1.01f;
+    // Speed_Loop_Float.Weak_Pi.ki = 1.01f;
+    Speed_Loop_Float.Weak_Pi.out_max = 0.0f;
+    Speed_Loop_Float.Weak_Pi.out_min = -8.0f;
 
     /*其他参数*/
-    Speed_Loop.Align_Finish_Flag = 0;
-    Speed_Loop.Speed_Ref = 0;
-    Speed_Loop.Speed_Switch_Flag = 0;
-    Speed_Loop.Speed_PI.integral = 0;
-    Speed_Loop.Weak_Control_Hcomp.comp_out = 0;
-    Speed_Loop.Weak_Pi.integral = 0;
-    Speed_Loop.target_id = 0;
-    Speed_Loop.target_iq = 0;
-    Speed_Loop.target_is = 0;
-    Speed_Loop.Speed_Fb = 0;
+    Speed_Loop_Float.Align_Finish_Flag = 0;
+    Speed_Loop_Float.Speed_Ref = 0;
+    Speed_Loop_Float.Speed_Switch_Flag = 0;
+    Speed_Loop_Float.Speed_PI.integral = 0;
+    Speed_Loop_Float.Weak_Control_Hcomp.comp_out = 0;
+    Speed_Loop_Float.Weak_Pi.integral = 0;
+    Speed_Loop_Float.target_id = 0;
+    Speed_Loop_Float.target_iq = 0;
+    Speed_Loop_Float.target_is = 0;
+    Speed_Loop_Float.Speed_Fb = 0;
 
     // LADRC_FirstOrder_Init(&Speed_Loop.Speed_LADRC, 0.001f, 100000.0f, 200.0f, 20.0f, 8.0f, -8.0f);
 
-    Hysteresis_Comp_Init(&Speed_Loop.Speed_Middle_High_Hcomp, 1000.0f, 800.0f, 1000);
-    Speed_Loop.Speed_Middle_High_Hcomp.enable = 1;
+    Hysteresis_Comp_Init(&Speed_Loop_Float.Speed_Middle_High_Hcomp, 1000.0f, 800.0f, 1000);
+    Speed_Loop_Float.Speed_Middle_High_Hcomp.enable = 1;
 
-    Speed_Loop.PWM_SWITCH_FREQ = 20000.0f;
-    Speed_Loop.PWM_CUR_FREQ = 20000.0f;
-    Power_Derating_Init();
+    Speed_Loop_Float.PWM_SWITCH_FREQ = 20000.0f;
+    Speed_Loop_Float.PWM_CUR_FREQ = 20000.0f;
+    Power_Derating_Float_Init(pControl);
 }
 
 void Speed_Input_LPF()
 {
-    Speed_Loop.Speed_Fb_1s = Speed_Loop.Speed_Fb_1s * 0.999f + Speed_Loop.Speed_Fb * 0.001f;
+    Speed_Loop_Float.Speed_Fb_1s =  Speed_Loop_Float.Speed_Fb_1s * 0.999f + Speed_Loop_Float.Speed_Fb * 0.001f;
 }
 
-void Speed_Loop_Task(void)
+void SPEED_Idle_Task_FLoat(Motor_Control_t *pControl)
 {
-    if (System.system_state == SYSTEM_RUN && Current_Loop.Motor_State == MOTOR_RUN)
+    System_Loop_FLoat_t *System_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    if (System_Loop->Run_flag == 1)
     {
-        Speed_Input_LPF();
-        Paramater_update();
-        Speed_Run();
-        
+        Speed_Loop_Init_Float(pControl);
+        pControl->Speed_Loop.Status = SPEED_ALIGN;
     }
     else
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Idle;
-        Speed_Loop.Speed_Fb = 0;
-        Speed_Loop.spd_ctrl_timer = 0;
+        pControl->Speed_Loop.Status = SPEED_IDLE;
     }
 }
 
-void Speed_Loop_Idle_Task(void)
+void Align_Task(Motor_Control_t *pControl)
 {
-
-    if (System.Run_flag == 1)
-    {
-        Speed_Loop_Init();
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Align;
-    }
-}
-
-void Align_Task()
-{
-    Speed_Loop.target_iq = 0;
-    Speed_Loop.Speed_Ref = 0;
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    pSpeed_Loop->target_iq = 0;
+    pSpeed_Loop->Speed_Ref = 0;
     // vTaskDelay(100);
     // Speed_Loop.target_id = 1.0f;
     // align_done = 1;
@@ -123,219 +103,180 @@ void Align_Task()
     // vTaskDelay(5000);
 }
 
-void Speed_Loop_Align_Task()
+void Speed_Loop_Align_Task(Motor_Control_t *pControl)
 {
-    Speed_Loop.target_id = 0.0f;
-    if (System.Run_flag == 1)
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    System_Loop_FLoat_t *System_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    pSpeed_Loop->target_id = 0.0f;
+    if (System_Loop->Run_flag == 1)
     {
-#if defined(MOTOR_OPEN_SETUP)
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Open;
-#elif defined(MOTOR_CLOSE_SETUP)
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Low;
-#endif
+        #if defined(MOTOR_OPEN_SETUP)
+            pControl->Speed_Loop.Status = SPEED_OPEN;
+            pSpeed_Loop->IF_Start_Cnt  = pControl->Speed_Loop.Loop_count;
+        #elif defined(MOTOR_CLOSE_SETUP)
+            pSpeed_Loop->spd_ctrl_state = SPEED_LOW;
+        #endif
     }
 }
 
-void Speed_Loop_Open_Task(void)
+void Speed_Loop_Open_Task(Motor_Control_t *pControl)
 {
-    float tick_count = ((float)(Speed_Loop.spd_ctrl_timer) / Speed_Loop.FREQ_Hz);
-    Speed_Loop.Speed_Ref = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Speed_Lookup);
-    Speed_Loop.target_iq = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Iq_Lookup);
-    Speed_Loop.target_id = 0;
-    if (Speed_Loop.Speed_Ref >= 600)
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
+    pSpeed_Loop->Speed_Ref = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Speed_Lookup);
+    pSpeed_Loop->target_iq = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Iq_Lookup);
+    pSpeed_Loop->target_id = 0;
+    if (pSpeed_Loop->Speed_Ref >= 600)
     {
         // Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
     }
 }
 
-void Speed_Loop_Switch_Task(void)
+void Speed_Loop_Switch_Task(Motor_Control_t *pControl)
 {
-    if (Speed_Loop.Speed_Switch_Flag == 0)
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    if (pSpeed_Loop->Speed_Switch_Flag == 0)
     {
-        Speed_Loop.target_iq -= (SPEED_SWITCH_ID_SUB_STEP);
-        if (Speed_Loop.target_iq < 0)
+        pSpeed_Loop->target_iq -= (SPEED_SWITCH_ID_SUB_STEP);
+        if (pSpeed_Loop->target_iq < 0)
         {
-            Speed_Loop.target_iq = 0;
+            pSpeed_Loop->target_iq = 0;
         }
     }
     else
     {
-        Speed_Loop.Speed_PI.integral = Speed_Loop.target_iq;
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Low;
+        pSpeed_Loop->Speed_PI.integral = pSpeed_Loop->target_iq;
+        pControl->Speed_Loop.Status = SPEED_LOW;
     }
 }
 
-void Speed_Loop_Low_Task(void)
+void Speed_Loop_Low_Task(Motor_Control_t *pControl)
 {
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
 
     // Speed_Loop.target_id = Oblique_Wave(0.5f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if (Speed_Loop.Speed_Ref > MOTOR_SPEED_MIDDLE_THD)
+    if (pSpeed_Loop->Speed_Ref > MOTOR_SPEED_MIDDLE_THD)
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Middle;
+         pControl->Speed_Loop.Status = SPEED_MIDDLE;
     }
-    Speed_Loop_Run_Task();
+    Speed_Loop_Run_Task(pControl);
 }
 
-void Speed_Loop_Middle_Task(void)
+void Speed_Loop_Middle_Task(Motor_Control_t *pControl)
 {
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     // Speed_Loop.target_id = Oblique_Wave(0.2f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    Speed_Loop_Run_Task();
-    Hysteresis_Comp_Process_Add(&Speed_Loop.Speed_Middle_High_Hcomp, Speed_Loop.Speed_Ref);
-    if (Speed_Loop.Speed_Middle_High_Hcomp.comp_out == 1)
+    Speed_Loop_Run_Task(pControl);
+    Hysteresis_Comp_Process_Add(&pSpeed_Loop->Speed_Middle_High_Hcomp, pSpeed_Loop->Speed_Ref);
+    if (pSpeed_Loop->Speed_Middle_High_Hcomp.comp_out == 1)
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_High;
+        pControl->Speed_Loop.Status = SPEED_HIGH;
     }
 }
 
-void Speed_Loop_High_Task(void)
+void Speed_Loop_High_Task(Motor_Control_t *pControl)
 {
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     // Speed_Loop.target_id = Oblique_Wave(0.0f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    Speed_Loop_Run_Task();
-    Hysteresis_Comp_Process_Add(&Speed_Loop.Speed_Middle_High_Hcomp, Speed_Loop.Speed_Ref);
-    if (Speed_Loop.Speed_Middle_High_Hcomp.comp_out == 0)
+    Speed_Loop_Run_Task(pControl);
+    Hysteresis_Comp_Process_Add(&pSpeed_Loop->Speed_Middle_High_Hcomp, pSpeed_Loop->Speed_Ref);
+    if (pSpeed_Loop->Speed_Middle_High_Hcomp.comp_out == 0)
     {
-        Speed_Loop.spd_ctrl_state = Speed_Loop_Middle;
+        pControl->Speed_Loop.Status = SPEED_MIDDLE;
     }
 }
 
-void Speed_Loop_Run_Task(void)
+void Speed_Loop_Run_Task(Motor_Control_t *pControl)
 {
-    Power_Derating(Current_Loop.Bus_Current_LPF, Current_Loop_Input.Udc_ADISR, PMSM_42JS_Config.motor_param->Power_Limit);
-    Speed_Loop.Speed_Ref = Oblique_Wave(Speed_Loop.Speed_Command * Speed_Loop.Derating_Factor, Speed_Loop.Speed_Ref,
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
+    Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;
+    Power_Derating_FLoat(pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, PMSM_42JS_Config.motor_param->Power_Limit);   
+    pSpeed_Loop->Speed_Ref = Oblique_Wave(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
                                         SPEED_ADD_STEP, SPEED_SUB_STEP);
     // Speed_Loop.Speed_Ref = Speed_Loop.Speed_Command;
-    Hysteresis_Comp_Process_Add(&Speed_Loop.Weak_Control_Hcomp, Speed_Loop.Voltage_err);
+    Hysteresis_Comp_Process_Add(&pSpeed_Loop->Weak_Control_Hcomp, pSpeed_Loop->Voltage_err);
     // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
-    Speed_Loop.target_is = Hal_PI_f32(&Speed_Loop.Speed_PI, Speed_Loop.Speed_Ref - Speed_Loop.Speed_Fb);
-    if (Speed_Loop.Weak_Control_Hcomp.comp_out == 1)
+    pSpeed_Loop->target_is = Hal_PI_f32(&pSpeed_Loop->Speed_PI, pSpeed_Loop->Speed_Ref - pSpeed_Loop->Speed_Fb);
+    if (pSpeed_Loop->Weak_Control_Hcomp.comp_out == 1)
     {
-        Speed_Loop.Flux_Weak_Id = Hal_PI_f32(&Speed_Loop.Weak_Pi, (Speed_Loop.Weak_Control_Hcomp.threshold_high - Speed_Loop.Voltage_err));
+        pSpeed_Loop->Flux_Weak_Id = Hal_PI_f32(&pSpeed_Loop->Weak_Pi, (pSpeed_Loop->Weak_Control_Hcomp.threshold_high - pSpeed_Loop->Voltage_err));
     }
     else
     {
-        Speed_Loop.Flux_Weak_Id = 0;
+        pSpeed_Loop->Flux_Weak_Id = 0;
     }
-    MTPA_Cal(Speed_Loop.target_is);
-    Speed_Loop.target_id = Speed_Loop.MTPA_Id + Speed_Loop.Flux_Weak_Id;
+    MTPA_Cal_FLoat(pSpeed_Loop->target_is);
+    pSpeed_Loop->target_id = pSpeed_Loop->MTPA_Id + pSpeed_Loop->Flux_Weak_Id;
     // Speed_Loop.target_id = Speed_Loop.MTPA_Id;
-    arm_sqrt_f32(Current_Loop.Ud_Target * Current_Loop.Ud_Target + Current_Loop.Uq_Target * Current_Loop.Uq_Target, &Speed_Loop.Vs);
-    Speed_Loop.Voltage_err = Speed_Loop.Vs - Current_Loop_Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION;
-    if (Speed_Loop.target_is > Speed_Loop.target_id)
+    arm_sqrt_f32(pCurrent_Loop_Float->Ud_Target * pCurrent_Loop_Float->Ud_Target + pCurrent_Loop_Float->Uq_Target * pCurrent_Loop_Float->Uq_Target, &pSpeed_Loop->Vs);
+    pSpeed_Loop->Voltage_err = pSpeed_Loop->Vs - pInput->Udc_ADISR * WEAK_VOLTAGE_COMPENSATION;
+    if (pSpeed_Loop->target_is > pSpeed_Loop->target_id)
     {
-        arm_sqrt_f32(Speed_Loop.target_is * Speed_Loop.target_is - Speed_Loop.target_id * Speed_Loop.target_id,
-                     &Speed_Loop.target_iq);
+        arm_sqrt_f32(pSpeed_Loop->target_is * pSpeed_Loop->target_is - pSpeed_Loop->target_id * pSpeed_Loop->target_id,
+                     &pSpeed_Loop->target_iq);
     }
     else
     {
-        Speed_Loop.target_iq = 0;
+        pSpeed_Loop->target_iq = 0;
     }
 }
 
 
-void Paramater_update(void)
+void Paramater_update(Motor_Control_t *pControl)
 {
-    if (Speed_Loop.PWM_CUR_FREQ < PWM_SWITH_FREQ_MIN)
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;  
+    if (pSpeed_Loop->PWM_CUR_FREQ < PWM_SWITH_FREQ_MIN)
     {
-        Speed_Loop.PWM_CUR_FREQ = PWM_SWITH_FREQ_MIN;
+        pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MIN;
     }
-    else if (Speed_Loop.PWM_CUR_FREQ > PWM_SWITH_FREQ_MAX)
+    else if (pSpeed_Loop->PWM_CUR_FREQ > PWM_SWITH_FREQ_MAX)
     {
-        Speed_Loop.PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
+        pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
     }
-    Speed_Loop.PWM_CUR_FREQ = Oblique_Wave(Speed_Loop.PWM_SWITCH_FREQ, Speed_Loop.PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
-    Observer_Param_Lookup_Updata(Speed_Loop.Speed_Fb_1s, Speed_Loop.target_is, 1/Speed_Loop.PWM_CUR_FREQ);
-    Current_Para_Updata(Speed_Loop.Speed_Fb_1s, 1/Speed_Loop.PWM_CUR_FREQ);    
-    Speed_Loop.Speed_PI.kp = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
-    Speed_Loop.Speed_PI.ki = Lookup_Table_Linear(Speed_Loop.Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
+    pSpeed_Loop->PWM_CUR_FREQ = Oblique_Wave(pSpeed_Loop->PWM_SWITCH_FREQ, pSpeed_Loop->PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
+    Observer_Param_Lookup_Updata(pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1/pSpeed_Loop->PWM_CUR_FREQ);
+    Current_Para_Updata(pControl, pSpeed_Loop->Speed_Fb_1s, 1/pSpeed_Loop->PWM_CUR_FREQ);    
+    pSpeed_Loop->Speed_PI.kp = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
+    pSpeed_Loop->Speed_PI.ki = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
 }                     
 
-/* ==================================================================
- * 一阶LADRC (线性自抗扰控制)
- * 参考: https://zhuanlan.zhihu.com/p/664345718
- *
- * 一阶系统: dy/dt = f(y,t,d) + b0 * u
- * 其中 f 为总扰动 (内部不确定性 + 外部扰动)
- *
- * 扩张状态: x1=y, x2=f
- *   dx1/dt = x2 + b0*u
- *   dx2/dt = df/dt
- *
- * LESO (线性扩张状态观测器) — 欧拉前向离散化:
- *   e(k) = y(k) - z1(k)
- *   z1(k+1) = z1(k) + h * [beta1*e(k) + z2(k) + b0*u(k)]
- *   z2(k+1) = z2(k) + h * [beta2*e(k)]
- *   其中 beta1=2*wo, beta2=wo^2
- *
- * LSEF (线性误差反馈控制律):
- *   u0 = wc * (ref - z1)
- *   u  = (u0 - z2) / b0
- *
- * 参数整定: wo ≈ (3~10)*wc, b0 = Kt/J
- * ================================================================== */
 
-void LADRC_FirstOrder_Init(LADRC_FirstOrder_t *ladrc, float h, float b0, float wo, float wc, float out_max, float out_min)
+
+void Power_Derating_Float_Init(Motor_Control_t *pControl)
 {
-    ladrc->h = h;
-    ladrc->b0 = b0;
-    ladrc->wo = wo;
-    ladrc->wc = wc;
-    ladrc->z1 = 0.0f;
-    ladrc->z2 = 0.0f;
-    ladrc->u = 0.0f;
-    ladrc->out_max = out_max;
-    ladrc->out_min = out_min;
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    pSpeed_Loop->Derating_Pi.kp = 1e-5f;
+    pSpeed_Loop->Derating_Pi.ki = 1e-5f;
+    pSpeed_Loop->Derating_Pi.Kd = 0.1f;
+    pSpeed_Loop->Derating_Pi.out_max = 1.0f;
+    pSpeed_Loop->Derating_Pi.out_min = 0.0f;
+    pSpeed_Loop->Derating_Factor = 1.0f;
 }
 
-float LADRC_FirstOrder_Update(LADRC_FirstOrder_t *ladrc, float ref, float y)
+void Power_Derating_Float(Motor_Control_t *pControl, float Bus_Current, float Bus_Voltage, float Power_Limit)
 {
-    float beta1 = 2.0f * ladrc->wo;
-    float beta2 = ladrc->wo * ladrc->wo;
-    float e = y - ladrc->z1;
-
-    ladrc->z1 += ladrc->h * (beta1 * e + ladrc->z2 + ladrc->b0 * ladrc->u);
-    ladrc->z2 += ladrc->h * (beta2 * e);
-
-    float u0 = ladrc->wc * (ref - ladrc->z1);
-    ladrc->u = (u0 - ladrc->z2) / ladrc->b0;
-
-    if (ladrc->u > ladrc->out_max)
-        ladrc->u = ladrc->out_max;
-    else if (ladrc->u < ladrc->out_min)
-        ladrc->u = ladrc->out_min;
-
-    return ladrc->u;
-}
-
-void Power_Derating_Init(void)
-{
-    Speed_Loop.Derating_Pi.kp = 1e-5f;
-    Speed_Loop.Derating_Pi.ki = 1e-5f;
-    Speed_Loop.Derating_Pi.Kd = 0.1f;
-    Speed_Loop.Derating_Pi.out_max = 1.0f;
-    Speed_Loop.Derating_Pi.out_min = 0.0f;
-    Speed_Loop.Derating_Factor = 1.0f;
-}
-
-void Power_Derating(float Bus_Current, float Bus_Voltage, float Power_Limit)
-{
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     float Error = Power_Limit - (Bus_Current * Bus_Voltage);
     // if((Error) < 10.0f)
     {
-        Speed_Loop.Derating_Factor = Hal_PI_f32(&Speed_Loop.Derating_Pi, Error);
+        pSpeed_Loop->Derating_Factor = Hal_PI_f32(&pSpeed_Loop->Derating_Pi, Error);
     }
 }
 
-void MTPA_Cal(float Is)
+void MTPA_Cal_Float(Motor_Control_t *pControl, float Is)
 {
-    if (Speed_Loop.pMotor->motor_param->Ld_Lq > 1e-4)
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    if (pSpeed_Loop->pMotor->motor_param->Ld_Lq > 1e-4)
     {
         float MTPA_tmp = 0;
-        arm_sqrt_f32(Is * Is * Speed_Loop.pMotor->motor_param->Ld_Lq * Speed_Loop.pMotor->motor_param->Ld_Lq * 8 
-                    + Speed_Loop.pMotor->motor_param->Flux_Flux, &MTPA_tmp);
-        Speed_Loop.MTPA_Id = (MTPA_tmp - Speed_Loop.pMotor->motor_param->flux_linkage_wb) / Speed_Loop.pMotor->motor_param->Ld_Lq / 4;
+        arm_sqrt_f32(Is * Is * pSpeed_Loop->pMotor->motor_param->Ld_Lq * pSpeed_Loop->pMotor->motor_param->Ld_Lq * 8 
+                    + pSpeed_Loop->pMotor->motor_param->Flux_Flux, &MTPA_tmp);
+        pSpeed_Loop->MTPA_Id = (MTPA_tmp - pSpeed_Loop->pMotor->motor_param->flux_linkage_wb) / pSpeed_Loop->pMotor->motor_param->Ld_Lq / 4;
     }
     else
     {
-        Speed_Loop.MTPA_Id = 0;
+        pSpeed_Loop->MTPA_Id = 0;
     }
 }

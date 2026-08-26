@@ -10,91 +10,92 @@
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
-extern Motor_Config_t PMSM_42JS_Config;
-extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern Current_Loop_t Current_Loop;
-extern Speed_Loop_t Speed_Loop;
-extern Current_Loop_Input_t Current_Loop_Input;
-extern Current_Loop_Output_t Current_Loop_Output;
 
 uint8_t System_Fault_Flag = 0;
 
-void SYSTEM_Init(void);
-void SYSTEM_LV_Standy(void);
-void SYSTEM_HV_Standy(void);
-void SYSTEM_Run(void);
-void SYSTEM_Fault(void);
-void SYSTEM_Wait(void);
+System_Loop_FLoat_t System_Loop_FLoat;
 
-void SYSTEM_Init(void)
+void SYSTEM_Init_Float(Motor_Control_t *pControl);
+void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl);
+void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl);
+void SYSTEM_Run_Float(Motor_Control_t *pControl);
+void SYSTEM_Fault_Float(Motor_Control_t *pControl);
+void SYSTEM_Wait_Float(Motor_Control_t *pControl);
+
+void SYSTEM_Init_Float(Motor_Control_t *pControl)
 {
-    // Initialization code for the system
-    // e.g., setting up peripherals, initializing variables, etc.
+    pControl->System_Loop.pSystem_Loop = (void*)&System_Loop_FLoat;
     Current_Loop_Init();
     Speed_Loop_Init();
     Motor_Diag_Init();
     System_Diag_Init();
     Motor_Config_Init();
     Speed_Command = 1000.0f;
-    System.Run_flag = 0;
+    System_Loop_FLoat.Run_flag = 0;
 }
 
-void SYSTEM_LV_Standy(void)
+void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl)
 {
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     vTaskDelay(SYSTEM_LV_INIT_TIME);
-    System.system_state = SYSTEM_HV_STANDY;
-    System.Run_flag = 0;
+    pSystem_Loop->system_state = SYSTEM_HV_STANDY;
+    pSystem_Loop->Run_flag = 0;
 }
 
-void SYSTEM_HV_Standy(void)
+void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl)
 {
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
         vTaskDelay(SYSTEM_HV_STANDY_TIME);
-        System.system_state = SYSTEM_RUN;
-        System.Run_flag = 0;
+        pSystem_Loop->system_state = SYSTEM_RUN;
+        pSystem_Loop->Run_flag = 0;
     }
 }
 
 
 extern uint8_t System_Diag_Fault_Flag;
 
-void SYSTEM_Run(void)
+void SYSTEM_Run_Float(Motor_Control_t *pControl)
 {
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     System_Fault_Flag = System_Diag_Fault_Flag; // Combine system and motor diagnostic fault flags
     if(System_Fault_Flag != 0)
     {
-        System.system_state = SYSTEM_FAULT;
-        Speed_Loop.Speed_Command = 0;
+        pSystem_Loop->system_state = SYSTEM_FAULT;
+        pSpeed_Loop->Speed_Command = 0;
         return;
     }
     if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
     {
-        Speed_Loop.Speed_Command = Speed_Command; 
-        System.Run_flag = 1;
+        pSpeed_Loop->Speed_Command = Speed_Command; 
+        pSystem_Loop->Run_flag = 1;
     }
     else 
     {
-        Speed_Loop.Speed_Command = 0;
-        System.Run_flag = 0;
+        pSpeed_Loop->Speed_Command = 0;
+        pSystem_Loop->Run_flag = 0;
     }
     return;
 }
 
-void SYSTEM_Fault(void)
+void SYSTEM_Fault_Float(Motor_Control_t *pControl)
 {
-    System.Fault_cnt++;
-    System.Run_flag = 0;
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    pSystem_Loop->Fault_cnt++;
+    pSystem_Loop->Run_flag = 0;
     vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_WAIT;
+    pSystem_Loop->system_state = SYSTEM_WAIT;
 }
 
-void SYSTEM_Wait(void)
+void SYSTEM_Wait_Float(Motor_Control_t *pControl)
 {
     vTaskDelay(SYSTEM_WAIT_TIME);
-    System.system_state = SYSTEM_HV_STANDY;
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    pSystem_Loop->system_state = SYSTEM_HV_STANDY;
     System_Diag_Fault_Flag = 0;
-    System.Run_flag = 0;
+    pSystem_Loop->Run_flag = 0;
 }
 
 

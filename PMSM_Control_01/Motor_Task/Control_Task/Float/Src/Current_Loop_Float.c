@@ -8,15 +8,7 @@
 #include "Motor_Diag.h"
 #include "Motor_Control.h"
 
-extern Motor_Config_t PMSM_42JS_Config;
-extern struct SMO_Parameter SMO_OB;
-extern struct NonFluxObserver_Parameter NonFlux_OB;
-extern struct Encoder_Parameter Encode_ABZ;
-extern struct HFSWInjection_Parameter HFSW_OB;
-extern Speed_Loop_t Speed_Loop;
-extern SYSTEM_t System;
-extern struct EMF_Cal_Parameter EMF_Cal;
-extern struct EffFluxObserver_Parameter EffFlux_OB;
+
 
 Current_Loop_Float_t Current_Loop_FLoat;  
 
@@ -80,21 +72,21 @@ void Speed_Switch(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     switch (pControl->Speed_Loop.Status)
     {
-    case Speed_Loop_Idle:
+    case SPEED_IDLE:
         pCurrent_Loop_Float->theta = 0;
         break;
-    case Speed_Loop_Align:
+    case SPEED_ALIGN:
     {
         break;
     }
-    case Speed_Loop_Open:
+    case SPEED_OPEN:
     {
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
             pCurrent_Loop_Float->pMotor->motor_param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
         break;
     }
-    case Speed_Loop_Switch:
+    case SPEED_SWITCH:
     {
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
             pCurrent_Loop_Float->pMotor->motor_param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
@@ -110,9 +102,9 @@ void Speed_Switch(Motor_Control_t *pControl)
         }
         break;
     }
-    case Speed_Loop_High:
-    case Speed_Loop_Middle:
-    case Speed_Loop_Low:
+    case SPEED_HIGH:
+    case SPEED_MIDDLE:
+    case SPEED_LOW:
     {
         pCurrent_Loop_Float->theta = OBSERVE_GET_THETA();
         Limit_2PI(&pCurrent_Loop_Float->theta);
@@ -139,9 +131,9 @@ void Current_PWM_Switch(uint8_t PWM_Flag)
 void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
-    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     // Code for MOTOR_IDLE state
-    if (System.Run_flag == 1)
+    if (pSystem_Loop->Run_flag == 1)
     {
         pControl->Current_Loop.Status = MOTOR_READY;
     }
@@ -158,7 +150,8 @@ void MOTOR_READY_TASK_Float(Motor_Control_t *pControl)
     // Code for MOTOR_READY state
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    if (System.Run_flag == 1)
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    if (pSystem_Loop->Run_flag == 1)
     {
         if (Motor_Diag_Fault_Flag != 0)
         {
@@ -181,7 +174,8 @@ void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    if (System.Run_flag == 1)
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    if (pSystem_Loop->Run_flag == 1)
     {
         if (Motor_Diag_Fault_Flag != 0)
         {
@@ -225,8 +219,9 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     /* Code for MOTOR_RUN state */
-    if (System.Run_flag == 0 && pSpeed_Loop->Speed_Fb < 1000.0f)
+    if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < 1000.0f)
     {
         pControl->Current_Loop.Status = MOTOR_WAIT;
     }
@@ -449,9 +444,9 @@ inline void Dead_Zone_Compensation(Motor_Control_t *pControl, float we, float th
                                                     arm_sin_f32(theta_comp), arm_cos_f32(theta_comp));
     arm_inv_clarke_f32(Ialpha_tmp, Ibeta_tmp, &Ia_pre, &Ib_pre);
     if (pCurrent_Loop_Float->Dead_Zone_Enable_Flag &&
-        (pControl->Speed_Loop.Status == Speed_Loop_Low ||
-         pControl->Speed_Loop.Status == Speed_Loop_Middle ||
-         pControl->Speed_Loop.Status == Speed_Loop_High))
+        (pControl->Speed_Loop.Status == SPEED_LOW ||
+         pControl->Speed_Loop.Status == SPEED_MIDDLE ||
+         pControl->Speed_Loop.Status == SPEED_HIGH))
     {
         if (Ia_pre > MOTOR_DEAD_ZONE_THD)
         {

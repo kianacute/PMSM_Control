@@ -44,44 +44,51 @@ void Current_Loop_Switch(Motor_Control_t *pControl)
     pControl->Current_Loop.Loop_count++;
 }
 
-
-void Speed_Run(Motor_Control_t *pControl)
+void Speed_Loop_Task(Motor_Control_t *pControl)
 {
-    pControl->Speed_Loop.Loop_count++;
-    switch (pControl->Speed_Loop.Status)
+    if (pControl->System.Status == SYSTEM_RUN && pControl->Current_Loop.Status == MOTOR_RUN)
     {
-    case Speed_Loop_Idle:
-        // Handle idle state
-        SPEED_Idle_Task();
-        break;
-    case Speed_Loop_Align:
-        // Handle align state
-        SPEED_Align_Task();
-        break;
-    case Speed_Loop_Open:
-        // Handle open state
-        SPEED_Open_Task();
-        break;
-    case Speed_Loop_Switch:
-        // Handle switch state
-        SPEED_Switch_Task();
-        break;
-    case Speed_Loop_Low:
-        // Handle low state
-        SPEED_Low_Task();
-        break;
-    case Speed_Loop_Middle:
-        // Handle middle state
-        SPEED_Middle_Task();
-        break;
-    case Speed_Loop_High:
-        // Handle high state
-        SPEED_High_Task();
-        break;
-    default:
-        pControl->Speed_Loop.Status = Speed_Loop_Idle;
-        break;
+        pControl->Speed_Loop.Loop_count++;
+        switch (pControl->Speed_Loop.Status)
+        {
+        case SPEED_IDLE:
+            // Handle idle state
+            SPEED_Idle_Task();
+            break;
+        case SPEED_ALIGN:
+            // Handle align state
+            SPEED_Align_Task();
+            break;
+        case SPEED_OPEN:
+            // Handle open state
+            SPEED_Open_Task();
+            break;
+        case SPEED_SWITCH:
+            // Handle switch state
+            SPEED_Switch_Task();
+            break;
+        case SPEED_LOW:
+            // Handle low state
+            SPEED_Low_Task();
+            break;
+        case SPEED_MIDDLE:
+            // Handle middle state
+            SPEED_Middle_Task();
+            break;
+        case SPEED_HIGH:
+            // Handle high state
+            SPEED_High_Task();
+            break;
+        default:
+            pControl->Speed_Loop.Status = SPEED_IDLE;
+            break;
+        }
     }
+    else
+    {
+        pControl->Speed_Loop.Status = SPEED_IDLE;
+    }
+    
 }
 
 void SYSTEM_Task(Motor_Control_t *pControl)
