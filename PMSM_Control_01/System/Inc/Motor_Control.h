@@ -76,32 +76,32 @@ typedef struct SYSTEM_Loop
         } Motor_Control_Output_t;
 
         /*电机状态机*/
-        #define         MOTOR_IDLE_TASK               MOTOR_IDLE_TASK_FLoat                  
-        #define         MOTOR_READY_TASK              MOTOR_READY_TASK_FLoat                  
-        #define         MOTOR_OFFSET_CHECK_TASK       MOTOR_OFFSET_CHECK_TASK_FLoat                  
-        #define         MOTOR_RUN_TASK                MOTOR_RUN_TASK_FLoat                  
-        #define         MOTOR_FAULT_TASK              MOTOR_FAULT_TASK_FLoat                  
-        #define         MOTOR_WAIT_TASK               MOTOR_WAIT_TASK_FLoat                  
+        #define         MOTOR_IDLE_TASK(pMotor_control)               MOTOR_IDLE_TASK_FLoat(pMotor_control)                  
+        #define         MOTOR_READY_TASK(pMotor_control)              MOTOR_READY_TASK_FLoat(pMotor_control)                  
+        #define         MOTOR_OFFSET_CHECK_TASK(pMotor_control)       MOTOR_OFFSET_CHECK_TASK_FLoat(pMotor_control)                 
+        #define         MOTOR_RUN_TASK(pMotor_control)                MOTOR_RUN_TASK_FLoat(pMotor_control)                  
+        #define         MOTOR_FAULT_TASK(pMotor_control)              MOTOR_FAULT_TASK_FLoat(pMotor_control)                  
+        #define         MOTOR_WAIT_TASK(pMotor_control)               MOTOR_WAIT_TASK_FLoat(pMotor_control)                  
 
         /*速度状态机*/
 
-        #define         SPEED_Idle_Task          SPEED_Idle_Task_FLoat
-        #define         SPEED_Align_Task         SPEED_Align_Task_FLoat
-        #define         SPEED_Open_Task          SPEED_Open_Task_FLoat
-        #define         SPEED_Switch_Task        SPEED_Switch_Task_FLoat
-        #define         SPEED_Low_Task           SPEED_Low_Task_FLoat
-        #define         SPEED_Middle_Task        SPEED_Middle_Task_FLoat
-        #define         SPEED_High_Task          SPEED_High_Task_FLoat
-        #define         SPEED_Run_Task           SPEED_Run_Task_FLoat
+        #define         SPEED_Idle_Task(pMotor_control)          SPEED_Idle_Task_FLoat(pMotor_control)
+        #define         SPEED_Align_Task(pMotor_control)         SPEED_Align_Task_FLoat(pMotor_control)
+        #define         SPEED_Open_Task(pMotor_control)          SPEED_Open_Task_FLoat(pMotor_control)
+        #define         SPEED_Switch_Task(pMotor_control)        SPEED_Switch_Task_FLoat(pMotor_control)
+        #define         SPEED_Low_Task(pMotor_control)           SPEED_Low_Task_FLoat(pMotor_control)
+        #define         SPEED_Middle_Task(pMotor_control)        SPEED_Middle_Task_FLoat(pMotor_control)
+        #define         SPEED_High_Task(pMotor_control)          SPEED_High_Task_FLoat(pMotor_control)
+        #define         SPEED_Run_Task(pMotor_control)           SPEED_Run_Task_FLoat(pMotor_control)
 
         /*系统状态机*/
 
-        #define         SYSTEM_Init              SYSTEM_Init_FLoat
-        #define         SYSTEM_LV_Standy         SYSTEM_LV_Standy_FLoat
-        #define         SYSTEM_HV_Standy         SYSTEM_HV_Standy_FLoat
-        #define         SYSTEM_Run               SYSTEM_Run_FLoat
-        #define         SYSTEM_Fault             SYSTEM_Fault_FLoat 
-        #define         SYSTEM_Wait              SYSTEM_Wait_FLoat
+        #define         SYSTEM_Init(pMotor_control)              SYSTEM_Init_FLoat(pMotor_control)
+        #define         SYSTEM_LV_Standy(pMotor_control)         SYSTEM_LV_Standy_FLoat(pMotor_control)
+        #define         SYSTEM_HV_Standy(pMotor_control)         SYSTEM_HV_Standy_FLoat(pMotor_control)
+        #define         SYSTEM_Run(pMotor_control)               SYSTEM_Run_FLoat(pMotor_control)
+        #define         SYSTEM_Fault(pMotor_control)             SYSTEM_Fault_FLoat(pMotor_control) 
+        #define         SYSTEM_Wait(pMotor_control)              SYSTEM_Wait_FLoat(pMotor_control)
 
     #elif defined MOTOR_CONTROL_FIXED
 
@@ -139,6 +139,58 @@ typedef struct SYSTEM_Loop
 
     #endif
 
+
+
+typedef struct Motor_Parameter
+{
+    float pole_pairs;      // 电机极对数
+    float Rs;              // 定子电阻
+    float Ld, Lq, Ls;      // 定子电感
+    float flux_rpm_per_v;  // 反电动势系数，单位为Vs/rpm
+    float flux_linkage_wb; // 磁链, 单位为Wb
+    float max_rpm;         // 最大转速
+    float max_current_a;   // 最大电流
+    float voltage_limit_v; // 电压限制，单位为V
+    uint8_t rs_identified; // Rs离线辨识标志: 0=未辨识, 1=已辨识成功
+    float Power_Limit; // 功率限制参数
+    float Flux_Flux;
+    float Ld_Lq;
+    float One_per_Flux;
+} Motor_Parameter_t;
+
+typedef struct Motor_Config
+{
+    Motor_Parameter_t *Motor_Param; // 电机参数
+
+    // IF启动参数
+    Lookup_Table_f32_t IF_Start_Speed_Lookup;           // 启动速度查表
+    Lookup_Table_f32_t IF_Start_Iq_Lookup;              // 启动Iq查表
+
+    // 电流环查表参数
+    Lookup_Table_f32_t ID_PI_Kp_Lookup;  
+    Lookup_Table_f32_t IQ_PI_Kp_Lookup; 
+    Lookup_Table_f32_t ID_PI_Ki_Lookup; 
+    Lookup_Table_f32_t IQ_PI_Ki_Lookup; 
+
+    // 速度环查表参数
+    Lookup_Table_f32_t Speed_PI_Kp_Lookup; // 速度PI比例增益查表
+    Lookup_Table_f32_t Speed_PI_Ki_Lookup; // 速度PI积分增益查表    
+
+    //磁链观测器查表参数
+    Lookup_Table_f32_t NonFlux_PLL_Kp_Lookup;
+    Lookup_Table_f32_t NonFlux_PLL_Ki_Lookup;
+    Lookup_Table_f32_t NonFlux_Gama_Lookup;
+    Lookup_Table_f32_t EfFlux_Gama_Lookup;
+    Lookup_Table_2D_f32_t EfFlux_Angle_Comp; 
+    
+    //SMO观测器查表参数
+    Lookup_Table_f32_t SMO_PLL_Kp_Lookup;
+    Lookup_Table_f32_t SMO_PLL_Ki_Lookup;
+    Lookup_Table_f32_t SMO_Gain_Lookup;
+    
+
+} Motor_Config_t;
+
 typedef struct Motor_Control    
 {
     System_Loop_t System_Loop;
@@ -146,8 +198,8 @@ typedef struct Motor_Control
     Speed_Loop_t Speed_Loop;
     Motor_Control_Input_t Input;
     Motor_Control_Output_t Output;
+    Motor_Config_t* Motor_Config;
+    void *pObserver; // Pointer to the observer structure (either float or fixed)
 } Motor_Control_t;
-
-
 
 #endif

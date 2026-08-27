@@ -20,7 +20,6 @@ void Speed_Loop_Init_Float(Motor_Control_t *pControl)
     pControl->Speed_Loop.Status = SPEED_IDLE;
     pControl->Speed_Loop.pSpeed_Loop = (void*)&Speed_Loop_Float;
     Speed_Loop_Float.Speed_Switch_Cnt = 0;
-    Speed_Loop_Float.pMotor = &PMSM_42JS_Config;
     Speed_Loop_Float.FREQ_Hz = 1000;
     Speed_Loop_Float.Speed_Fb_1s = 0;
 
@@ -122,9 +121,10 @@ void Speed_Loop_Align_Task(Motor_Control_t *pControl)
 void Speed_Loop_Open_Task(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
     float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
-    pSpeed_Loop->Speed_Ref = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Speed_Lookup);
-    pSpeed_Loop->target_iq = Lookup_Table_Linear(tick_count, &PMSM_42JS_Config.IF_Start_Iq_Lookup);
+    pSpeed_Loop->Speed_Ref = Lookup_Table_Linear(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
+    pSpeed_Loop->target_iq = Lookup_Table_Linear(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
     pSpeed_Loop->target_id = 0;
     if (pSpeed_Loop->Speed_Ref >= 600)
     {
@@ -191,7 +191,9 @@ void Speed_Loop_Run_Task(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;
-    Power_Derating_FLoat(pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, PMSM_42JS_Config.motor_param->Power_Limit);   
+    Motor_Parameter_t *Motor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
+
+    Power_Derating_FLoat(pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, Motor_Param->Power_Limit);   
     pSpeed_Loop->Speed_Ref = Oblique_Wave(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
                                         SPEED_ADD_STEP, SPEED_SUB_STEP);
     // Speed_Loop.Speed_Ref = Speed_Loop.Speed_Command;
@@ -227,6 +229,7 @@ void Paramater_update(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;  
+    Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
     if (pSpeed_Loop->PWM_CUR_FREQ < PWM_SWITH_FREQ_MIN)
     {
         pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MIN;
@@ -236,10 +239,10 @@ void Paramater_update(Motor_Control_t *pControl)
         pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
     }
     pSpeed_Loop->PWM_CUR_FREQ = Oblique_Wave(pSpeed_Loop->PWM_SWITCH_FREQ, pSpeed_Loop->PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
-    Observer_Param_Lookup_Updata(pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1/pSpeed_Loop->PWM_CUR_FREQ);
+    Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1/pSpeed_Loop->PWM_CUR_FREQ);
     Current_Para_Updata(pControl, pSpeed_Loop->Speed_Fb_1s, 1/pSpeed_Loop->PWM_CUR_FREQ);    
-    pSpeed_Loop->Speed_PI.kp = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Kp_Lookup);
-    pSpeed_Loop->Speed_PI.ki = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &PMSM_42JS_Config.Speed_PI_Ki_Lookup);
+    pSpeed_Loop->Speed_PI.kp = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Kp_Lookup);
+    pSpeed_Loop->Speed_PI.ki = Lookup_Table_Linear(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Ki_Lookup);
 }                     
 
 
@@ -268,12 +271,13 @@ void Power_Derating_Float(Motor_Control_t *pControl, float Bus_Current, float Bu
 void MTPA_Cal_Float(Motor_Control_t *pControl, float Is)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    if (pSpeed_Loop->pMotor->motor_param->Ld_Lq > 1e-4)
+    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
+    if (pMotor_Param->Ld_Lq > 1e-4)
     {
         float MTPA_tmp = 0;
-        arm_sqrt_f32(Is * Is * pSpeed_Loop->pMotor->motor_param->Ld_Lq * pSpeed_Loop->pMotor->motor_param->Ld_Lq * 8 
-                    + pSpeed_Loop->pMotor->motor_param->Flux_Flux, &MTPA_tmp);
-        pSpeed_Loop->MTPA_Id = (MTPA_tmp - pSpeed_Loop->pMotor->motor_param->flux_linkage_wb) / pSpeed_Loop->pMotor->motor_param->Ld_Lq / 4;
+        arm_sqrt_f32(Is * Is * pMotor_Param->Ld_Lq * pMotor_Param->Ld_Lq * 8 
+                    + pMotor_Param->Flux_Flux, &MTPA_tmp);
+        pSpeed_Loop->MTPA_Id = (MTPA_tmp - pMotor_Param->flux_linkage_wb) / pMotor_Param->Ld_Lq / 4;
     }
     else
     {

@@ -3,13 +3,13 @@
 void Current_Loop_Switch(Motor_Control_t *pControl)
 {
     // Code to switch current task states
-    if (pControl->System.Status == SYSTEM_RUN)
+    if (pControl->System_Loop.Status == SYSTEM_RUN)
     {
         switch (pControl->Current_Loop.Status)
         {
         case MOTOR_IDLE:
             // Handle idle state
-            MOTOR_IDLE_TASK();
+            MOTOR_IDLE_TASK(pControl);
             break;
         case MOTOR_READY:
             // Handle ready state
@@ -17,20 +17,20 @@ void Current_Loop_Switch(Motor_Control_t *pControl)
             break;
         case MOTOR_OFFSET_CHECK:
             // Handle offset check state
-            MOTOR_OFFSET_CHECK_TASK();
+            MOTOR_OFFSET_CHECK_TASK(pControl);
             break;
         case MOTOR_RUN:
             // Handle run state
-            MOTOR_RUN_TASK();
+            MOTOR_RUN_TASK(pControl);
             break;
         case MOTOR_FAULT:
             // Handle fault state
             // Add fault handling code here
-            MOTOR_FAULT_TASK();
+            MOTOR_FAULT_TASK(pControl);
             break;
         case MOTOR_WAIT:
             // Handle wait state
-            MOTOR_WAIT_TASK();
+            MOTOR_WAIT_TASK(pControl);
             break;
         default:
             break;
@@ -38,7 +38,7 @@ void Current_Loop_Switch(Motor_Control_t *pControl)
     }
     else
     {
-        MOTOR_IDLE_TASK();
+        MOTOR_IDLE_TASK(pControl);
         pControl->Current_Loop.Status = MOTOR_IDLE;
     }
     pControl->Current_Loop.Loop_count++;
@@ -46,38 +46,38 @@ void Current_Loop_Switch(Motor_Control_t *pControl)
 
 void Speed_Loop_Task(Motor_Control_t *pControl)
 {
-    if (pControl->System.Status == SYSTEM_RUN && pControl->Current_Loop.Status == MOTOR_RUN)
+    if (pControl->System_Loop.Status == SYSTEM_RUN && pControl->Current_Loop.Status == MOTOR_RUN)
     {
         pControl->Speed_Loop.Loop_count++;
         switch (pControl->Speed_Loop.Status)
         {
         case SPEED_IDLE:
             // Handle idle state
-            SPEED_Idle_Task();
+            SPEED_Idle_Task(pControl);
             break;
         case SPEED_ALIGN:
             // Handle align state
-            SPEED_Align_Task();
+            SPEED_Align_Task(pControl);
             break;
         case SPEED_OPEN:
             // Handle open state
-            SPEED_Open_Task();
+            SPEED_Open_Task(pControl);
             break;
         case SPEED_SWITCH:
             // Handle switch state
-            SPEED_Switch_Task();
+            SPEED_Switch_Task(pControl);
             break;
         case SPEED_LOW:
             // Handle low state
-            SPEED_Low_Task();
+            SPEED_Low_Task(pControl);
             break;
         case SPEED_MIDDLE:
             // Handle middle state
-            SPEED_Middle_Task();
+            SPEED_Middle_Task(pControl);
             break;
         case SPEED_HIGH:
             // Handle high state
-            SPEED_High_Task();
+            SPEED_High_Task(pControl);
             break;
         default:
             pControl->Speed_Loop.Status = SPEED_IDLE;
@@ -93,23 +93,23 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
 
 void SYSTEM_Task(Motor_Control_t *pControl)
 {
-    pControl->System.Loop_count++;
-    switch (pControl->System.Status)
+    pControl->System_Loop.Loop_count++;
+    switch (pControl->System_Loop.Status)
     {
     case SYSTEM_LV_STANDY:
-        SYSTEM_LV_Standy();
+        SYSTEM_LV_Standy(pControl);
         break;
     case SYSTEM_HV_STANDY:
-        SYSTEM_HV_Standy();
+        SYSTEM_HV_Standy(pControl);
         break;
     case SYSTEM_RUN:
-        SYSTEM_Run();
+        SYSTEM_Run(pControl);
         break;
     case SYSTEM_FAULT:
-        SYSTEM_Fault();
+        SYSTEM_Fault(pControl);
         break;
     case SYSTEM_WAIT:
-        SYSTEM_Wait();
+        SYSTEM_Wait(pControl);
         break;
     default:
         break;

@@ -3,12 +3,12 @@
 
 #include "Motor_Config_Float.h"
 #include "Motor_Lookup_Tables_Float.c"
-
+#include "Motor_Control.h"
 
 Motor_Parameter_t PMSM_42JS_Parameter;
 Motor_Config_t PMSM_42JS_Config;
 
-void Motor_Parameter_Init(void)
+void Motor_Parameter_Init(Motor_Control_t *pMotor_Contro)
 {
     PMSM_42JS_Parameter.pole_pairs = 4.0f;
     PMSM_42JS_Parameter.max_current_a = 20.0f;
@@ -28,10 +28,11 @@ void Motor_Parameter_Init(void)
     PMSM_42JS_Parameter.One_per_Flux = 1 / PMSM_42JS_Parameter.flux_linkage_wb;
 }
 
-void Motor_Config_Init(void)
+void Motor_Config_Init(Motor_Control_t *pMotor_Control)
 {
-    Motor_Parameter_Init();
-    PMSM_42JS_Config.motor_param = &PMSM_42JS_Parameter;
+    Motor_Parameter_Init(pMotor_Control);
+    pMotor_Control->Motor_Config = (Motor_Config_t*)&PMSM_42JS_Config;
+    pMotor_Control->Motor_Config->Motor_Param = &PMSM_42JS_Parameter;
 
     // IF启动参数查表初始化
     PMSM_42JS_Config.IF_Start_Iq_Lookup.x_table = IF_Start_Ramp_Sec;

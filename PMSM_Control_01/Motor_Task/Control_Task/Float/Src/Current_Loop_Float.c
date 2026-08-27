@@ -20,10 +20,9 @@ void Current_Loop_Init_Float(Motor_Control_t *pControl)
     // Initialization code for current task
     // e.g., setting up filters, initializing variables, etc.
     pControl->Current_Loop.pCurrent_Loop = (void*)&Current_Loop_FLoat;
-    OBSERVE_Init();
+    OBSERVE_Init(pControl);
     pControl->Current_Loop.Status = MOTOR_IDLE;
     Current_Loop_FLoat.theta = 0.0f;
-    Current_Loop_FLoat.pMotor = &PMSM_42JS_Config;
     Current_Loop_FLoat.FREQ_HZ = MOTOR_CURRENT_LOOP_HZ;
     Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
     /* 计算电流环参数 */
@@ -41,7 +40,6 @@ void Current_Loop_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.Iq_Ref = 0.0f;
     Current_Loop_FLoat.Id_PI.integral = 0.0f;
     Current_Loop_FLoat.Iq_PI.integral = 0.0f;
-    EMF_Cal.EMF = 0.0f;
     Current_Loop_FLoat.A_Max = 0.0f;
     Current_Loop_FLoat.B_Max = 0.0f;
     Current_Loop_FLoat.C_Max = 0.0f;
@@ -70,6 +68,7 @@ void Speed_Switch(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
     switch (pControl->Speed_Loop.Status)
     {
     case SPEED_IDLE:
@@ -82,14 +81,14 @@ void Speed_Switch(Motor_Control_t *pControl)
     case SPEED_OPEN:
     {
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pCurrent_Loop_Float->pMotor->motor_param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
         break;
     }
     case SPEED_SWITCH:
     {
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pCurrent_Loop_Float->pMotor->motor_param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
         if (MY_ABS(OBSERVE_GET_THETA() - pCurrent_Loop_Float->theta) < 0.10)
         {
@@ -159,7 +158,7 @@ void MOTOR_READY_TASK_Float(Motor_Control_t *pControl)
         }
         else
         {
-            Current_Loop_Init();
+            Current_Loop_Init(pControl);
             pControl->Current_Loop.Status = MOTOR_OFFSET_CHECK;
         }
     }
@@ -280,10 +279,11 @@ void Current_Avg_Filt(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
     if (pCurrent_Loop_Float->avg_count >= ((uint32_t)(pCurrent_Loop_Float->FREQ_HZ / pSpeed_Loop->FREQ_Hz)))
     {
         pSpeed_Loop->Speed_Fb = pCurrent_Loop_Float->Speed_fb_1ms / 2 / PI / 
-        pCurrent_Loop_Float->pMotor->motor_param->pole_pairs * 60.0f / pCurrent_Loop_Float->avg_count;
+        pMotor_Param->pole_pairs * 60.0f / pCurrent_Loop_Float->avg_count;
         pCurrent_Loop_Float->Speed_fb_1ms = 0;
         pCurrent_Loop_Float->avg_count = 0;
     }
@@ -307,7 +307,7 @@ inline void Current_Loop_Run(Motor_Control_t *pControl)
     arm_clarke_f32(pCurrent_Loop_Float->Ia_fb, pCurrent_Loop_Float->Ib_fb, 
                     &pCurrent_Loop_Float->ialpha_fb, &pCurrent_Loop_Float->ibeta_fb);
 
-    OBSERVE_Updata(pCurrent_Loop_Float->Ualpha_Ref, pCurrent_Loop_Float->Ubeta_Ref,  \
+    OBSERVE_Updata(pControl, pCurrent_Loop_Float->Ualpha_Ref, pCurrent_Loop_Float->Ubeta_Ref,  \
                     pCurrent_Loop_Float->ialpha_fb, pCurrent_Loop_Float->ibeta_fb);
 
     pCurrent_Loop_Float->sinVal = arm_sin_f32(pCurrent_Loop_Float->theta);
@@ -533,14 +533,15 @@ inline void MOTOR_Bus_Current_Rewrite(Motor_Control_t *pControl)
 void Current_Para_Updata(Motor_Control_t *pControl, float speed, float Ts)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
+    Motor_Config_t *Motor_Config = (Motor_Config_t *)pControl->Motor_Config;
     pCurrent_Loop_Float->Loop_time_s = Ts;
     pCurrent_Loop_Float->FREQ_HZ = 1.0f / Ts;
     pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
-    pCurrent_Loop_Float->Id_PI.kp = Lookup_Table_Linear(pControl->Speed_Loop.Status, &PMSM_42JS_Config.ID_PI_Kp_Lookup)
+    pCurrent_Loop_Float->Id_PI.kp = Lookup_Table_Linear(pControl->Speed_Loop.Status, &Motor_Config->ID_PI_Kp_Lookup)
                                      * pControl->Output.PWM_HZ_Coeff;
     pCurrent_Loop_Float->Iq_PI.ki = pCurrent_Loop_Float->Id_PI.ki = Lookup_Table_Linear(pControl->Speed_Loop.Status,
-                                     &PMSM_42JS_Config.ID_PI_Ki_Lookup);
-    pCurrent_Loop_Float->Iq_PI.kp = Lookup_Table_Linear(pControl->Speed_Loop.Status, &PMSM_42JS_Config.IQ_PI_Kp_Lookup) 
+                                     &Motor_Config->ID_PI_Ki_Lookup);
+    pCurrent_Loop_Float->Iq_PI.kp = Lookup_Table_Linear(pControl->Speed_Loop.Status, &Motor_Config->IQ_PI_Kp_Lookup) 
                                      * pControl->Output.PWM_HZ_Coeff;
     pCurrent_Loop_Float->Phase_check_cnt_THD = (uint32_t)(pCurrent_Loop_Float->FREQ_HZ / (pControl->Speed_Loop.Status) * 60);
 }

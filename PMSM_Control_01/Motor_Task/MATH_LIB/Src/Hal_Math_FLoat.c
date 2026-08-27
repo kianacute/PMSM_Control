@@ -4,7 +4,7 @@
 /// @param controller PI控制器对象，包含增益、积分项、输出限制等参数
 /// @param error 输入误差
 /// @return 输出
-float32_t Hal_PI_f32(Hal_PI_t *controller, float error)
+float32_t Hal_PI_f32(Hal_PI_f32_t *controller, float error)
 {
      controller->integral += controller->ki * error - 
                              controller->Kd * (controller->output_raw - controller->output); // 抗饱和项
@@ -36,18 +36,18 @@ float32_t Hal_PI_f32(Hal_PI_t *controller, float error)
 /// @param n 数组长度
 /// @param target 目标值
 /// @return 查找到小于等于目标值的最后一个元素的下标
-int binary_search_float_first(const float* arr, uint32_t n, float target)
+int32_t Binary_Search_f32(const float* arr, uint32_t n, float target)
 {
      if (n == 0 || arr == NULL)
      {
           return -1;
      }
-     int left = 0;
-     int right = n - 1;
-     int result = -1;
+     int32_t left = 0;
+     int32_t right = n - 1;
+     int32_t result = -1;
      while (left < right)
      {
-          int mid = (left + right + 1) / 2;
+          int32_t mid = (left + right + 1) / 2;
           if ((arr[mid] <= target))
           {
                left = mid;
@@ -67,7 +67,7 @@ int binary_search_float_first(const float* arr, uint32_t n, float target)
 /// @param y_table 查找表的y坐标数组
 /// @param table_size 查找表的大小
 /// @return 插值结果
-float Lookup_Table_Linear(float x, Lookup_Table_t *table)
+float Lookup_Table_1D_Linear_f32(float x, Lookup_Table_f32_t *table)
 {
      if (x <= table->x_table[0])
      {
@@ -77,7 +77,7 @@ float Lookup_Table_Linear(float x, Lookup_Table_t *table)
      {
           return table->y_table[table->table_size - 1];
      }
-     int idx = binary_search_float_first(table->x_table, table->table_size, x);
+     int32_t idx = Binary_Search_f32(table->x_table, table->table_size, x);
      float x0 = table->x_table[idx];
      float y0 = table->y_table[idx];
      float x1 = table->x_table[idx + 1];
@@ -90,7 +90,7 @@ float Lookup_Table_Linear(float x, Lookup_Table_t *table)
 /// @param y y轴输入值
 /// @param table 二维查找表结构体指针，包含x_table、y_table、z_table和各自的维度
 /// @return 双线性插值结果
-float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
+float Lookup_Table_2D_Linear_f32(float x, float y, Lookup_Table_2D_f32_t *table)
 {
     // x轴边界限幅
     float x_clamped = x;
@@ -115,12 +115,12 @@ float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
     }
 
     // 查找x轴和y轴的索引
-    int ix = binary_search_float_first(table->x_table, table->nx_size, x_clamped);
-    int iy = binary_search_float_first(table->y_table, table->ny_size, y_clamped);
+    int32_t ix = Binary_Search_f32(table->x_table, table->nx_size, x_clamped);
+    int32_t iy = Binary_Search_f32(table->y_table, table->ny_size, y_clamped);
 
     // 确保索引在有效范围内（边界情况下取nx_size-2或ny_size-2）
-    if (ix >= (int)(table->nx_size - 1)) ix = table->nx_size - 2;
-    if (iy >= (int)(table->ny_size - 1)) iy = table->ny_size - 2;
+    if (ix >= (int32_t)(table->nx_size - 1)) ix = table->nx_size - 2;
+    if (iy >= (int32_t)(table->ny_size - 1)) iy = table->ny_size - 2;
     if (ix < 0) ix = 0;
     if (iy < 0) iy = 0;
 
@@ -149,7 +149,7 @@ float Lookup_Table_2D_Linear(float x, float y, Lookup_Table_2D_t *table)
 /// @param Sub_Step 减速步长
 /// @param Add_Step 加速步长
 /// @return 更新后的值
-float Oblique_Wave(float end_value, float cur_value, float Add_Step, float Sub_Step)
+float Oblique_Wave_f32(float end_value, float cur_value, float Add_Step, float Sub_Step)
 {
      float cur = cur_value;
      if (cur_value < end_value)
@@ -171,27 +171,13 @@ float Oblique_Wave(float end_value, float cur_value, float Add_Step, float Sub_S
      return cur;
 }
 
-/// @brief PLL更新函数
-/// @param pPLL pLL对象指针，包含PI控制器和当前频率、相位等参数
-/// @param alpha 正弦信号
-/// @param beta 余弦信号
-/// @param Discrete_time 离散积分时间,单位为秒
-void PLL_Update(struct PLL *pPLL, float alpha, float beta, float Discrete_time)
-{
-     float deta = alpha * arm_cos_f32(pPLL->theta) - beta * arm_sin_f32(pPLL->theta);
-     pPLL->we = Hal_PI_f32(&pPLL->PLL_PI, deta);
-     pPLL->theta = (pPLL->theta + pPLL->we * Discrete_time);
-     Limit_2PI(&pPLL->theta);
-     return;
-}
-
 /// @brief 滞回比较器初始化函数
 /// @param hcomp 滞回比较器结构体指针
 /// @param th_h 高阈值
 /// @param th_l 低阈值
 /// @param delay 延迟时间，单位为周期数 (例如，delay=5表示需要连续5个周期满足条件才改变输出状态)
 /// @author doubao
-void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l, uint32_t delay)
+void Hysteresis_Comp_Init_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float th_h, float th_l, uint32_t delay)
 {
      hcomp->enable = 0;
      hcomp->reset = 0;
@@ -205,7 +191,7 @@ void Hysteresis_Comp_Init(Hysteresis_Comp_TypeDef *hcomp, float th_h, float th_l
 /// @brief 滞回比较器核心处理（必须周期性调用）
 /// @param hcomp 滞回比较器结构体指针
 /// @author doubao
-void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+void Hysteresis_Comp_Process_Add_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float analog_input)
 {
      // 1. 复位优先
      if (hcomp->reset)
@@ -263,7 +249,7 @@ void Hysteresis_Comp_Process_Add(Hysteresis_Comp_TypeDef *hcomp, float analog_in
 }
 
 
-void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+void Hysteresis_Comp_Process_Sub_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float analog_input)
 {
      // 1. 复位优先
      if (hcomp->reset)
@@ -321,7 +307,7 @@ void Hysteresis_Comp_Process_Sub(Hysteresis_Comp_TypeDef *hcomp, float analog_in
 }
 
 
-void Sensor_Status_Update(Sensor_Hysteresis_Comp_TypeDef *hcomp, float analog_input,
+void Sensor_Status_Update_f32(Sensor_Hysteresis_Comp_TypeDef_f32_t *hcomp, float analog_input,
                           float theshould1, enum Sensor_Status next_status1,
                           float theshould2, enum Sensor_Status next_status2)
 {
@@ -359,7 +345,7 @@ void Sensor_Status_Update(Sensor_Hysteresis_Comp_TypeDef *hcomp, float analog_in
 /// @param hcomp 比较器实例
 /// @param analog_input 模拟输入值  
 /// @author MWZ
-void Sensor_Hysteresis_Comp_Process(Sensor_Hysteresis_Comp_TypeDef *hcomp, float analog_input)
+void Sensor_Hysteresis_Comp_Process_f32(Sensor_Hysteresis_Comp_TypeDef_f32_t *hcomp, float analog_input)
 {
     // 1. 复位优先
     if (hcomp->reset)

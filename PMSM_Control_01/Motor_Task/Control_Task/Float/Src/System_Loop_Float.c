@@ -25,11 +25,11 @@ void SYSTEM_Wait_Float(Motor_Control_t *pControl);
 void SYSTEM_Init_Float(Motor_Control_t *pControl)
 {
     pControl->System_Loop.pSystem_Loop = (void*)&System_Loop_FLoat;
-    Current_Loop_Init();
-    Speed_Loop_Init();
+    Current_Loop_Init(pControl);
+    Speed_Loop_Init(pControl);
     Motor_Diag_Init();
     System_Diag_Init();
-    Motor_Config_Init();
+    Motor_Config_Init(pControl);
     Speed_Command = 1000.0f;
     System_Loop_FLoat.Run_flag = 0;
 }

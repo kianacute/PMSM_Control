@@ -119,7 +119,6 @@ struct EffFluxObserver_Parameter
     float discrete_time;
     float freq;
     float gama;
-    struct PLL tPLL;
     float Sin, Cos;
     float Id, Iq;
     float FLux_D, Flux_Q;
@@ -132,22 +131,21 @@ struct EffFluxObserver_Parameter
     float y_beta_hat;
     float Eta_alpha;
     float Eta_beta;
-    Motor_Config_t *pMotor;
-    Lookup_Table_t PLL_Kp_Lookup;
-    Lookup_Table_t PLL_Ki_Lookup;
-    Lookup_Table_t Gama_Lookup;
+    Hal_PI_f32_t PLL_PI;
+    float we;
+    float theta;
+    Lookup_Table_f32_t PLL_Kp_Lookup;
+    Lookup_Table_f32_t PLL_Ki_Lookup;
+    Lookup_Table_f32_t Gama_Lookup;
     float Angle_Comp;
 };
 
-void Effective_FluxObserver_Init(void);
-inline void Effective_FluxObserver_Updata(struct EffFluxObserver_Parameter *EFO, float32_t Ualpha, float32_t Ubeta,
+void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control);
+inline void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
                                    float32_t Ialpha, float32_t Ibeta);
-
-extern struct EffFluxObserver_Parameter EffFlux_OB;
-#define OBSERVE_Init() Effective_FluxObserver_Init()
-#define OBSERVE_Updata(Ualpha, Ubeta, Ialpha, Ibeta) Effective_FluxObserver_Updata(&EffFlux_OB, Ualpha, Ubeta, Ialpha, Ibeta)
-#define OBSERVE_GET_THETA()     ((EffFlux_OB.tPLL.theta) + (EffFlux_OB.Angle_Comp))
-#define OBSERVE_GET_WE()        (EffFlux_OB.tPLL.we)
+#define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init(pMotor_control)
+#define OBSERVE_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)   \
+                    Effective_FluxObserver_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)
 
 #endif
 
@@ -181,6 +179,6 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 #endif
 
 
-void Observer_Param_Lookup_Updata(float Speed, float Is, float Ts);
+void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float Speed, float Is, float Ts)
 
 #endif // __EST_H__

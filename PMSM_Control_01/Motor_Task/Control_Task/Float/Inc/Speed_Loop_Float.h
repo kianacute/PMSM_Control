@@ -25,17 +25,16 @@ typedef struct Speed_Loop_FLoat
     float Speed_Ref, Speed_Fb;             // 速度参考值和反馈值
     float Speed_Fb_1s;
     float Speed_Sub_Step, Speed_Add_Step;  // 速度增减步长
-    Motor_Config_t *pMotor;                // 电机参数指针
-    Hal_PI_t Speed_PI;                     // 速度PI控制器参数
+    Hal_PI_f32_t Speed_PI;                     // 速度PI控制器参数
     uint32_t Speed_Switch_Cnt;             // IF模式切换计数器
     uint8_t Speed_Switch_Flag;             // 速度闭环标志
     float Vs;
     float Voltage_err;
-    Hysteresis_Comp_TypeDef Weak_Control_Hcomp;      // 弱磁滞回比较器
-    Hal_PI_t Weak_Pi;                                // 弱磁PI控制器参数
+    Hysteresis_Comp_TypeDef_f32_t Weak_Control_Hcomp;      // 弱磁滞回比较器
+    Hal_PI_f32_t Weak_Pi;                                // 弱磁PI控制器参数
     uint8_t Align_Finish_Flag;                       // 对准完成标志
-    Hysteresis_Comp_TypeDef Speed_Middle_High_Hcomp; // 中高档速度滞回比较器
-    Hal_PI_t Derating_Pi;                            // 限功率PI控制器参数
+    Hysteresis_Comp_TypeDef_f32_t Speed_Middle_High_Hcomp; // 中高档速度滞回比较器
+    Hal_PI_f32_t Derating_Pi;                            // 限功率PI控制器参数
     float Derating_Factor;
     float MTPA_Id;
     float Flux_Weak_Id;

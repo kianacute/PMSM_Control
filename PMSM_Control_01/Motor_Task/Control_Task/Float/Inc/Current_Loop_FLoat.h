@@ -17,9 +17,8 @@ typedef struct Current_Loop_Float
     float FREQ_HZ;                                       //电流环频率
     float Loop_time_s;                                      //电流环循环时间
     /*电压电流，PI控制*/
-    Motor_Config_t *pMotor;                             //电机参数指针  
-    Hal_PI_t Id_PI;                                     //d轴电流PI控制器参数
-    Hal_PI_t Iq_PI;                                     //q轴电流PI控制器参数
+    Hal_PI_f32_t Id_PI;                                     //d轴电流PI控制器参数
+    Hal_PI_f32_t Iq_PI;                                     //q轴电流PI控制器参数
     float Ud_Target, Uq_Target;                             
     float Id_Ref, Iq_Ref;
     float Id_fb, Iq_fb;
@@ -59,7 +58,5 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl);
 void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
 void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
 
-extern Current_Loop_Input_t Current_Loop_Input;
-extern Current_Loop_Output_t Current_Loop_Output;
 
 #endif // __Current_Loop_H__

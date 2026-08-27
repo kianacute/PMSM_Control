@@ -18,7 +18,7 @@ inline uint8_t SVPWM_Sector_Predict(float U_alpha, float U_beta)
     return N;
 }
 
-void SVPWM_Calculate(float T_s, float V_dc, float U_alpha, float U_beta,
+void SVPWM_Calculate_f32(float T_s, float V_dc, float U_alpha, float U_beta,
                      float* T_a, float* T_b, float* T_c, uint8_t* N)
 {
     int8_t sector = SVPWM_Sector_Predict(U_alpha, U_beta);
