@@ -1,6 +1,6 @@
 #include "SVPWM_Float.h"
 
-void SVPWM_Init(void)
+void SVPWM_Init_f32(void)
 {
     // Initialization code for SVPWM
 }

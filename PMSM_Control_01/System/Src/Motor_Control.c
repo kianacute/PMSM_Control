@@ -1,6 +1,8 @@
 #include "Motor_Control.h"
 
-void Current_Loop_Switch(Motor_Control_t *pControl)
+Motor_Control_t PMSM_42J;   
+
+void Current_Loop_Task(Motor_Control_t *pControl)
 {
     // Code to switch current task states
     if (pControl->System_Loop.Status == SYSTEM_RUN)
@@ -13,7 +15,7 @@ void Current_Loop_Switch(Motor_Control_t *pControl)
             break;
         case MOTOR_READY:
             // Handle ready state
-            MOTOR_READY_TASK();
+            MOTOR_READY_TASK(pControl);
             break;
         case MOTOR_OFFSET_CHECK:
             // Handle offset check state
@@ -91,7 +93,7 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
     
 }
 
-void SYSTEM_Task(Motor_Control_t *pControl)
+void SYSTEM_LOOP_Task(Motor_Control_t *pControl)
 {
     pControl->System_Loop.Loop_count++;
     switch (pControl->System_Loop.Status)

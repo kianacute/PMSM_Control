@@ -920,7 +920,7 @@
 
   <Group>
     <GroupName>Motor_FOC_Float</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -943,8 +943,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</PathWithFileName>
-      <FilenameWithoutPath>Motor_Config_Float.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Speed_Loop_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -955,8 +955,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</PathWithFileName>
-      <FilenameWithoutPath>Motor_Lookup_Tables_Float.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</PathWithFileName>
+      <FilenameWithoutPath>System_Loop_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -979,8 +979,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</PathWithFileName>
-      <FilenameWithoutPath>Speed_Loop_Float.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</PathWithFileName>
+      <FilenameWithoutPath>SVPWM_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -991,8 +991,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</PathWithFileName>
-      <FilenameWithoutPath>SVPWM_Float.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Config_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1003,8 +1003,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</PathWithFileName>
-      <FilenameWithoutPath>System_Loop_Float.c</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</PathWithFileName>
+      <FilenameWithoutPath>Motor_Lookup_Tables_Float.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

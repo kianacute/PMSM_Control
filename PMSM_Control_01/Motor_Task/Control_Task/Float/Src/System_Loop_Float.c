@@ -15,21 +15,11 @@ uint8_t System_Fault_Flag = 0;
 
 System_Loop_FLoat_t System_Loop_FLoat;
 
-void SYSTEM_Init_Float(Motor_Control_t *pControl);
-void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl);
-void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl);
-void SYSTEM_Run_Float(Motor_Control_t *pControl);
-void SYSTEM_Fault_Float(Motor_Control_t *pControl);
-void SYSTEM_Wait_Float(Motor_Control_t *pControl);
-
 void SYSTEM_Init_Float(Motor_Control_t *pControl)
 {
     pControl->System_Loop.pSystem_Loop = (void*)&System_Loop_FLoat;
-    Current_Loop_Init(pControl);
-    Speed_Loop_Init(pControl);
     Motor_Diag_Init();
     System_Diag_Init();
-    Motor_Config_Init(pControl);
     Speed_Command = 1000.0f;
     System_Loop_FLoat.Run_flag = 0;
 }
@@ -45,7 +35,8 @@ void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl)
 void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl)
 {
     System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
-    if(Current_Loop_Input.Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
+    Motor_Control_Input_t *pMotor_Control_Input = (Motor_Control_Input_t *)&pControl->Input;
+    if(pMotor_Control_Input->Udc_ADISR > 20.0f) // Check if the DC bus voltage is above a certain threshold
     {
         vTaskDelay(SYSTEM_HV_STANDY_TIME);
         pSystem_Loop->system_state = SYSTEM_RUN;

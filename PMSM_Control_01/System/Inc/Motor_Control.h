@@ -2,7 +2,7 @@
 #define __MOTOR_CONTROL_H__ 
 
 #include "Motor_FOC_Config.h"
-
+#include "Hal_Math_Float.h"
 
 enum Motor_State{
     MOTOR_IDLE = 0,
@@ -56,89 +56,6 @@ typedef struct SYSTEM_Loop
     void *pSystem_Loop;
 } System_Loop_t;
 
-    #ifdef MOTOR_CONTROL_FLOAT
-
-        #include "Current_Loop_FLoat.h"
-        #include "Speed_Loop_Float.h"
-        #include "System_Loop_Float.h"
-
-
-        typedef struct Current_Loop_Input
-        {
-            float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
-            float Udc_ADISR;
-        } Motor_Control_Input_t;
-
-        typedef struct Current_Loop_Output
-        {
-            float PWM_HZ_Coeff;
-            float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
-        } Motor_Control_Output_t;
-
-        /*电机状态机*/
-        #define         MOTOR_IDLE_TASK(pMotor_control)               MOTOR_IDLE_TASK_FLoat(pMotor_control)                  
-        #define         MOTOR_READY_TASK(pMotor_control)              MOTOR_READY_TASK_FLoat(pMotor_control)                  
-        #define         MOTOR_OFFSET_CHECK_TASK(pMotor_control)       MOTOR_OFFSET_CHECK_TASK_FLoat(pMotor_control)                 
-        #define         MOTOR_RUN_TASK(pMotor_control)                MOTOR_RUN_TASK_FLoat(pMotor_control)                  
-        #define         MOTOR_FAULT_TASK(pMotor_control)              MOTOR_FAULT_TASK_FLoat(pMotor_control)                  
-        #define         MOTOR_WAIT_TASK(pMotor_control)               MOTOR_WAIT_TASK_FLoat(pMotor_control)                  
-
-        /*速度状态机*/
-
-        #define         SPEED_Idle_Task(pMotor_control)          SPEED_Idle_Task_FLoat(pMotor_control)
-        #define         SPEED_Align_Task(pMotor_control)         SPEED_Align_Task_FLoat(pMotor_control)
-        #define         SPEED_Open_Task(pMotor_control)          SPEED_Open_Task_FLoat(pMotor_control)
-        #define         SPEED_Switch_Task(pMotor_control)        SPEED_Switch_Task_FLoat(pMotor_control)
-        #define         SPEED_Low_Task(pMotor_control)           SPEED_Low_Task_FLoat(pMotor_control)
-        #define         SPEED_Middle_Task(pMotor_control)        SPEED_Middle_Task_FLoat(pMotor_control)
-        #define         SPEED_High_Task(pMotor_control)          SPEED_High_Task_FLoat(pMotor_control)
-        #define         SPEED_Run_Task(pMotor_control)           SPEED_Run_Task_FLoat(pMotor_control)
-
-        /*系统状态机*/
-
-        #define         SYSTEM_Init(pMotor_control)              SYSTEM_Init_FLoat(pMotor_control)
-        #define         SYSTEM_LV_Standy(pMotor_control)         SYSTEM_LV_Standy_FLoat(pMotor_control)
-        #define         SYSTEM_HV_Standy(pMotor_control)         SYSTEM_HV_Standy_FLoat(pMotor_control)
-        #define         SYSTEM_Run(pMotor_control)               SYSTEM_Run_FLoat(pMotor_control)
-        #define         SYSTEM_Fault(pMotor_control)             SYSTEM_Fault_FLoat(pMotor_control) 
-        #define         SYSTEM_Wait(pMotor_control)              SYSTEM_Wait_FLoat(pMotor_control)
-
-    #elif defined MOTOR_CONTROL_FIXED
-
-        #include "Current_Loop_Fixed.h"
-        #include "Speed_Loop_Fixed.h"
-        #include "System_Loop_Fixed.h"
-
-        /*电机状态机*/
-        #define         MOTOR_IDLE_TASK               MOTOR_IDLE_TASK_Fixed                  
-        #define         MOTOR_READY_TASK              MOTOR_READY_TASK_Fixed                  
-        #define         MOTOR_OFFSET_CHECK_TASK       MOTOR_OFFSET_CHECK_TASK_Fixed                  
-        #define         MOTOR_RUN_TASK                MOTOR_RUN_TASK_Fixed                  
-        #define         MOTOR_FAULT_TASK              MOTOR_FAULT_TASK_Fixed                  
-        #define         MOTOR_WAIT_TASK               MOTOR_WAIT_TASK_Fixed                  
-
-        /*速度状态机*/
-
-        #define         SPEED_Idle_Task          SPEED_Idle_Task_Fixed
-        #define         SPEED_Align_Task         SPEED_Align_Task_Fixed
-        #define         SPEED_Open_Task          SPEED_Open_Task_Fixed
-        #define         SPEED_Switch_Task        SPEED_Switch_Task_Fixed
-        #define         SPEED_Low_Task           SPEED_Low_Task_Fixed
-        #define         SPEED_Middle_Task        SPEED_Middle_Task_Fixed
-        #define         SPEED_High_Task          SPEED_High_Task_Fixed
-        #define         SPEED_Run_Task           SPEED_Run_Task_Fixed
-
-        /*系统状态机*/
-
-        #define         SYSTEM_Init              SYSTEM_Init_Fixed
-        #define         SYSTEM_LV_Standy         SYSTEM_LV_Standy_Fixed
-        #define         SYSTEM_HV_Standy         SYSTEM_HV_Standy_Fixed
-        #define         SYSTEM_Run               SYSTEM_Run_Fixed
-        #define         SYSTEM_Fault             SYSTEM_Fault_Fixed 
-        #define         SYSTEM_Wait              SYSTEM_Wait_Fixed
-
-    #endif
-
 
 
 typedef struct Motor_Parameter
@@ -191,6 +108,18 @@ typedef struct Motor_Config
 
 } Motor_Config_t;
 
+typedef struct Current_Loop_Input
+{
+    float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
+    float Udc_ADISR;
+} Motor_Control_Input_t;
+
+typedef struct Current_Loop_Output
+{
+    float PWM_HZ_Coeff;
+    float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
+} Motor_Control_Output_t;
+
 typedef struct Motor_Control    
 {
     System_Loop_t System_Loop;
@@ -202,4 +131,97 @@ typedef struct Motor_Control
     void *pObserver; // Pointer to the observer structure (either float or fixed)
 } Motor_Control_t;
 
+
+
+
+    #ifdef MOTOR_CONTROL_FLOAT
+
+        /*电机状态机*/
+
+        void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl);
+        void MOTOR_READY_TASK_Float(Motor_Control_t *pControl);
+        void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl);
+        void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl);
+        void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
+        void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
+
+        #define         MOTOR_IDLE_TASK(pMotor_control)               MOTOR_IDLE_TASK_Float(pMotor_control)                  
+        #define         MOTOR_READY_TASK(pMotor_control)              MOTOR_READY_TASK_Float(pMotor_control)                  
+        #define         MOTOR_OFFSET_CHECK_TASK(pMotor_control)       MOTOR_OFFSET_CHECK_TASK_Float(pMotor_control)                 
+        #define         MOTOR_RUN_TASK(pMotor_control)                MOTOR_RUN_TASK_Float(pMotor_control)                  
+        #define         MOTOR_FAULT_TASK(pMotor_control)              MOTOR_FAULT_TASK_Float(pMotor_control)                  
+        #define         MOTOR_WAIT_TASK(pMotor_control)               MOTOR_WAIT_TASK_Float(pMotor_control)                  
+
+        /*速度状态机*/
+
+        void SPEED_Idle_Task_Float(Motor_Control_t *pControl);
+        void SPEED_Align_Task_Float(Motor_Control_t *pControl);
+        void SPEED_Open_Task_Float(Motor_Control_t *pControl);
+        void SPEED_Switch_Task_Float(Motor_Control_t *pControl);
+        void SPEED_Low_Task_Float(Motor_Control_t *pControl);
+        void SPEED_Middle_Task_Float(Motor_Control_t *pControl);
+        void SPEED_High_Task_Float(Motor_Control_t *pControl);
+
+        #define         SPEED_Idle_Task(pMotor_control)          SPEED_Idle_Task_Float(pMotor_control)
+        #define         SPEED_Align_Task(pMotor_control)         SPEED_Align_Task_Float(pMotor_control)
+        #define         SPEED_Open_Task(pMotor_control)          SPEED_Open_Task_Float(pMotor_control)
+        #define         SPEED_Switch_Task(pMotor_control)        SPEED_Switch_Task_Float(pMotor_control)
+        #define         SPEED_Low_Task(pMotor_control)           SPEED_Low_Task_Float(pMotor_control)
+        #define         SPEED_Middle_Task(pMotor_control)        SPEED_Middle_Task_Float(pMotor_control)
+        #define         SPEED_High_Task(pMotor_control)          SPEED_High_Task_Float(pMotor_control)
+        #define         SPEED_Run_Task(pMotor_control)           SPEED_Run_Task_Float(pMotor_control)
+
+        /*系统状态机*/
+        
+        void SYSTEM_Init_Float(Motor_Control_t *pControl);
+        void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl);
+        void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl);
+        void SYSTEM_Run_Float(Motor_Control_t *pControl);
+        void SYSTEM_Fault_Float(Motor_Control_t *pControl);
+        void SYSTEM_Wait_Float(Motor_Control_t *pControl);
+
+        #define         SYSTEM_LV_Standy(pMotor_control)         SYSTEM_LV_Standy_Float(pMotor_control)
+        #define         SYSTEM_HV_Standy(pMotor_control)         SYSTEM_HV_Standy_Float(pMotor_control)
+        #define         SYSTEM_Run(pMotor_control)               SYSTEM_Run_Float(pMotor_control)
+        #define         SYSTEM_Fault(pMotor_control)             SYSTEM_Fault_Float(pMotor_control) 
+        #define         SYSTEM_Wait(pMotor_control)              SYSTEM_Wait_Float(pMotor_control)
+
+    #elif defined MOTOR_CONTROL_FIXED
+
+        /*电机状态机*/
+        #define         MOTOR_IDLE_TASK               MOTOR_IDLE_TASK_Fixed                  
+        #define         MOTOR_READY_TASK              MOTOR_READY_TASK_Fixed                  
+        #define         MOTOR_OFFSET_CHECK_TASK       MOTOR_OFFSET_CHECK_TASK_Fixed                  
+        #define         MOTOR_RUN_TASK                MOTOR_RUN_TASK_Fixed                  
+        #define         MOTOR_FAULT_TASK              MOTOR_FAULT_TASK_Fixed                  
+        #define         MOTOR_WAIT_TASK               MOTOR_WAIT_TASK_Fixed                  
+
+        /*速度状态机*/
+
+        #define         SPEED_Idle_Task          SPEED_Idle_Task_Fixed
+        #define         SPEED_Align_Task         SPEED_Align_Task_Fixed
+        #define         SPEED_Open_Task          SPEED_Open_Task_Fixed
+        #define         SPEED_Switch_Task        SPEED_Switch_Task_Fixed
+        #define         SPEED_Low_Task           SPEED_Low_Task_Fixed
+        #define         SPEED_Middle_Task        SPEED_Middle_Task_Fixed
+        #define         SPEED_High_Task          SPEED_High_Task_Fixed
+        #define         SPEED_Run_Task           SPEED_Run_Task_Fixed
+
+        /*系统状态机*/
+
+        #define         SYSTEM_Init              SYSTEM_Init_Fixed
+        #define         SYSTEM_LV_Standy         SYSTEM_LV_Standy_Fixed
+        #define         SYSTEM_HV_Standy         SYSTEM_HV_Standy_Fixed
+        #define         SYSTEM_Run               SYSTEM_Run_Fixed
+        #define         SYSTEM_Fault             SYSTEM_Fault_Fixed 
+        #define         SYSTEM_Wait              SYSTEM_Wait_Fixed
+
+    #endif
+
+
+void Current_Loop_Task(Motor_Control_t *pControl);
+void Speed_Loop_Task(Motor_Control_t *pControl);
+void SYSTEM_LOOP_Task(Motor_Control_t *pControl);
+
 #endif
+

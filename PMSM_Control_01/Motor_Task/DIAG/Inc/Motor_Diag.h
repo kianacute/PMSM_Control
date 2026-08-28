@@ -3,6 +3,7 @@
 
 #include "Hal_Math_Float.h"
 #include "Diag_List.h"
+#include "Motor_Control.h"
 
 #define MOTOR_OVER_SPEED_THRESHOLD       (5000.0f)
 #define MOTOR_OVER_SPEED_THRESHOLD_DELAY (1000u)
@@ -19,12 +20,12 @@
 
 typedef struct {
     Diag_Node_t node;
-    Hysteresis_Comp_TypeDef hcomp;
+    Hysteresis_Comp_TypeDef_f32_t hcomp;
 } Motor_Diag_Item_t;
 
 extern uint64_t Motor_Diag_Fault_Flag;
 
 void Motor_Diag_Init(void);
-void Motor_Diag_Task(void);
+void Motor_Diag_Task(Motor_Control_t *pControl);
 
 #endif

@@ -2116,6 +2116,26 @@
               <FilePath>..\Motor_Task\Control_Task\Float\Src\Current_Loop_Float.c</FilePath>
             </File>
             <File>
+              <FileName>Speed_Loop_Float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</FilePath>
+            </File>
+            <File>
+              <FileName>System_Loop_Float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</FilePath>
+            </File>
+            <File>
+              <FileName>Observer_Float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\Observer_Float.c</FilePath>
+            </File>
+            <File>
+              <FileName>SVPWM_Float.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</FilePath>
+            </File>
+            <File>
               <FileName>Motor_Config_Float.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</FilePath>
@@ -2124,26 +2144,6 @@
               <FileName>Motor_Lookup_Tables_Float.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>Observer_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\Observer_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>Speed_Loop_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\Speed_Loop_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>SVPWM_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>System_Loop_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\System_Loop_Float.c</FilePath>
             </File>
             <File>
               <FileName>Hal_Math_FLoat.c</FileName>

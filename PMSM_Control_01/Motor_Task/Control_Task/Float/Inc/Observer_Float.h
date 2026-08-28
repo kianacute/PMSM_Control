@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "Motor_Config_Float.h"
 #include "Hal_Math_Float.h"
+#include "Motor_Control.h"
 
 struct EMF_Cal_Parameter
 {
@@ -15,7 +16,6 @@ struct EMF_Cal_Parameter
     float ibeta_last;
     float EMF;
     float EMF_LPF_Coff;
-    Motor_Config_t *pMotor;
 };
 
 #ifdef MOTOR_SMO_OBSERVER
@@ -179,6 +179,6 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 #endif
 
 
-void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float Speed, float Is, float Ts)
+void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float Speed, float Is, float Ts);
 
 #endif // __EST_H__

@@ -243,7 +243,7 @@ void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control)
     EffFlux_OB.we = 0.0f;
     EffFlux_OB.theta = 0.0f;
     EffFlux_OB.Angle_Comp = 0.0f;
-    EMF_CAL_Init();
+    // EMF_CAL_Init();
 }
 
 void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
@@ -337,10 +337,10 @@ void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float S
 #endif
 
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
-    EffFlux_OB.PLL_PI.kp = Lookup_Table_Linear(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
-    EffFlux_OB.PLL_PI.ki = Lookup_Table_Linear(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
-    EffFlux_OB.gama = Lookup_Table_Linear(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
-    EffFlux_OB.Angle_Comp = Lookup_Table_2D_Linear(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
+    EffFlux_OB.PLL_PI.kp = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
+    EffFlux_OB.PLL_PI.ki = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
+    EffFlux_OB.gama = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
+    EffFlux_OB.Angle_Comp = Lookup_Table_2D_Linear_f32(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
     EffFlux_OB.discrete_time = Ts;
 #endif
 

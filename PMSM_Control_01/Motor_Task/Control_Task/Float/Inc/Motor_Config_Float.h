@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include "Hal_Math_Float.h"
+#include "Motor_Control.h"
 
 /*current parameters*/
 #define MOTOR_CURRENT_LOOP_HZ               (20000.0f)

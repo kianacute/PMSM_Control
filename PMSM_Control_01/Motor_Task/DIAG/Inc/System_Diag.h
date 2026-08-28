@@ -18,7 +18,7 @@
 
 typedef struct {
     Diag_Node_t node;
-    Sensor_Hysteresis_Comp_TypeDef hcomp;
+    Hysteresis_Comp_TypeDef_f32_t hcomp;
 } Sensor_Diag_Item_t;
 
 void System_Diag_Init(void);

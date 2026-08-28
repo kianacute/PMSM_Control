@@ -42,7 +42,7 @@ typedef struct Speed_Loop_FLoat
     float PWM_CUR_FREQ;
 } Speed_Loop_Float_t;
 
-void Speed_Loop_Init_Float(Motor_Control_t *pControl);
+void SPEED_Init_Float(Motor_Control_t *pControl);
 void SPEED_Idle_Task_Float(Motor_Control_t *pControl);
 void SPEED_Align_Task_Float(Motor_Control_t *pControl);
 void SPEED_Open_Task_Float(Motor_Control_t *pControl);
@@ -50,6 +50,5 @@ void SPEED_Switch_Task_Float(Motor_Control_t *pControl);
 void SPEED_Low_Task_Float(Motor_Control_t *pControl);
 void SPEED_Middle_Task_Float(Motor_Control_t *pControl);
 void SPEED_High_Task_Float(Motor_Control_t *pControl);
-void SPEED_Run_Task_Float(Motor_Control_t *pControl);
 
 #endif // __Speed_Loop_H__

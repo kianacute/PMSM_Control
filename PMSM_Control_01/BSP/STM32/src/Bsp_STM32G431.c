@@ -10,25 +10,19 @@
 #include "arm_math.h"
 #include "adc.h"
 #include "opamp.h"
-#include "Current_Loop_Float.h"
-#include "Current_Loop_Fixed.h"
-#include "Speed_Loop_Fixed.h"
-#include "Observer_Fixed.h"
 #include "Motor_Diag.h"
 #include "System_Diag.h"
-#include "System_Loop_Fixed.h"
-#include "Motor_Config_Fixed.h"
+#include "Motor_Control.h"
 
+extern Motor_Control_t PMSM_42J;   
+
+    
 TickType_t lasttick = 0;
 uint16_t adc_v24;
 
 uint8_t load_send_buffer[500];
 extern volatile uint32_t CPU_RunTime;
 adc_adjustment_t adc_adjustment = {0};
-
-extern Current_Loop_Input_t Current_Loop_Input;
-extern Current_Loop_Output_t Current_Loop_Output;
-extern Current_Loop_Input_Fixed_t Current_Loop_Input_Fixed;
 
 /* Profiler 全局变量 (ISR-aware 运行时间统计) */
 volatile uint32_t g_isr_accumulated_cycles = 0;
@@ -45,8 +39,8 @@ void my_task1(void *argument)
         Profiler_TaskBegin(&isr_before, &start);
 
         lasttick = xTaskGetTickCount();
-        Speed_Loop_Task();
-        Motor_Diag_Task();
+        Speed_Loop_Task(&PMSM_42J);
+        Motor_Diag_Task(&PMSM_42J);
 
         net_cycles = Profiler_TaskEnd(isr_before, start);
 
@@ -62,7 +56,7 @@ void my_task2(void *argument)
     for (;;)
     {
         lasttick = xTaskGetTickCount();
-        SYSTEM_Task();
+        SYSTEM_LOOP_Task(&PMSM_42J);
         vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
     }
 }
@@ -147,7 +141,6 @@ int Bsp_Init(void)
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityRealtime, NULL);
     // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
     xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
-    SYSTEM_Init();
     Profiler_Init();
     return 0;
 }
@@ -163,18 +156,18 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
         adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
-        Current_Loop_Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
-        Current_Loop_Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
-        Current_Loop_Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
-        Current_Loop_Input.Udc_ADISR = adc_adjustment.ADC_j4 * 1.1f * 0.019842f;
+        PMSM_42J.Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
+        PMSM_42J.Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
+        PMSM_42J.Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
+        PMSM_42J.Input.Udc_ADISR = adc_adjustment.ADC_j4 * 1.1f * 0.019842f;
 
-        Current_Loop_Input_Fixed.Ia_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read injected channel value
-        Current_Loop_Input_Fixed.Ib_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read another injected channel value
-        Current_Loop_Input_Fixed.Ic_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)) << 3) - 0x4000; // Read another injected channel value
-        Current_Loop_Input_Fixed.Udc_ADISR = (HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2)) << 3;
+        // PMSM_42J.Input_Fixed.Ia_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read injected channel value
+        // PMSM_42J.Input_Fixed.Ib_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read another injected channel value
+        // Current_Loop_Input_Fixed.Ic_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2)) << 3) - 0x4000; // Read another injected channel value
+        // Current_Loop_Input_Fixed.Udc_ADISR = (HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2)) << 3;
 
         /*调用电流环切换函数*/
-        Current_Loop_Switch();
+        Current_Loop_Task(&PMSM_42J);
 
         uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
         Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
@@ -206,10 +199,10 @@ void Bsp_STM32G431_PWM_Disable(void)
 
 void Bsp_STM32G431_PWM_SetDuty()
 {
-    __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, Current_Loop_Output.PWM_duty_a*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, Current_Loop_Output.PWM_duty_b*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, Current_Loop_Output.PWM_duty_c*PWM_MAX_DUTY/Current_Loop_Output.PWM_HZ_Coeff);
-    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, Current_Loop_Output.PWM_duty_d);
+    __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PMSM_42J.Output.PWM_duty_d);
 }

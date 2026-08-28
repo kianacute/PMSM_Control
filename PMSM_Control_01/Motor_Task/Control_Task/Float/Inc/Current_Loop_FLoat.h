@@ -49,14 +49,6 @@ typedef struct Current_Loop_Float
 
 
 void Current_Loop_Init_Float(Motor_Control_t *pControl);
-void Current_Para_Updata(Motor_Control_t *pControl, float speed, float Ts);
-
-void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl);
-void MOTOR_READY_TASK_Float(Motor_Control_t *pControl);
-void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl);
-void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl);
-void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
-void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
-
+void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts);
 
 #endif // __Current_Loop_H__
