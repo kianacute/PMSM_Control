@@ -9,7 +9,6 @@
 
 Speed_Loop_Float_t Speed_Loop_Float;
 
-void Paramater_update_Float(Motor_Control_t *pControl);
 void Power_Derating_Init_Float(Motor_Control_t *pControl);
 void Power_Derating_Float(Motor_Control_t *pControl, float Bus_Current, float Bus_Voltage, float Power_Limit);
 void MTPA_Cal_Float(Motor_Control_t *pControl, float Is);
@@ -124,12 +123,12 @@ void SPEED_Open_Task_Float(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
     float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
-    pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
+    pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Speed_Lookup)*6.0f;
     pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
     pSpeed_Loop->target_id = 0;
     if (pSpeed_Loop->Speed_Ref >= 600)
     {
-        // Speed_Loop.spd_ctrl_state = Speed_Loop_Switch;
+        pControl->Speed_Loop.Status= SPEED_SWITCH;
     }
 }
 
@@ -240,8 +239,8 @@ void Paramater_update_Float(Motor_Control_t *pControl)
         pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
     }
     pSpeed_Loop->PWM_CUR_FREQ = Oblique_Wave_f32(pSpeed_Loop->PWM_SWITCH_FREQ, pSpeed_Loop->PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
-    Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1/pSpeed_Loop->PWM_CUR_FREQ);
-    Current_Para_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, 1/pSpeed_Loop->PWM_CUR_FREQ);    
+    Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);
+    Current_Para_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);       
     pSpeed_Loop->Speed_PI.kp = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Kp_Lookup);
     pSpeed_Loop->Speed_PI.ki = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Ki_Lookup);
 } 

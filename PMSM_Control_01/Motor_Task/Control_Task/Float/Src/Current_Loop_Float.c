@@ -15,7 +15,7 @@ Current_Loop_Float_t Current_Loop_FLoat;
 const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
 // const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
 
-void Current_Loop_Init_Float(Motor_Control_t *pControl)
+void Current_Init_Float(Motor_Control_t *pControl)
 {
     // Initialization code for current task
     // e.g., setting up filters, initializing variables, etc.
@@ -51,7 +51,7 @@ void Current_Loop_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.Id_PI.integral = 0;
     Current_Loop_FLoat.Iq_PI.integral = 0;
 
-    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 1;
+    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 0;
     Current_Loop_FLoat.PWM_FREQ_Coeff = 1.0f;
 }
 
@@ -62,58 +62,6 @@ void Phase_Current_Rewrite_Float(Motor_Control_t *pControl);
 void Phase_Min_Max_Float(Motor_Control_t *pControl, float A, float B, float C);
 void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float theta);
 void MOTOR_Bus_Current_Rewrite_Float(Motor_Control_t *pControl);                        
-
-
-void Current_Speed_Switch_Float(Motor_Control_t *pControl)
-{
-    Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
-    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
-    struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
-    switch (pControl->Speed_Loop.Status)
-    {
-    case SPEED_IDLE:
-        pCurrent_Loop_Float->theta = 0;
-        break;
-    case SPEED_ALIGN:
-    {
-        break;
-    }
-    case SPEED_OPEN:
-    {
-        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
-        Limit_2PI(&pCurrent_Loop_Float->theta);
-        break;
-    }
-    case SPEED_SWITCH:
-    {
-        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
-        Limit_2PI(&pCurrent_Loop_Float->theta);
-        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.10)
-        {
-            pSpeed_Loop->Speed_Switch_Cnt++;
-            if (pSpeed_Loop->Speed_Switch_Cnt > 10)
-            {
-                pSpeed_Loop->Speed_Switch_Flag = 1;
-                pCurrent_Loop_Float->theta = pObserver->theta;
-            }
-        }
-        break;
-    }
-    case SPEED_HIGH:
-    case SPEED_MIDDLE:
-    case SPEED_LOW:
-    {
-        pCurrent_Loop_Float->theta = pObserver->theta;
-        Limit_2PI(&pCurrent_Loop_Float->theta);
-        break;
-    }
-    default:
-        break;
-    }
-}
 
 void Current_PWM_Switch(uint8_t PWM_Flag)
 {
@@ -159,7 +107,7 @@ void MOTOR_READY_TASK_Float(Motor_Control_t *pControl)
         }
         else
         {
-            Current_Loop_Init_Float(pControl);
+            Current_Init_Float(pControl);
             pControl->Current_Loop.Status = MOTOR_OFFSET_CHECK;
         }
     }
@@ -293,6 +241,58 @@ void Current_Avg_Filt_Float(Motor_Control_t *pControl)
     pCurrent_Loop_Float->Speed_fb_1ms += pObserver->we;
 }
 
+void Current_Speed_Switch_Float(Motor_Control_t *pControl)
+{
+    Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
+    struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
+    switch (pControl->Speed_Loop.Status)
+    {
+    case SPEED_IDLE:
+        pCurrent_Loop_Float->theta = 0;
+        break;
+    case SPEED_ALIGN:
+    {
+        break;
+    }
+    case SPEED_OPEN:
+    {
+        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
+            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+        // pCurrent_Loop_Float->theta += 0.002f;
+        Limit_2PI(&pCurrent_Loop_Float->theta);
+        break;
+    }
+    case SPEED_SWITCH:
+    {
+        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
+            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+        Limit_2PI(&pCurrent_Loop_Float->theta);
+        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.10)
+        {
+            pSpeed_Loop->Speed_Switch_Cnt++;
+            if (pSpeed_Loop->Speed_Switch_Cnt > 10)
+            {
+                pSpeed_Loop->Speed_Switch_Flag = 1;
+                pCurrent_Loop_Float->theta = pObserver->theta;
+            }
+        }
+        break;
+    }
+    case SPEED_HIGH:
+    case SPEED_MIDDLE:
+    case SPEED_LOW:
+    {
+        pCurrent_Loop_Float->theta = pObserver->theta;
+        Limit_2PI(&pCurrent_Loop_Float->theta);
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 inline void Current_Loop_Run(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
@@ -322,7 +322,12 @@ inline void Current_Loop_Run(Motor_Control_t *pControl)
     pCurrent_Loop_Float->Iq_Ref = pSpeed_Loop->target_iq;
     pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
     pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
-    arm_sqrt_f32(pCurrent_Loop_Float->Id_fb * pCurrent_Loop_Float->Id_fb + pCurrent_Loop_Float->Iq_fb * pCurrent_Loop_Float->Iq_fb, &pCurrent_Loop_Float->Is_fb);
+
+    // pCurrent_Loop_Float->Ud_Target = 0.0f;
+    // pCurrent_Loop_Float->Uq_Target = 1.0f;
+
+    arm_sqrt_f32(pCurrent_Loop_Float->Id_fb * pCurrent_Loop_Float->Id_fb + pCurrent_Loop_Float->Iq_fb * pCurrent_Loop_Float->Iq_fb, 
+                    &pCurrent_Loop_Float->Is_fb);
     arm_inv_park_f32(pCurrent_Loop_Float->Ud_Target, pCurrent_Loop_Float->Uq_Target, &pCurrent_Loop_Float->Ualpha_Ref,
                      &pCurrent_Loop_Float->Ubeta_Ref, pCurrent_Loop_Float->sinVal, pCurrent_Loop_Float->cosVal);
     SVPWM_Calculate_f32(2, pControl->Input.Udc_ADISR, pCurrent_Loop_Float->Ualpha_Ref, pCurrent_Loop_Float->Ubeta_Ref,

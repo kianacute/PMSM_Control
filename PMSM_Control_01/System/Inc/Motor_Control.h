@@ -137,14 +137,16 @@ typedef struct Motor_Control
     #ifdef MOTOR_CONTROL_FLOAT
 
         /*电机状态机*/
-
+        void Current_Init_Float(Motor_Control_t *pControl);
         void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_READY_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
-
+        void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts);
+        
+        #define         Current_Init(pMotor_control)                  Current_Init_Float(pMotor_control)
         #define         MOTOR_IDLE_TASK(pMotor_control)               MOTOR_IDLE_TASK_Float(pMotor_control)                  
         #define         MOTOR_READY_TASK(pMotor_control)              MOTOR_READY_TASK_Float(pMotor_control)                  
         #define         MOTOR_OFFSET_CHECK_TASK(pMotor_control)       MOTOR_OFFSET_CHECK_TASK_Float(pMotor_control)                 
@@ -154,6 +156,7 @@ typedef struct Motor_Control
 
         /*速度状态机*/
 
+        void SPEED_Init_Float(Motor_Control_t *pControl);
         void SPEED_Idle_Task_Float(Motor_Control_t *pControl);
         void SPEED_Align_Task_Float(Motor_Control_t *pControl);
         void SPEED_Open_Task_Float(Motor_Control_t *pControl);
@@ -162,6 +165,7 @@ typedef struct Motor_Control
         void SPEED_Middle_Task_Float(Motor_Control_t *pControl);
         void SPEED_High_Task_Float(Motor_Control_t *pControl);
 
+        #define         SPEED_Init(pMotor_control)               SPEED_Init_Float(pMotor_control)
         #define         SPEED_Idle_Task(pMotor_control)          SPEED_Idle_Task_Float(pMotor_control)
         #define         SPEED_Align_Task(pMotor_control)         SPEED_Align_Task_Float(pMotor_control)
         #define         SPEED_Open_Task(pMotor_control)          SPEED_Open_Task_Float(pMotor_control)
@@ -180,11 +184,18 @@ typedef struct Motor_Control
         void SYSTEM_Fault_Float(Motor_Control_t *pControl);
         void SYSTEM_Wait_Float(Motor_Control_t *pControl);
 
+        #define         SYSTEM_Init(pMotor_control)              SYSTEM_Init_Float(pMotor_control)
         #define         SYSTEM_LV_Standy(pMotor_control)         SYSTEM_LV_Standy_Float(pMotor_control)
         #define         SYSTEM_HV_Standy(pMotor_control)         SYSTEM_HV_Standy_Float(pMotor_control)
         #define         SYSTEM_Run(pMotor_control)               SYSTEM_Run_Float(pMotor_control)
         #define         SYSTEM_Fault(pMotor_control)             SYSTEM_Fault_Float(pMotor_control) 
         #define         SYSTEM_Wait(pMotor_control)              SYSTEM_Wait_Float(pMotor_control)
+
+
+        /*电机参数和控制参数*/
+
+        void Motor_Config_Init(Motor_Control_t *pMotor_Control);
+        void Paramater_update_Float(Motor_Control_t *pControl);
 
     #elif defined MOTOR_CONTROL_FIXED
 
@@ -218,7 +229,7 @@ typedef struct Motor_Control
 
     #endif
 
-
+void  Motor_Control_Init(Motor_Control_t *pControl);
 void Current_Loop_Task(Motor_Control_t *pControl);
 void Speed_Loop_Task(Motor_Control_t *pControl);
 void SYSTEM_LOOP_Task(Motor_Control_t *pControl);

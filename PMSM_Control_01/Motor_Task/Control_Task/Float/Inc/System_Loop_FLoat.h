@@ -14,7 +14,6 @@
 typedef struct SYSTEM_Ctrl
 {
     uint32_t FREQ_Hz;                            // 循环周期
-    enum SYSTEM_State_t system_state;  
     uint32_t Fault_cnt;                          // 系统状态
     uint8_t Run_flag;                            // 在Run状态下管理运行指令
 } System_Loop_FLoat_t;

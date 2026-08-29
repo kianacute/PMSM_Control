@@ -32,20 +32,20 @@ Profiler_Slot_t g_profiler_slots[PROFILER_SLOT_COUNT] = {0};
 void my_task1(void *argument)
 {
     uint32_t isr_before, start, net_cycles;
-
+    TickType_t lasttick = 0;
     for (;;)
     {
         /* ---- ISR-aware 任务时间测量 ---- */
-        Profiler_TaskBegin(&isr_before, &start);
+        // Profiler_TaskBegin(&isr_before, &start);
 
         lasttick = xTaskGetTickCount();
         Speed_Loop_Task(&PMSM_42J);
-        Motor_Diag_Task(&PMSM_42J);
+        // Motor_Diag_Task(&PMSM_42J);
 
-        net_cycles = Profiler_TaskEnd(isr_before, start);
+        // net_cycles = Profiler_TaskEnd(isr_before, start);
 
         /* 记录到 profiler 槽位 + 更新兼容变量 (us) */
-        Profiler_Record(CPU_TASK1_INDEX, net_cycles);
+        // Profiler_Record(CPU_TASK1_INDEX, net_cycles);
 
         vTaskDelayUntil(&lasttick, 1); /* 每1ms执行一次 */
     }
@@ -53,11 +53,12 @@ void my_task1(void *argument)
 
 void my_task2(void *argument)
 {
+    TickType_t lasttick = 0;
     for (;;)
     {
         lasttick = xTaskGetTickCount();
         SYSTEM_LOOP_Task(&PMSM_42J);
-        vTaskDelayUntil(&lasttick, 1); // 每1ms执行一次
+        vTaskDelayUntil(&lasttick, 10); // 每10ms执行一次
     }
 }
 
@@ -138,10 +139,11 @@ int Bsp_Init(void)
     __HAL_TIM_ENABLE_IT(&htim16, TIM_IT_UPDATE);  //使能更新中断
     
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
-    xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityRealtime, NULL);
+    xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
     // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
-    xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
+    // xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     Profiler_Init();
+    Motor_Control_Init(&PMSM_42J);
     return 0;
 }
 

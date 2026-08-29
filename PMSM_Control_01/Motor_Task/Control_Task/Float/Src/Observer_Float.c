@@ -249,7 +249,7 @@ void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control)
 void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
                                    float32_t Ialpha, float32_t Ibeta)
 {
-    struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)&pMotor_control->pObserver;
+    struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
     Motor_Parameter_t *pMotor = (Motor_Parameter_t *)pMotor_control->Motor_Config->Motor_Param;
     arm_park_f32(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
     EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;

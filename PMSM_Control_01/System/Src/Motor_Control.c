@@ -1,6 +1,14 @@
 #include "Motor_Control.h"
 
-Motor_Control_t PMSM_42J;   
+Motor_Control_t PMSM_42J; 
+
+void Motor_Control_Init(Motor_Control_t *pControl)
+{
+    Current_Init(pControl);
+    SPEED_Init(pControl);
+    SYSTEM_Init(pControl);
+    Motor_Config_Init(pControl);
+}
 
 void Current_Loop_Task(Motor_Control_t *pControl)
 {
@@ -50,7 +58,7 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
 {
     if (pControl->System_Loop.Status == SYSTEM_RUN && pControl->Current_Loop.Status == MOTOR_RUN)
     {
-        pControl->Speed_Loop.Loop_count++;
+        Paramater_update_Float(pControl);
         switch (pControl->Speed_Loop.Status)
         {
         case SPEED_IDLE:
@@ -90,7 +98,7 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
     {
         pControl->Speed_Loop.Status = SPEED_IDLE;
     }
-    
+    pControl->Speed_Loop.Loop_count++;
 }
 
 void SYSTEM_LOOP_Task(Motor_Control_t *pControl)

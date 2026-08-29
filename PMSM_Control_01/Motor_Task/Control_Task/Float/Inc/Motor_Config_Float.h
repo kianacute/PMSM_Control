@@ -37,6 +37,4 @@
 #define T_BASE   (1.0f/F_BASE)
 #define R_BASE   (U_BASE/I_BASE)
 
-void Motor_Config_Init(Motor_Control_t *pMotor_Control);
-
 #endif // MOTOR_CONFIG_H
