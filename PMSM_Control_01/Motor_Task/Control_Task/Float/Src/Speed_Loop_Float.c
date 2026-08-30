@@ -1,11 +1,9 @@
 #include "Speed_Loop_Float.h"
 #include "arm_math.h"
 #include "Current_Loop_Float.h"
-#include "Motor_Config_Float.h"
 #include "Hal_Math_Float.h"
 #include "Observer_Float.h"
 #include "System_Loop_Float.h"
-#include "Motor_Config_Float.h"
 
 Speed_Loop_Float_t Speed_Loop_Float;
 
@@ -14,6 +12,7 @@ void Power_Derating_Float(Motor_Control_t *pControl, float Bus_Current, float Bu
 void MTPA_Cal_Float(Motor_Control_t *pControl, float Is);
 void Speed_Input_LPF(void);
 void SPEED_Run_Task_Float(Motor_Control_t *pControl);
+void PWM_Freq_Update_Float(Motor_Control_t *pControl);
 
 void SPEED_Init_Float(Motor_Control_t *pControl)
 {
@@ -113,7 +112,7 @@ void SPEED_Align_Task_Float(Motor_Control_t *pControl)
             pControl->Speed_Loop.Status = SPEED_OPEN;
             pSpeed_Loop->IF_Start_Cnt  = pControl->Speed_Loop.Loop_count;
         #elif defined(MOTOR_CLOSE_SETUP)
-            pSpeed_Loop->spd_ctrl_state = SPEED_LOW;
+            pControl->Speed_Loop.Status = SPEED_LOW;
         #endif
     }
 }
@@ -230,6 +229,16 @@ void Paramater_update_Float(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;  
     Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
+    PWM_Freq_Update_Float(pControl);
+    Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);
+    Current_Para_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);       
+    pSpeed_Loop->Speed_PI.kp = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Kp_Lookup);
+    pSpeed_Loop->Speed_PI.ki = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Ki_Lookup);
+} 
+
+void PWM_Freq_Update_Float(Motor_Control_t *pControl)
+{
+    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     if (pSpeed_Loop->PWM_CUR_FREQ < PWM_SWITH_FREQ_MIN)
     {
         pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MIN;
@@ -239,12 +248,7 @@ void Paramater_update_Float(Motor_Control_t *pControl)
         pSpeed_Loop->PWM_CUR_FREQ = PWM_SWITH_FREQ_MAX;
     }
     pSpeed_Loop->PWM_CUR_FREQ = Oblique_Wave_f32(pSpeed_Loop->PWM_SWITCH_FREQ, pSpeed_Loop->PWM_CUR_FREQ, PWM_SWITH_FREQ_STEP, PWM_SWITH_FREQ_STEP);
-    Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, pSpeed_Loop->target_is, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);
-    Current_Para_Updata_Float(pControl, pSpeed_Loop->Speed_Fb_1s, 1.0f/pSpeed_Loop->PWM_CUR_FREQ);       
-    pSpeed_Loop->Speed_PI.kp = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Kp_Lookup);
-    pSpeed_Loop->Speed_PI.ki = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &pMotor_Config->Speed_PI_Ki_Lookup);
-} 
-
+}
 
 
 void Power_Derating_Init_Float(Motor_Control_t *pControl)

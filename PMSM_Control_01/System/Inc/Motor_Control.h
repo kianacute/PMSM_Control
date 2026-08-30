@@ -57,6 +57,7 @@ typedef struct SYSTEM_Loop
 } System_Loop_t;
 
 
+#define MOTOR_CONFIG
 
 typedef struct Motor_Parameter
 {
@@ -68,7 +69,6 @@ typedef struct Motor_Parameter
     float max_rpm;         // 最大转速
     float max_current_a;   // 最大电流
     float voltage_limit_v; // 电压限制，单位为V
-    uint8_t rs_identified; // Rs离线辨识标志: 0=未辨识, 1=已辨识成功
     float Power_Limit; // 功率限制参数
     float Flux_Flux;
     float Ld_Lq;
@@ -131,9 +131,6 @@ typedef struct Motor_Control
     void *pObserver; // Pointer to the observer structure (either float or fixed)
 } Motor_Control_t;
 
-
-
-
     #ifdef MOTOR_CONTROL_FLOAT
 
         /*电机状态机*/
@@ -145,14 +142,15 @@ typedef struct Motor_Control
         void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl);
         void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl);
         void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts);
-        
+
         #define         Current_Init(pMotor_control)                  Current_Init_Float(pMotor_control)
         #define         MOTOR_IDLE_TASK(pMotor_control)               MOTOR_IDLE_TASK_Float(pMotor_control)                  
         #define         MOTOR_READY_TASK(pMotor_control)              MOTOR_READY_TASK_Float(pMotor_control)                  
         #define         MOTOR_OFFSET_CHECK_TASK(pMotor_control)       MOTOR_OFFSET_CHECK_TASK_Float(pMotor_control)                 
         #define         MOTOR_RUN_TASK(pMotor_control)                MOTOR_RUN_TASK_Float(pMotor_control)                  
         #define         MOTOR_FAULT_TASK(pMotor_control)              MOTOR_FAULT_TASK_Float(pMotor_control)                  
-        #define         MOTOR_WAIT_TASK(pMotor_control)               MOTOR_WAIT_TASK_Float(pMotor_control)                  
+        #define         MOTOR_WAIT_TASK(pMotor_control)               MOTOR_WAIT_TASK_Float(pMotor_control)   
+    
 
         /*速度状态机*/
 

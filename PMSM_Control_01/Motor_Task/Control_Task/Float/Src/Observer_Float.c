@@ -1,5 +1,4 @@
 #include "Observer_Float.h"
-#include "Motor_Config_Float.h"
 #include "Motor_Control.h"
 
 struct EMF_Cal_Parameter EMF_Cal = {0};

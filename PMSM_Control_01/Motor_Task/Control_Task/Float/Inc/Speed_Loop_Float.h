@@ -2,7 +2,6 @@
 #define __Speed_LOOP_H__
 
 #include "Hal_Math_Float.h"
-#include "Motor_Config_Float.h"
 #include "Motor_Control.h"
 
 #define SPEED_ADD_STEP (1000 / 1000.0f)
@@ -10,7 +9,6 @@
 #define SPEED_ID_ADD_STEP (1.0 / 1000.0f)
 #define SPEED_ID_SUB_STEP (1.0 / 1000.0f)
 #define SPEED_SWITCH_ID_SUB_STEP (0.001f)
-
 
 #define PWM_SWITH_FREQ_MAX  (20000.0f)
 #define PWM_SWITH_FREQ_MIN  (1000.0f)

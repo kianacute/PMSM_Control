@@ -2,7 +2,6 @@
 #define __Observer_H_
 
 #include <stdint.h>
-#include "Motor_Config_Float.h"
 #include "Hal_Math_Float.h"
 #include "Motor_Control.h"
 

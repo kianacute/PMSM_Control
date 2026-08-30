@@ -2105,6 +2105,11 @@
               <FileType>1</FileType>
               <FilePath>..\System\Src\Motor_Control.c</FilePath>
             </File>
+            <File>
+              <FileName>Motor_Lookup_Tables_Float.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables_Float.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2134,16 +2139,6 @@
               <FileName>SVPWM_Float.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor_Config_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Config_Float.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor_Lookup_Tables_Float.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Src\Motor_Lookup_Tables_Float.c</FilePath>
             </File>
             <File>
               <FileName>Hal_Math_FLoat.c</FileName>

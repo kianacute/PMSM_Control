@@ -3,13 +3,7 @@
 
 #include <stdint.h>
 #include "Hal_Math_Float.h"
-#include "Motor_Config_Float.h"
 #include "Motor_Control.h"
-
-#define MOTOR_ADC_OFFSET_SAMPLE_CNT                 (100U)
-#define WEAK_VOLTAGE_COMPENSATION                   (2.0f/3.0f)
-#define PWM_OPEN                                    (1U)
-#define PWM_CLOSE                                   (0U)
 
 typedef struct Current_Loop_Float
 {
