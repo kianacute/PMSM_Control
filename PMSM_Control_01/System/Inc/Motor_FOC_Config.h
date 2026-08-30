@@ -49,7 +49,7 @@
 #define MOTOR_CURRENT_LOOP_CYCLE_TIME_S     (1.0f/ MOTOR_CURRENT_LOOP_HZ)
 #define MOTOR_SPEED_LOOP_HZ                 (1000.0f)
 #define MOTOR_SPEED_LOOP_CYCLE_TIME_S       (1.0f/ MOTOR_SPEED_LOOP_HZ)
-#define Dead_TIME_DUTY                      (120.0f/160.0f*1e-6/MOTOR_CURRENT_LOOP_CYCLE_TIME_S)
+#define Dead_TIME_DUTY                      (120.0f/160.0f*1e-6f/MOTOR_CURRENT_LOOP_CYCLE_TIME_S)
 // #define Dead_TIME_DUTY         (0/MOTOR_CURRENT_LOOP_HZ)
 
 #define MOTOR_DEAD_ZONE_THD                 (0.5f)

@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-从 Motor_Para/*.csv 生成 Motor_Lookup_Tables.c 和 Motor_Config.c。
+从 Motor_Para/Motor_Parameters.csv 生成查表头文件 Motor_Lookup_Tables_Float.h。
 
 CSV 中存储的是**调谐参数**（如阻尼系数、带宽比），
 脚本根据电机参数和公式计算出最终的 PI/PLL 增益值。
+
+输出:
+  Motor_Task/Control_Task/Float/Inc/Motor_Lookup_Tables_Float.h  （Keil 工程引用）
+  Motor_Task/Control_Task/Float/Src/Motor_Lookup_Tables_Float.h  （同步副本）
+
+电机参数/配置初始化已改为手写在 System/Src/Motor_Control.c，
+脚本不再生成 Motor_Config.c。
 
 用法: python generate.py [输出目录]
 """
@@ -20,7 +27,10 @@ from collections import OrderedDict
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
 CSV_DIR = SCRIPT_DIR
-DEFAULT_OUTPUT_DIR = os.path.join(PROJECT_DIR, "Motor_Control", "Motor_Config", "Src")
+MERGED_CSV_FILENAME = "Motor_Parameters.csv"
+DEFAULT_OUTPUT_DIR = os.path.join(PROJECT_DIR, "Motor_Task", "Control_Task", "Float", "Inc")
+SYNC_OUTPUT_DIR = os.path.join(PROJECT_DIR, "Motor_Task", "Control_Task", "Float", "Src")
+OUTPUT_FILENAME = "Motor_Lookup_Tables_Float.h"
 
 PI = math.pi
 
@@ -203,16 +213,16 @@ def compute_speed_loop(params, rows):
     return output
 
 
-# 模块名 → (计算函数, 预期的调谐参数列数)
+# 区块名 → (计算函数, 预期的调谐参数列数)
 MODULE_PIPELINE = OrderedDict({
-    'NonFluxObserver.csv': (compute_nonflux_observer, 6),
-    'SMOObserver.csv':     (compute_smo_observer,     4),
-    'CurrentLoop.csv':     (compute_current_loop,     2),
+    'NonFluxObserver': (compute_nonflux_observer, 6),
+    'SMOObserver':     (compute_smo_observer,     4),
+    'CurrentLoop':     (compute_current_loop,     2),
 })
 
 RAW_MODULES = {
-    'SpeedLoop.csv':  (compute_speed_loop, 3),
-    'IFStartup.csv':  (None, 3),  # 无公式, 直接用 read_raw_1d
+    'SpeedLoop':  (compute_speed_loop, 3),
+    'IFStartup':  (None, 3),  # 无公式, 直接用 read_raw_1d
 }
 
 # ─── 工具函数 ──────────────────────────────────────────────────────────
@@ -240,25 +250,57 @@ def check_duplicates(values, label):
 
 # ─── CSV 读取 ──────────────────────────────────────────────────────────
 
-def read_csv(path):
-    """读取 CSV，返回 (headers, data_rows)。跳过空行和注释行。"""
-    with open(path, 'r', encoding='utf-8-sig', newline='') as f:
-        reader = csv.reader(f)
-        rows = []
-        for row in reader:
-            if not row or all(not c.strip() for c in row):
-                continue
-            if row[0].strip().startswith('#') and not row[0].strip().startswith('#2D '):
-                continue
-            rows.append(row)
-    if not rows:
-        raise ValueError(f"CSV file is empty: {path}")
-    return rows
+def read_csv_text(path):
+    """读取 CSV 文本，自动识别编码：UTF-8(-BOM) 优先，失败回退 GBK（Excel ANSI 另存）。"""
+    with open(path, 'rb') as f:
+        raw = f.read()
+    for enc in ('utf-8-sig', 'gbk'):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode('utf-8-sig')
 
 
-def read_motor_base(path):
-    """读取 MotorBase.csv → dict"""
-    rows = read_csv(path)
+def read_merged_csv(path):
+    """读取合并 CSV → OrderedDict {区块名: rows}。
+
+    区块以 "#Module: <名称>" 行分隔；空行与 "#" 注释行跳过；
+    "#2D ..." 行保留（2D 表标记，属于区块内容）。
+    编码: 自动识别 UTF-8/GBK，中文注释不依赖系统区域设置。
+    容错: 忽略每行尾部的空列（Excel 保存 CSV 时会补齐逗号）。
+    """
+    modules = OrderedDict()
+    current = None
+    text = read_csv_text(path)
+    for row in csv.reader(text.splitlines()):
+        if not row or all(not c.strip() for c in row):
+            continue
+        # 去掉行尾空列（Excel 补逗号产生）
+        while row and not row[-1].strip():
+            row.pop()
+        if not row:
+            continue
+        first = row[0].strip()
+        if first.startswith('#Module:'):
+            current = first[len('#Module:'):].strip()
+            if not current:
+                raise ValueError(f"Empty #Module marker in '{path}'")
+            modules[current] = []
+            continue
+        # 注释行（#2D 除外，它是 2D 表标记，属于区块内容）
+        if first.startswith('#') and not first.startswith('#2D '):
+            continue
+        if current is None:
+            raise ValueError(f"Data row before first #Module marker in '{path}'")
+        modules[current].append(row)
+    if not modules:
+        raise ValueError(f"No #Module sections found in '{path}'")
+    return modules
+
+
+def read_motor_base(rows, label):
+    """读取 MotorBase 区块 → dict"""
     params = {}
     for row in rows[1:]:
         if len(row) < 2:
@@ -270,13 +312,12 @@ def read_motor_base(path):
     return params
 
 
-def read_raw_1d(path):
-    """读取无公式的 1D CSV → OrderedDict {col_name: [values]}"""
-    rows = read_csv(path)
+def read_raw_1d(rows, label):
+    """读取无公式的 1D 区块 → OrderedDict {col_name: [values]}"""
     headers = [h.strip() for h in rows[0]]
     for h in headers:
         if not _RE_C_IDENT.match(h):
-            raise ValueError(f"'{h}' is not a valid C identifier in '{path}'")
+            raise ValueError(f"'{h}' is not a valid C identifier in '{label}'")
 
     data = OrderedDict()
     for h in headers:
@@ -284,38 +325,36 @@ def read_raw_1d(path):
 
     for i, row in enumerate(rows[1:], 2):
         if len(row) < len(headers):
-            raise ValueError(f"Row {i}: expected {len(headers)} cols, got {len(row)} in '{path}'")
+            raise ValueError(f"Row {i}: expected {len(headers)} cols, got {len(row)} in '{label}'")
         for j, h in enumerate(headers):
             data[h].append(float(row[j].strip()))
 
-    check_duplicates(data[headers[0]], f"{path} -> {headers[0]}")
+    check_duplicates(data[headers[0]], f"{label} -> {headers[0]}")
     return data
 
 
-def read_tuning_params(path, expected_cols):
-    """读取调谐参数 CSV → list of lists (仅数据行，无表头)"""
-    rows = read_csv(path)
+def read_tuning_params(rows, expected_cols, label):
+    """读取调谐参数区块 → list of lists (仅数据行，无表头)"""
     headers = [h.strip() for h in rows[0]]
     if len(headers) != expected_cols:
         raise ValueError(
-            f"'{path}': expected {expected_cols} tuning columns, got {len(headers)}. "
+            f"'{label}': expected {expected_cols} tuning columns, got {len(headers)}. "
             f"Headers: {headers}"
         )
     data_rows = []
     for i, row in enumerate(rows[1:], 2):
         if len(row) < expected_cols:
-            raise ValueError(f"Row {i}: expected {expected_cols} cols, got {len(row)} in '{path}'")
+            raise ValueError(f"Row {i}: expected {expected_cols} cols, got {len(row)} in '{label}'")
         data_rows.append(row)
     return data_rows
 
 
-def read_2d_table(path):
-    """读取 2D 查表 CSV → (var_name, [[float]])"""
-    rows = read_csv(path)
+def read_2d_table(rows, label):
+    """读取 2D 查表区块 → (var_name, [[float]])"""
     marker = rows[0][0].strip()
     var_name = marker[4:].strip()
     if not _RE_C_IDENT.match(var_name):
-        raise ValueError(f"'{var_name}' invalid C identifier for 2D table in '{path}'")
+        raise ValueError(f"'{var_name}' invalid C identifier for 2D table in '{label}'")
 
     col_headers = []
     for c in rows[1][1:]:
@@ -323,81 +362,88 @@ def read_2d_table(path):
         if val:
             col_headers.append(float(val))
     if not col_headers:
-        raise ValueError(f"No column headers in '{path}'")
+        raise ValueError(f"No column headers in '{label}'")
 
     matrix = []
     for i, row in enumerate(rows[2:], 3):
         if len(row) < len(col_headers) + 1:
-            raise ValueError(f"Row {i}: insufficient columns in '{path}'")
+            raise ValueError(f"Row {i}: insufficient columns in '{label}'")
         matrix.append([float(c) for c in row[1:1 + len(col_headers)]])
 
     if not matrix:
-        raise ValueError(f"No data rows in '{path}'")
+        raise ValueError(f"No data rows in '{label}'")
 
     return var_name, matrix
 
 
 # ─── C 代码生成 ────────────────────────────────────────────────────────
 
-# 1D 查表 Y 变量名 → (Motor_Config 字段名, X 轴变量名)
-TABLE_BINDINGS = OrderedDict({
+# 期望生成的查表（用于验证 CSV 是否齐全）
+EXPECTED_1D = {
     # IF 启动
-    "IF_Start_Speed_RPM":     ("IF_Start_Speed_Lookup",  "IF_Start_Ramp_Sec"),
-    "IF_Start_Iq_A":          ("IF_Start_Iq_Lookup",     "IF_Start_Ramp_Sec"),
+    "IF_Start_Ramp_Sec", "IF_Start_Speed_RPM", "IF_Start_Iq_A",
     # 电流环
-    "Current_ID_PI_Kp_Lookup_1D": ("ID_PI_Kp_Lookup",   "Current_Lookup_Speed_index"),
-    "Current_IQ_PI_Kp_Lookup_1D": ("IQ_PI_Kp_Lookup",   "Current_Lookup_Speed_index"),
-    "Current_ID_PI_Ki_Lookup_1D": ("ID_PI_Ki_Lookup",   "Current_Lookup_Speed_index"),
-    "Current_IQ_PI_Ki_Lookup_1D": ("IQ_PI_Ki_Lookup",   "Current_Lookup_Speed_index"),
+    "Current_Lookup_Speed_index",
+    "Current_ID_PI_Kp_Lookup_1D", "Current_ID_PI_Ki_Lookup_1D",
+    "Current_IQ_PI_Kp_Lookup_1D", "Current_IQ_PI_Ki_Lookup_1D",
     # 速度环
-    "Speed_Loop_Speed_PI_Kp_1D": ("Speed_PI_Kp_Lookup", "Speed_Loop_Speed_Index"),
-    "Speed_Loop_Speed_PI_Ki_1D": ("Speed_PI_Ki_Lookup", "Speed_Loop_Speed_Index"),
+    "Speed_Loop_Speed_Index",
+    "Speed_Loop_Speed_PI_Kp_1D", "Speed_Loop_Speed_PI_Ki_1D",
     # 非磁链观测器
-    "NonFlux_PLL_Kp_Lookup_1D": ("NonFlux_PLL_Kp_Lookup", "NonFlux_Lookup_Speed_index"),
-    "NonFlux_PLL_Ki_Lookup_1D": ("NonFlux_PLL_Ki_Lookup", "NonFlux_Lookup_Speed_index"),
-    "NonFlux_Gama_Lookup_1D":   ("NonFlux_Gama_Lookup",   "NonFlux_Lookup_Speed_index"),
-    "EfFlux_Gama_Lookup_1D":    ("EfFlux_Gama_Lookup",    "NonFlux_Lookup_Speed_index"),
-    "NonFlux_Lookup_Is_index":  ("EfFlux_Angle_Comp",     None),
+    "NonFlux_Lookup_Speed_index", "NonFlux_Lookup_Is_index",
+    "NonFlux_PLL_Kp_Lookup_1D", "NonFlux_PLL_Ki_Lookup_1D",
+    "NonFlux_Gama_Lookup_1D", "EfFlux_Gama_Lookup_1D",
     # SMO 观测器
-    "SMO_PLL_Kp_Lookup_1D":     ("SMO_PLL_Kp_Lookup",    "SMO_Lookup_Speed_index"),
-    "SMO_PLL_Ki_Lookup_1D":     ("SMO_PLL_Ki_Lookup",    "SMO_Lookup_Speed_index"),
-    "SMO_Gain_Lookup_1D":       ("SMO_Gain_Lookup",      "SMO_Lookup_Speed_index"),
-})
-
-TABLE_2D_BINDINGS = OrderedDict({
-    "EFFlux_Angle_Comp_table_2D": {
-        "field":   "EfFlux_Angle_Comp",
-        "x_table": "NonFlux_Lookup_Speed_index",
-        "y_table": "NonFlux_Lookup_Is_index",
-    },
-})
-
-SCALAR_FIELD_MAP = {
-    "pole_pairs":      "pole_pairs",
-    "max_current_a":   "max_current_a",
-    "voltage_limit_v": "voltage_limit_v",
-    "flux_rpm_per_v":  "flux_rpm_per_v",
-    "Rs":              "Rs",
-    "Ld":              "Ld",
-    "Lq":              "Lq",
-    "power_limit_w":   "Power_Limit",
-    "rs_identified":   "rs_identified",
+    "SMO_Lookup_Speed_index",
+    "SMO_PLL_Kp_Lookup_1D", "SMO_PLL_Ki_Lookup_1D", "SMO_Gain_Lookup_1D",
 }
 
-SCALAR_TYPE_OVERRIDES = {
-    "rs_identified": ("uint8_t", lambda v: str(int(float(v)))),
+EXPECTED_2D = {
+    "EFFlux_Angle_Comp_table_2D",
 }
 
+# MotorBase 参数名 → (C 宏名, 结构体字段名)
+# current_loop_hz 仅用于脚本内计算，不生成；rs_identified 结构体无字段，不生成
+SCALAR_MACROS = OrderedDict([
+    ("pole_pairs",      ("MOTOR_POLE_PAIRS",       "pole_pairs")),
+    ("max_current_a",   ("MOTOR_MAX_CURRENT_A",    "max_current_a")),
+    ("voltage_limit_v", ("MOTOR_VOLTAGE_LIMIT_V",  "voltage_limit_v")),
+    ("flux_rpm_per_v",  ("MOTOR_FLUX_RPM_PER_V",   "flux_rpm_per_v")),
+    ("Rs",              ("MOTOR_RS",               "Rs")),
+    ("Ld",              ("MOTOR_LD",               "Ld")),
+    ("Lq",              ("MOTOR_LQ",               "Lq")),
+    ("power_limit_w",   ("MOTOR_POWER_LIMIT",      "Power_Limit")),
+])
 
-def gen_lookup_tables_c(all_1d, all_2d):
-    """生成 Motor_Lookup_Tables.c"""
+
+def gen_motor_param_macros(motor_params):
+    """生成电机基本参数宏定义（数值只出现在此头文件中，保持纯 ASCII）"""
+    lines = ['// Motor base parameters (from MotorBase section, values generated by generate.py)']
+    for csv_name, (macro, field) in SCALAR_MACROS.items():
+        if csv_name not in motor_params:
+            print(f"  [WARN] '{csv_name}' missing in MotorBase, macro {macro} not generated")
+            continue
+        lines.append(f'#define {macro:<26} ({fmt_float(motor_params[csv_name])})')
+    return lines
+
+
+# 生成头文件的包含守卫，须与 Motor_Control.h 中定义的宏一致
+HEADER_GUARD = "MOTOR_LOOKUP_TABLES_FLOAT"
+
+
+def gen_lookup_tables_h(motor_params, all_1d, all_2d):
+    """生成 Motor_Lookup_Tables_Float.h（查表 + 电机基本参数）"""
     lines = [
-        '// Auto-generated by generate.py from Motor_Para/*.csv',
+        '// Auto-generated by generate.py from Motor_Para/Motor_Parameters.csv',
         '// DO NOT EDIT manually.',
         '',
-        '#ifdef MOTOR_CONFIG_H',
+        f'#ifdef {HEADER_GUARD}',
         '',
     ]
+
+    # 电机基本参数宏
+    lines.extend(gen_motor_param_macros(motor_params))
+    lines.append('')
 
     for var_name in sorted(all_1d.keys()):
         values = all_1d[var_name]
@@ -428,155 +474,67 @@ def gen_lookup_tables_c(all_1d, all_2d):
     return '\n'.join(lines) + '\n'
 
 
-def gen_motor_config_c(motor_params, all_1d, all_2d):
-    """生成 Motor_Config.c"""
-    lines = [
-        '// Auto-generated by generate.py from Motor_Para/*.csv',
-        '// DO NOT EDIT manually.',
-        '',
-        '#include "Motor_Config.h"',
-        '',
-        '#include "Motor_Lookup_Tables.c"',
-        '',
-        '',
-        'Motor_Parameter_t PMSM_42JS_Parameter;',
-        'Motor_Config_t PMSM_42JS_Config;',
-        '',
-        'void Motor_Parameter_Init(void)',
-        '{',
-    ]
-
-    for csv_name, field_name in SCALAR_FIELD_MAP.items():
-        if csv_name not in motor_params:
-            continue
-        val = motor_params[csv_name]
-        if csv_name in SCALAR_TYPE_OVERRIDES:
-            _, fmt_fn = SCALAR_TYPE_OVERRIDES[csv_name]
-            lines.append(f'    PMSM_42JS_Parameter.{field_name} = {fmt_fn(val)};')
-        else:
-            lines.append(f'    PMSM_42JS_Parameter.{field_name} = {fmt_float(val)};')
-
-    lines.extend([
-        '    PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;',
-        '    PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs',
-        '                         / 100.0f / PI * 3.0f);',
-        '    /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */',
-        '    PMSM_42JS_Parameter.Flux_Flux  = PMSM_42JS_Parameter.flux_linkage_wb * PMSM_42JS_Parameter.flux_linkage_wb;',
-        '    PMSM_42JS_Parameter.Ld_Lq = PMSM_42JS_Parameter.Ld - PMSM_42JS_Parameter.Lq;',
-        '    PMSM_42JS_Parameter.One_per_Flux = 1 / PMSM_42JS_Parameter.flux_linkage_wb;',
-        '}',
-        '',
-        'void Motor_Config_Init(void)',
-        '{',
-        '    Motor_Parameter_Init();',
-        '    PMSM_42JS_Config.motor_param = &PMSM_42JS_Parameter;',
-    ])
-
-    sections = [
-        ("IF启动参数",    ["IF_Start_Iq_A", "IF_Start_Speed_RPM"]),
-        ("电流环参数",    ["Current_ID_PI_Kp_Lookup_1D", "Current_ID_PI_Ki_Lookup_1D",
-                           "Current_IQ_PI_Kp_Lookup_1D", "Current_IQ_PI_Ki_Lookup_1D"]),
-        ("速度环参数",    ["Speed_Loop_Speed_PI_Kp_1D", "Speed_Loop_Speed_PI_Ki_1D"]),
-        ("磁链观测器参数", ["NonFlux_PLL_Kp_Lookup_1D", "NonFlux_PLL_Ki_Lookup_1D",
-                           "NonFlux_Gama_Lookup_1D", "EfFlux_Gama_Lookup_1D",
-                           "NonFlux_Lookup_Is_index"]),
-        ("SMO观测器参数",  ["SMO_PLL_Kp_Lookup_1D", "SMO_PLL_Ki_Lookup_1D",
-                           "SMO_Gain_Lookup_1D"]),
-    ]
-
-    for section_name, y_vars in sections:
-        lines.append('')
-        lines.append(f'    // {section_name}查表初始化')
-        for y_var in y_vars:
-            if y_var not in TABLE_BINDINGS or y_var not in all_1d:
-                continue
-            field_name, x_var = TABLE_BINDINGS[y_var]
-            if x_var is None:
-                continue
-            lines.append(f'    PMSM_42JS_Config.{field_name}.x_table = {x_var};')
-            lines.append(f'    PMSM_42JS_Config.{field_name}.y_table = {y_var};')
-            lines.append(f'    PMSM_42JS_Config.{field_name}.table_size = sizeof({y_var}) / sizeof(float);')
-
-    for var_name, binding in TABLE_2D_BINDINGS.items():
-        if var_name not in all_2d:
-            continue
-        lines.append('')
-        lines.append(f'    // 角度补偿2D查表初始化')
-        lines.append(f'    PMSM_42JS_Config.{binding["field"]}.x_table = {binding["x_table"]};')
-        lines.append(f'    PMSM_42JS_Config.{binding["field"]}.y_table = {binding["y_table"]};')
-        lines.append(f'    PMSM_42JS_Config.{binding["field"]}.z_table = (const float *){var_name};')
-        lines.append(f'    PMSM_42JS_Config.{binding["field"]}.nx_size = sizeof({binding["x_table"]}) / sizeof(float);')
-        lines.append(f'    PMSM_42JS_Config.{binding["field"]}.ny_size = sizeof({binding["y_table"]}) / sizeof(float);')
-
-    lines.append('}')
-    return '\n'.join(lines) + '\n'
-
-
 # ─── 主流程 ────────────────────────────────────────────────────────────
 
-def extract_all(csv_dir):
-    """读取所有 CSV → (motor_params, all_1d_arrays, all_2d_arrays)"""
+def extract_all(merged_path):
+    """读取合并 CSV 的各区块 → (motor_params, all_1d_arrays, all_2d_arrays)"""
     motor_params = {}
     all_1d = OrderedDict()
     all_2d = OrderedDict()
 
-    csv_files = sorted(f for f in os.listdir(csv_dir) if f.endswith('.csv') and not f.startswith('~'))
+    modules = read_merged_csv(merged_path)
 
-    # MotorBase.csv 必须最先处理
-    if 'MotorBase.csv' in csv_files:
-        csv_files.remove('MotorBase.csv')
-        csv_files.insert(0, 'MotorBase.csv')
+    # MotorBase 必须最先处理（后续计算依赖它）
+    if 'MotorBase' in modules:
+        modules.move_to_end('MotorBase', last=False)
 
-    for filename in csv_files:
-        path = os.path.join(csv_dir, filename)
+    for name, rows in modules.items():
 
         # MotorBase
-        if filename == 'MotorBase.csv':
-            motor_params = read_motor_base(path)
-            print(f'  {filename}: {len(motor_params)} params')
+        if name == 'MotorBase':
+            motor_params = read_motor_base(rows, name)
+            print(f'  {name}: {len(motor_params)} params')
             for k, v in motor_params.items():
                 print(f'    {k} = {v}')
             continue
 
         # 2D 表
-        with open(path, 'r', encoding='utf-8-sig', newline='') as f:
-            first = next(csv.reader(f), [])
-        if first and first[0].strip().startswith('#2D '):
-            var_name, matrix = read_2d_table(path)
+        if rows and rows[0][0].strip().startswith('#2D '):
+            var_name, matrix = read_2d_table(rows, name)
             all_2d[var_name] = matrix
-            print(f'  {filename}: 2D table -> {var_name}[{len(matrix)}][{len(matrix[0])}]')
+            print(f'  {name}: 2D table -> {var_name}[{len(matrix)}][{len(matrix[0])}]')
             continue
 
         # 公式计算模块
-        if filename in MODULE_PIPELINE:
-            compute_fn, expected_cols = MODULE_PIPELINE[filename]
-            tuning_rows = read_tuning_params(path, expected_cols)
+        if name in MODULE_PIPELINE:
+            compute_fn, expected_cols = MODULE_PIPELINE[name]
+            tuning_rows = read_tuning_params(rows, expected_cols, name)
             result = compute_fn(motor_params, tuning_rows)
-            print(f'  {filename}: {len(tuning_rows)} rows -> {len(result)} output vars')
-            for name, vals in result.items():
-                print(f'    {name}[{len(vals)}]')
-                all_1d[name] = vals
+            print(f'  {name}: {len(tuning_rows)} rows -> {len(result)} output vars')
+            for var, vals in result.items():
+                print(f'    {var}[{len(vals)}]')
+                all_1d[var] = vals
             continue
 
         # 无公式模块（直接读取数组值）
-        if filename in RAW_MODULES:
-            compute_fn, expected_cols = RAW_MODULES[filename]
+        if name in RAW_MODULES:
+            compute_fn, expected_cols = RAW_MODULES[name]
             if compute_fn is not None:
-                result = compute_fn(motor_params, read_tuning_params(path, expected_cols))
+                result = compute_fn(motor_params, read_tuning_params(rows, expected_cols, name))
             else:
-                result = read_raw_1d(path)
-            print(f'  {filename}: {len(result)} vars (raw values)')
-            for name, vals in result.items():
-                print(f'    {name}[{len(vals)}]')
-                all_1d[name] = vals
+                result = read_raw_1d(rows, name)
+            print(f'  {name}: {len(result)} vars (raw values)')
+            for var, vals in result.items():
+                print(f'    {var}[{len(vals)}]')
+                all_1d[var] = vals
             continue
 
         # 回退: 作为无公式 1D 表处理
-        data = read_raw_1d(path)
-        print(f'  {filename}: {len(data)} vars x {len(list(data.values())[0])} rows (raw)')
-        for name, vals in data.items():
-            print(f'    {name}[{len(vals)}]')
-            all_1d[name] = vals
+        data = read_raw_1d(rows, name)
+        print(f'  {name}: {len(data)} vars x {len(list(data.values())[0])} rows (raw)')
+        for var, vals in data.items():
+            print(f'    {var}[{len(vals)}]')
+            all_1d[var] = vals
 
     return motor_params, all_1d, all_2d
 
@@ -585,27 +543,32 @@ def main():
     if sys.stdout.encoding != 'utf-8':
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-    output_dir = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_OUTPUT_DIR
-    os.makedirs(output_dir, exist_ok=True)
+    if len(sys.argv) > 1:
+        output_dirs = [sys.argv[1]]
+    else:
+        output_dirs = [DEFAULT_OUTPUT_DIR, SYNC_OUTPUT_DIR]
+    for d in output_dirs:
+        os.makedirs(d, exist_ok=True)
 
-    print(f"CSV 目录: {CSV_DIR}")
-    print(f"输出目录: {output_dir}")
+    merged_path = os.path.join(CSV_DIR, MERGED_CSV_FILENAME)
+    print(f"CSV 文件: {merged_path}")
+    print(f"输出目录: {', '.join(output_dirs)}")
     print()
 
-    motor_params, all_1d, all_2d = extract_all(CSV_DIR)
+    motor_params, all_1d, all_2d = extract_all(merged_path)
     print()
 
     if not all_1d and not all_2d:
         print("Error: no lookup tables extracted")
         sys.exit(1)
 
-    # 验证 binding
-    for y_var in TABLE_BINDINGS:
-        if y_var not in all_1d:
-            print(f"  [WARN] '{y_var}' in TABLE_BINDINGS but not found in any CSV")
-    for var_name in TABLE_2D_BINDINGS:
+    # 验证期望查表是否齐全
+    for var_name in sorted(EXPECTED_1D):
+        if var_name not in all_1d:
+            print(f"  [WARN] '{var_name}' expected but not found in any CSV")
+    for var_name in sorted(EXPECTED_2D):
         if var_name not in all_2d:
-            print(f"  [WARN] '{var_name}' in TABLE_2D_BINDINGS but not found in any CSV")
+            print(f"  [WARN] '{var_name}' expected but not found in any CSV")
 
     # 检查并警告 X 轴重复
     x_columns = [
@@ -618,16 +581,13 @@ def main():
         if var_name in all_1d:
             check_duplicates(all_1d[var_name], label)
 
-    # 生成
-    lookup_path = os.path.join(output_dir, 'Motor_Lookup_Tables.c')
-    with open(lookup_path, 'w', encoding='utf-8', newline='\n') as f:
-        f.write(gen_lookup_tables_c(all_1d, all_2d))
-    print(f'Generated: {lookup_path}')
-
-    config_path = os.path.join(output_dir, 'Motor_Config.c')
-    with open(config_path, 'w', encoding='utf-8', newline='\n') as f:
-        f.write(gen_motor_config_c(motor_params, all_1d, all_2d))
-    print(f'Generated: {config_path}')
+    # 生成查表头文件
+    content = gen_lookup_tables_h(motor_params, all_1d, all_2d)
+    for output_dir in output_dirs:
+        lookup_path = os.path.join(output_dir, OUTPUT_FILENAME)
+        with open(lookup_path, 'w', encoding='utf-8', newline='\n') as f:
+            f.write(content)
+        print(f'Generated: {lookup_path}')
 
 
 if __name__ == '__main__':

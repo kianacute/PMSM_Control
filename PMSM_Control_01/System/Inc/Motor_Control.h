@@ -57,7 +57,7 @@ typedef struct SYSTEM_Loop
 } System_Loop_t;
 
 
-#define MOTOR_CONFIG
+#define MOTOR_LOOKUP_TABLES_FLOAT
 
 typedef struct Motor_Parameter
 {

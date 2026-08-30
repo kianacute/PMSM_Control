@@ -144,7 +144,7 @@ void Encode_ABZ_Updata(void)
 
     if (Encode_ABZ.rpm_filt_cnt >= Encode_ABZ.rpm_filt_RP)
     {
-        Encode_ABZ.rpm = Encode_ABZ.rpm_last * 0.7 + 0.3 * (float32_t)(Encode_ABZ.counter) * 60.0f /
+        Encode_ABZ.rpm = Encode_ABZ.rpm_last * 0.7f + 0.3f * (float32_t)(Encode_ABZ.counter) * 60.0f /
                                                          ((float)Encode_ABZ.num_per_coil) / (Encode_ABZ.discrete_time * (float)Encode_ABZ.rpm_filt_cnt);
         Encode_ABZ.we = Encode_ABZ.rpm * 2.0f * PI / 60.0f * (float)4.0f;
         Encode_ABZ.rpm_last = Encode_ABZ.rpm;

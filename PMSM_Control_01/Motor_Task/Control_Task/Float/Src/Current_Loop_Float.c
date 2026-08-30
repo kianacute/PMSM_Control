@@ -49,7 +49,7 @@ void Current_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.Id_PI.integral = 0;
     Current_Loop_FLoat.Iq_PI.integral = 0;
 
-    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 0;
+    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 1;
     Current_Loop_FLoat.PWM_FREQ_Coeff = 1.0f;
 }                     
 
@@ -112,7 +112,7 @@ void Current_Speed_Switch_Float(Motor_Control_t *pControl)
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
             pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
-        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.10)
+        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.10f)
         {
             pSpeed_Loop->Speed_Switch_Cnt++;
             if (pSpeed_Loop->Speed_Switch_Cnt > 10)

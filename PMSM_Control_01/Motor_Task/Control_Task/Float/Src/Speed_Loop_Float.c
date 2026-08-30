@@ -276,7 +276,7 @@ void MTPA_Cal_Float(Motor_Control_t *pControl, float Is)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
-    if (pMotor_Param->Ld_Lq > 1e-4)
+    if (pMotor_Param->Ld_Lq > 1e-4f)
     {
         float MTPA_tmp = 0;
         arm_sqrt_f32(Is * Is * pMotor_Param->Ld_Lq * pMotor_Param->Ld_Lq * 8 

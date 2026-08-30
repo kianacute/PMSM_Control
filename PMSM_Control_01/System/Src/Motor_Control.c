@@ -7,14 +7,16 @@ Motor_Config_t PMSM_42JS_Config;
 
 void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
 {
-    PMSM_42JS_Parameter.pole_pairs = 4.0f;
-    PMSM_42JS_Parameter.max_current_a = 20.0f;
-    PMSM_42JS_Parameter.voltage_limit_v = 50.0f;
-    PMSM_42JS_Parameter.flux_rpm_per_v = 4.3f;
-    PMSM_42JS_Parameter.Rs = 1.05f;
-    PMSM_42JS_Parameter.Ld = 0.0005f;
-    PMSM_42JS_Parameter.Lq = 0.00059f;
-    PMSM_42JS_Parameter.Power_Limit = 100.0f;
+    // 电机基本参数数值来自 Motor_Parameters.csv，由 generate.py 生成到
+    // Motor_Lookup_Tables_Float.h 的宏定义中，请勿在此处直接改数值
+    PMSM_42JS_Parameter.pole_pairs = MOTOR_POLE_PAIRS;
+    PMSM_42JS_Parameter.max_current_a = MOTOR_MAX_CURRENT_A;
+    PMSM_42JS_Parameter.voltage_limit_v = MOTOR_VOLTAGE_LIMIT_V;
+    PMSM_42JS_Parameter.flux_rpm_per_v = MOTOR_FLUX_RPM_PER_V;
+    PMSM_42JS_Parameter.Rs = MOTOR_RS;
+    PMSM_42JS_Parameter.Ld = MOTOR_LD;
+    PMSM_42JS_Parameter.Lq = MOTOR_LQ;
+    PMSM_42JS_Parameter.Power_Limit = MOTOR_POWER_LIMIT;
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
     PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
                          / 100.0f / PI * 3.0f);
