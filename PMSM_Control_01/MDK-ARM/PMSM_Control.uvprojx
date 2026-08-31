@@ -2156,16 +2156,6 @@
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Current_Loop_Fixed.c</FilePath>
             </File>
             <File>
-              <FileName>Motor_Config_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Motor_Config_Fixed.c</FilePath>
-            </File>
-            <File>
-              <FileName>Motor_Lookup_Tables_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Motor_Lookup_Tables_Fixed.c</FilePath>
-            </File>
-            <File>
               <FileName>Observer_Fixed.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Observer_Fixed.c</FilePath>

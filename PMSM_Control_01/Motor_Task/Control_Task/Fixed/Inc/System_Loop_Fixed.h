@@ -1,8 +1,7 @@
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__
 
-#include "Hal_Math.h"
-#include "Motor_Config.h"
+#include "Hal_Math_Fixed.h"
 
 #define SYSTEM_HZ               (1000.0f)
 
