@@ -2106,9 +2106,9 @@
               <FilePath>..\System\Src\Motor_Control.c</FilePath>
             </File>
             <File>
-              <FileName>Motor_Lookup_Tables_Float.h</FileName>
+              <FileName>Motor_Lookup_Tables.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables_Float.h</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables.h</FilePath>
             </File>
           </Files>
         </Group>

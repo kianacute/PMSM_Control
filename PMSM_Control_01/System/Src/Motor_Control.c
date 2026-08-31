@@ -1,5 +1,5 @@
 #include "Motor_Control.h"
-#include "Motor_Lookup_Tables_Float.h"
+#include "Motor_Lookup_Tables.h"
 
 Motor_Control_t PMSM_42J; 
 Motor_Parameter_t PMSM_42JS_Parameter;
@@ -17,6 +17,7 @@ void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
     PMSM_42JS_Parameter.Ld = MOTOR_LD;
     PMSM_42JS_Parameter.Lq = MOTOR_LQ;
     PMSM_42JS_Parameter.Power_Limit = MOTOR_POWER_LIMIT;
+    PMSM_42JS_Parameter.max_rpm = MOTOR_SPEED_MAX;
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
     PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
                          / 100.0f / PI * 3.0f);

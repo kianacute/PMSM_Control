@@ -906,8 +906,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables_Float.h</PathWithFileName>
-      <FilenameWithoutPath>Motor_Lookup_Tables_Float.h</FilenameWithoutPath>
+      <PathWithFileName>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables.h</PathWithFileName>
+      <FilenameWithoutPath>Motor_Lookup_Tables.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
