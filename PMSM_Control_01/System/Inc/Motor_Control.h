@@ -227,7 +227,7 @@ typedef struct Motor_Control
 
     #endif
 
-void  Motor_Control_Init(Motor_Control_t *pControl);
+void Motor_Control_Init(Motor_Control_t *pControl);
 void Current_Loop_Task(Motor_Control_t *pControl);
 void Speed_Loop_Task(Motor_Control_t *pControl);
 void SYSTEM_LOOP_Task(Motor_Control_t *pControl);

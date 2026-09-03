@@ -5,8 +5,8 @@
 #include "arm_math.h"
 
 #define MY_ABS(x) (((x)>0)?(x):(-(x)))
-#define Limit_2PI(theta) { while ((*theta) > 6.283185f) {(*theta) -= 6.283185f;} \
-                           while ((*theta) < -6.283185f){(*theta) += 6.283185f;}}
+#define Limit_2PI(theta) { while ((*theta) > 1.0f) {(*theta) -= 1.0f;} \
+                           while ((*theta) < -1.0f){(*theta) += 1.0f;}}
 
 typedef struct Hal_PI_f32
 {

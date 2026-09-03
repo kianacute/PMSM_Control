@@ -257,15 +257,15 @@ void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ua
     EFO->x_alpha_hat += ((Ualpha + EFO->gama * (EFO->Flux_alpha - EFO->x_alpha_hat)) * EFO->discrete_time);
     EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
     EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;
-    EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta;
+    EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta; 
     EFO->Eta_alpha = EFO->y_alpha_hat *pMotor->One_per_Flux;
     EFO->Eta_beta = EFO->y_beta_hat *pMotor->One_per_Flux;
     // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
     EFO->we = Hal_PI_f32(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
     EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
     Limit_2PI(&EFO->theta);
-    EFO->Sin = arm_sin_f32(EFO->theta);
-    EFO->Cos = arm_cos_f32(EFO->theta);
+    EFO->Sin = arm_sin_f32(EFO->theta * 2 * PI);
+    EFO->Cos = arm_cos_f32(EFO->theta * 2 * PI);
     // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }
 

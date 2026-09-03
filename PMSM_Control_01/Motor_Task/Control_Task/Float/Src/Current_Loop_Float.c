@@ -22,7 +22,7 @@ void Current_Init_Float(Motor_Control_t *pControl)
     pControl->Current_Loop.Status = MOTOR_IDLE;
     Current_Loop_FLoat.theta = 0.0f;
     Current_Loop_FLoat.FREQ_HZ = MOTOR_CURRENT_LOOP_HZ;
-    Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+    Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_WE_BASE;
     /* 计算电流环参数 */
     Current_Loop_FLoat.Id_PI.Kd = 0.1f;
     Current_Loop_FLoat.Iq_PI.Kd = 0.1f;
@@ -49,7 +49,7 @@ void Current_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.Id_PI.integral = 0;
     Current_Loop_FLoat.Iq_PI.integral = 0;
 
-    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 1;
+    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 0;
     Current_Loop_FLoat.PWM_FREQ_Coeff = 1.0f;
 }                     
 
@@ -101,18 +101,16 @@ void Current_Speed_Switch_Float(Motor_Control_t *pControl)
     }
     case SPEED_OPEN:
     {
-        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref * pCurrent_Loop_Float->Loop_time_s;
         // pCurrent_Loop_Float->theta += 0.002f;
         Limit_2PI(&pCurrent_Loop_Float->theta);
         break;
     }
     case SPEED_SWITCH:
     {
-        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref / 60 * 2 * PI * 
-            pMotor_Param->pole_pairs * pCurrent_Loop_Float->Loop_time_s;
+        pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
-        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.10f)
+        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.05f)
         {
             pSpeed_Loop->Speed_Switch_Cnt++;
             if (pSpeed_Loop->Speed_Switch_Cnt > 10)
@@ -347,11 +345,11 @@ void Current_Loop_Run(Motor_Control_t *pControl)
 
     pCurrent_Loop_Float->Id_Ref = pSpeed_Loop->target_id;
     pCurrent_Loop_Float->Iq_Ref = pSpeed_Loop->target_iq;
-    pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
-    pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
+    // pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
+    // pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
 
-    // pCurrent_Loop_Float->Ud_Target = 0.0f;
-    // pCurrent_Loop_Float->Uq_Target = 1.0f;
+    pCurrent_Loop_Float->Ud_Target = -0.0f;
+    pCurrent_Loop_Float->Uq_Target = 1.5f;
 
     arm_sqrt_f32(pCurrent_Loop_Float->Id_fb * pCurrent_Loop_Float->Id_fb + pCurrent_Loop_Float->Iq_fb * pCurrent_Loop_Float->Iq_fb, 
                     &pCurrent_Loop_Float->Is_fb);

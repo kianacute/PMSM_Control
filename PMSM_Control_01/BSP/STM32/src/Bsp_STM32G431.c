@@ -158,10 +158,10 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
         adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
         adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
-        PMSM_42J.Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 1 value
-        PMSM_42J.Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC2 injected channel 1 value
-        PMSM_42J.Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) * ADC_OPAMP_GAIN; // Adjust ADC1 injected channel 2 value
-        PMSM_42J.Input.Udc_ADISR = adc_adjustment.ADC_j4 * 1.1f * 0.019842f;
+        PMSM_42J.Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 1 value
+        PMSM_42J.Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC2 injected channel 1 value
+        PMSM_42J.Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 2 value
+        PMSM_42J.Input.Udc_ADISR = adc_adjustment.ADC_j4 / ADC_VDDA_REF / 2;
 
         // PMSM_42J.Input_Fixed.Ia_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read injected channel value
         // PMSM_42J.Input_Fixed.Ib_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read another injected channel value

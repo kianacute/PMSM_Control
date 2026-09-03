@@ -55,18 +55,32 @@
 #define MOTOR_DEAD_ZONE_THD                 (0.5f)
 
 /*电机启动方式*/
-// #define MOTOR_OPEN_SETUP                     // 电机开环启动
-#define MOTOR_CLOSE_SETUP                       // 电机闭环启动
+#define MOTOR_OPEN_SETUP                     // 电机开环启动
+// #define MOTOR_CLOSE_SETUP                       // 电机闭环启动
 
 #define MOTOR_SPEED_MIDDLE_THD              (500.0f)
+
+
+#define MOTOR_POLE_PAIRS           (4.0f)
+#define MOTOR_MAX_CURRENT_A        (45.0f)
+#define MOTOR_VOLTAGE_LIMIT_V      (86.0f)
+#define MOTOR_FLUX_RPM_PER_V       (4.3f)
+#define MOTOR_RS                   (1.05f)
+#define MOTOR_LD                   (0.0005f)
+#define MOTOR_LQ                   (0.00059f)
+#define MOTOR_POWER_LIMIT          (100.0f)
+#define MOTOR_SPEED_MAX            (6000.0f)
 
 #define MOTOR_U_BASE        (MOTOR_VOLTAGE_LIMIT_V)                                              //母线电压采样最大值
 #define MOTOR_I_BASE        (MOTOR_MAX_CURRENT_A)                                              //相电流采样最大值
 #define MOTOR_FREQ_BASE     (MOTOR_SPEED_MAX/60.0f*MOTOR_POLE_PAIRS)                                        //最大电频率
 #define MOTOR_WE_BASE       (MOTOR_FREQ_BASE*3.14159265358979f*2.0f)
-#define MOTOR_L_BASE        (MOTOR_U_BASE/(MOTOR_I_BASE*MOTOR_F_BASE))           //电感基值
-#define MOTOR_T_BASE        (1.0f/MOTOR_F_BASE)                                  //时间基值
-#define MOTOR_R_BASE        (MOTOR_U_BASE/MOTOR_I_BASE)                          //电阻基值
+#define MOTOR_L_BASE        (MOTOR_U_BASE/(MOTOR_I_BASE*MOTOR_WE_BASE))             //电感基值
+#define MOTOR_T_BASE        (1.0f/MOTOR_FREQ_BASE)                                  //时间基值
+#define MOTOR_R_BASE        (MOTOR_U_BASE/MOTOR_I_BASE)                             //电阻基值
+#define MOTOR_FLUX_BASE     (MOTOR_U_BASE/MOTOR_WE_BASE)                            //磁链基值
+#define MOTOR_POWER_BASE    (MOTOR_U_BASE*MOTOR_I_BASE)                             //功率基值
+#define MOTOR_RPM_BASE      (MOTOR_SPEED_MAX)                                       //速度基值
 
 #endif
 

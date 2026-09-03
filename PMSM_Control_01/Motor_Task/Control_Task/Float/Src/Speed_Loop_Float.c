@@ -122,12 +122,12 @@ void SPEED_Open_Task_Float(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
     float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
-    pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Speed_Lookup)*6.0f;
+    pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Speed_Lookup)*3.0f / MOTOR_RPM_BASE;
     pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_f32(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
     pSpeed_Loop->target_id = 0;
     if (pSpeed_Loop->Speed_Ref >= 600)
     {
-        pControl->Speed_Loop.Status= SPEED_SWITCH;
+        // pControl->Speed_Loop.Status= SPEED_SWITCH;
     }
 }
 
