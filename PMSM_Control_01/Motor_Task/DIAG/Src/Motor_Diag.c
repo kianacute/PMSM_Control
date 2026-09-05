@@ -99,7 +99,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node, Motor_Control_t *pControl)
         item->hcomp.enable = 1; // 系统运行时使能比较器
     }
     emf_err = 0;
-    // MY_ABS(pSpeed_Loop->Speed_Fb * pControl->Motor_Config->Motor_Param->flux_rpm_per_v / 1000.0f - EMF_Cal.EMF);
+    // MY_ABS(pSpeed_Loop->Speed_Fb * pControl->Motor_Config->Motor_Param->Flux_Vkrpm / 1000.0f - EMF_Cal.EMF);
     Hysteresis_Comp_Process_Add_f32(&item->hcomp, emf_err);
     if(item->hcomp.comp_out == 1)
     {

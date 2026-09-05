@@ -221,15 +221,16 @@ struct EffFluxObserver_Parameter EffFlux_OB =
 void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control)
 {
     pMotor_control->pObserver = &EffFlux_OB;
-    EffFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S;
+    EffFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
     EffFlux_OB.freq = MOTOR_CURRENT_LOOP_HZ;
     EffFlux_OB.Flux_alpha = 0.0f;
     EffFlux_OB.Flux_beta = 0.0f;
     EffFlux_OB.PLL_PI.kp = 200.1f / 1.0f;
     EffFlux_OB.PLL_PI.ki = 16.1f / 40.0f;
+    EffFlux_OB.PLL_PI.Kd = 0.0f;
     EffFlux_OB.PLL_PI.out_max = 10000.0f;
     EffFlux_OB.PLL_PI.out_min = -10000.0f;
-    EffFlux_OB.gama = 200.0f;
+    EffFlux_OB.gama = 0.2000f;
     EffFlux_OB.x_alpha_hat = 0.0f;
     EffFlux_OB.x_beta_hat = 0.0f;
     EffFlux_OB.y_alpha_hat = 0.0f;
@@ -258,14 +259,14 @@ void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ua
     EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
     EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;
     EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta; 
-    EFO->Eta_alpha = EFO->y_alpha_hat *pMotor->One_per_Flux;
-    EFO->Eta_beta = EFO->y_beta_hat *pMotor->One_per_Flux;
+    EFO->Eta_alpha = EFO->y_alpha_hat * pMotor->One_per_Flux;
+    EFO->Eta_beta = EFO->y_beta_hat * pMotor->One_per_Flux;
     // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
     EFO->we = Hal_PI_f32(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
     EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
     Limit_2PI(&EFO->theta);
-    EFO->Sin = arm_sin_f32(EFO->theta * 2 * PI);
-    EFO->Cos = arm_cos_f32(EFO->theta * 2 * PI);
+    EFO->Sin = arm_sin_f32(EFO->theta);
+    EFO->Cos = arm_cos_f32(EFO->theta);
     // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }
 

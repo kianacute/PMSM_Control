@@ -144,6 +144,7 @@ int Bsp_Init(void)
     // xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     Profiler_Init();
     Motor_Control_Init(&PMSM_42J);
+    Bsp_STM32G431_PWM_Disable();
     return 0;
 }
 

@@ -22,7 +22,7 @@ void Current_Init_Float(Motor_Control_t *pControl)
     pControl->Current_Loop.Status = MOTOR_IDLE;
     Current_Loop_FLoat.theta = 0.0f;
     Current_Loop_FLoat.FREQ_HZ = MOTOR_CURRENT_LOOP_HZ;
-    Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_WE_BASE;
+    Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
     /* 计算电流环参数 */
     Current_Loop_FLoat.Id_PI.Kd = 0.1f;
     Current_Loop_FLoat.Iq_PI.Kd = 0.1f;
@@ -75,8 +75,7 @@ inline void Current_Avg_Filt_Float(Motor_Control_t *pControl)
     struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
     if (pCurrent_Loop_Float->avg_count >= ((uint32_t)(pCurrent_Loop_Float->FREQ_HZ / pSpeed_Loop->FREQ_Hz)))
     {
-        pSpeed_Loop->Speed_Fb = pCurrent_Loop_Float->Speed_fb_1ms / 2 / PI / 
-        pMotor_Param->pole_pairs * 60.0f / pCurrent_Loop_Float->avg_count;
+        pSpeed_Loop->Speed_Fb = pCurrent_Loop_Float->Speed_fb_1ms / pCurrent_Loop_Float->avg_count;
         pCurrent_Loop_Float->Speed_fb_1ms = 0;
         pCurrent_Loop_Float->avg_count = 0;
     }
@@ -110,7 +109,7 @@ void Current_Speed_Switch_Float(Motor_Control_t *pControl)
     {
         pCurrent_Loop_Float->theta += pSpeed_Loop->Speed_Ref * pCurrent_Loop_Float->Loop_time_s;
         Limit_2PI(&pCurrent_Loop_Float->theta);
-        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.05f)
+        if (MY_ABS(pObserver->theta - pCurrent_Loop_Float->theta) < 0.18f)
         {
             pSpeed_Loop->Speed_Switch_Cnt++;
             if (pSpeed_Loop->Speed_Switch_Cnt > 10)
@@ -345,11 +344,11 @@ void Current_Loop_Run(Motor_Control_t *pControl)
 
     pCurrent_Loop_Float->Id_Ref = pSpeed_Loop->target_id;
     pCurrent_Loop_Float->Iq_Ref = pSpeed_Loop->target_iq;
-    // pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
-    // pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
+    pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
+    pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
 
-    pCurrent_Loop_Float->Ud_Target = -0.0f;
-    pCurrent_Loop_Float->Uq_Target = 1.5f;
+    // pCurrent_Loop_Float->Ud_Target = -0.0f / MOTOR_BUS_VOLTAGE_MAX;
+    // pCurrent_Loop_Float->Uq_Target = 1.5f / MOTOR_BUS_VOLTAGE_MAX;
 
     arm_sqrt_f32(pCurrent_Loop_Float->Id_fb * pCurrent_Loop_Float->Id_fb + pCurrent_Loop_Float->Iq_fb * pCurrent_Loop_Float->Iq_fb, 
                     &pCurrent_Loop_Float->Is_fb);
@@ -382,9 +381,9 @@ void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Config_t *Motor_Config = (Motor_Config_t *)pControl->Motor_Config;
-    pCurrent_Loop_Float->Loop_time_s = Ts;
-    pCurrent_Loop_Float->FREQ_HZ = 1.0f / Ts;
-    pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
+    // pCurrent_Loop_Float->Loop_time_s = Ts;
+    // pCurrent_Loop_Float->FREQ_HZ = 1.0f / Ts;
+    // pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
     pCurrent_Loop_Float->Id_PI.kp = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &Motor_Config->ID_PI_Kp_Lookup)
                                      * pControl->Output.PWM_HZ_Coeff;
     pCurrent_Loop_Float->Iq_PI.ki = pCurrent_Loop_Float->Id_PI.ki = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Ref,

@@ -8,20 +8,18 @@ Motor_Config_t PMSM_42JS_Config;
 void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
 {
     // 电机基本参数数值来自 Motor_Parameters.csv，由 generate.py 生成到
-    // Motor_Lookup_Tables_Float.h 的宏定义中，请勿在此处直接改数值
-    PMSM_42JS_Parameter.pole_pairs = MOTOR_POLE_PAIRS;
-    PMSM_42JS_Parameter.max_current_a = 1.0f;
-    PMSM_42JS_Parameter.voltage_limit_v = 1.0f;
-    PMSM_42JS_Parameter.flux_rpm_per_v = MOTOR_FLUX_RPM_PER_V / MOTOR_FLUX_BASE;
+    // Motor_Lookup_Tables.h 的宏定义中，请勿在此处直接改数值
+    PMSM_42JS_Parameter.Pn = MOTOR_PN;
+    PMSM_42JS_Parameter.Current_Max_A = 1.0f;
+    PMSM_42JS_Parameter.Bus_Voltage_Max = 1.0f;
+    PMSM_42JS_Parameter.Flux_Vkrpm = MOTOR_FLUX_VKRPM / MOTOR_FLUX_BASE;
     PMSM_42JS_Parameter.Rs = MOTOR_RS / MOTOR_R_BASE;
     PMSM_42JS_Parameter.Ld = MOTOR_LD / MOTOR_L_BASE;
     PMSM_42JS_Parameter.Lq = MOTOR_LQ / MOTOR_L_BASE;
-    PMSM_42JS_Parameter.Power_Limit = MOTOR_POWER_LIMIT / MOTOR_POWER_BASE;
-    PMSM_42JS_Parameter.max_rpm = 1.0f;
+    PMSM_42JS_Parameter.Power_Max_W = MOTOR_POWER_MAX_W / MOTOR_POWER_BASE;
+    PMSM_42JS_Parameter.Speed_Max_Rpm = 1.0f;
     PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
-    PMSM_42JS_Parameter.flux_linkage_wb = (PMSM_42JS_Parameter.flux_rpm_per_v / PMSM_42JS_Parameter.pole_pairs
-                         / 100.0f / PI * 3.0f);
-    /*磁链计算参考文章：https://www.zhihu.com/question/606311981/answer/3091158625 */
+    PMSM_42JS_Parameter.flux_linkage_wb = MOTOR_FLUX_VS / MOTOR_FLUX_BASE;
     PMSM_42JS_Parameter.Flux_Flux  = PMSM_42JS_Parameter.flux_linkage_wb * PMSM_42JS_Parameter.flux_linkage_wb;
     PMSM_42JS_Parameter.Ld_Lq = PMSM_42JS_Parameter.Ld - PMSM_42JS_Parameter.Lq;
     PMSM_42JS_Parameter.One_per_Flux = 1 / PMSM_42JS_Parameter.flux_linkage_wb;

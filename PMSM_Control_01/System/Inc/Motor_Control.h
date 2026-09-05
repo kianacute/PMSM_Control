@@ -61,15 +61,15 @@ typedef struct SYSTEM_Loop
 
 typedef struct Motor_Parameter
 {
-    float pole_pairs;      // 电机极对数
+    float Pn;              // 电机极对数
     float Rs;              // 定子电阻
     float Ld, Lq, Ls;      // 定子电感
-    float flux_rpm_per_v;  // 反电动势系数，单位为Vs/rpm
+    float Flux_Vkrpm;      // 反电动势系数，单位为V/krpm
     float flux_linkage_wb; // 磁链, 单位为Wb
-    float max_rpm;         // 最大转速
-    float max_current_a;   // 最大电流
-    float voltage_limit_v; // 电压限制，单位为V
-    float Power_Limit; // 功率限制参数
+    float Speed_Max_Rpm;   // 最大转速
+    float Current_Max_A;   // 最大电流
+    float Bus_Voltage_Max; // 电压限制，单位为V
+    float Power_Max_W;     // 功率限制参数
     float Flux_Flux;
     float Ld_Lq;
     float One_per_Flux;

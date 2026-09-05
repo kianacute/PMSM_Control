@@ -35,7 +35,7 @@ void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl)
 {
     System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     Motor_Control_Input_t *pMotor_Control_Input = (Motor_Control_Input_t *)&pControl->Input;
-    if(pMotor_Control_Input->Udc_ADISR > 1.0f) // Check if the DC bus voltage is above a certain threshold
+    if(pMotor_Control_Input->Udc_ADISR > (12.0f / MOTOR_BUS_VOLTAGE_MAX)) // Check if the DC bus voltage is above a certain threshold
     {
         pControl->System_Loop.Status = SYSTEM_RUN;
         pSystem_Loop->Run_flag = 0;
@@ -58,7 +58,7 @@ void SYSTEM_Run_Float(Motor_Control_t *pControl)
     }
     if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
     {
-        pSpeed_Loop->Speed_Command = Speed_Command; 
+        pSpeed_Loop->Speed_Command = Speed_Command / MOTOR_RPM_BASE; // Convert speed command to base units
         pSystem_Loop->Run_flag = 1;
     }
     else 

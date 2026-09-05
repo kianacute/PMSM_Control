@@ -60,9 +60,10 @@ def compute_nonflux_observer(params, rows):
       NonFlux_Lookup_Speed_index, NonFlux_PLL_Kp_Lookup_1D, NonFlux_PLL_Ki_Lookup_1D,
       NonFlux_Gama_Lookup_1D, EfFlux_Gama_Lookup_1D, NonFlux_Lookup_Is_index
     """
-    Ts = 1.0 / params['current_loop_hz']
-    pp = params['pole_pairs']
-
+    Ts = 1.0 / params['Current_loop_hz']
+    pp = params['Pn']
+    We_b = params['Speed_Max_Rpm'] * 2.0 * PI / 60.0 * pp  # 电角速度上限 rad/s
+    print(f"  [INFO] NonFluxObserver: We_b = {We_b:.3f} rad/s")
     output = OrderedDict()
     output['NonFlux_Lookup_Speed_index'] = []
     output['NonFlux_PLL_Kp_Lookup_1D'] = []
@@ -75,14 +76,14 @@ def compute_nonflux_observer(params, rows):
         rpm = float(r[0])
         damping = float(r[1])
         cutoff_coeff = float(r[2])
-        nf_gamma = float(r[3])
-        ef_gamma = float(r[4])
+        nf_gamma = float(r[3])/We_b
+        ef_gamma = float(r[4])/We_b
         is_idx = float(r[5])
 
         we = elec_speed_rpm(rpm, pp)
         wc = cutoff_coeff * we
-        kp = 2.0 * damping * wc
-        ki = wc * wc * Ts
+        kp = 2.0 * damping * wc / We_b
+        ki = wc * wc * Ts / We_b
 
         output['NonFlux_Lookup_Speed_index'].append(rpm)
         output['NonFlux_PLL_Kp_Lookup_1D'].append(kp)
@@ -110,9 +111,9 @@ def compute_smo_observer(params, rows):
       SMO_Lookup_Speed_index, SMO_PLL_Kp_Lookup_1D, SMO_PLL_Ki_Lookup_1D,
       SMO_Gain_Lookup_1D
     """
-    Ts = 1.0 / params['current_loop_hz']
-    pp = params['pole_pairs']
-    ke = params['flux_rpm_per_v']  # V/(krpm)
+    Ts = 1.0 / params['Current_loop_hz']
+    pp = params['Pn']
+    ke = params['Flux_Vkrpm']  # V/(krpm)
 
     output = OrderedDict()
     output['SMO_Lookup_Speed_index'] = []
@@ -158,11 +159,14 @@ def compute_current_loop(params, rows):
       Current_ID_PI_Ki_Lookup_1D, Current_IQ_PI_Kp_Lookup_1D,
       Current_IQ_PI_Ki_Lookup_1D
     """
-    f_pwm = params['current_loop_hz']
+    f_pwm = params['Current_loop_hz']
     Ts = 1.0 / f_pwm
     Rs = params['Rs']
     Ld = params['Ld']
     Lq = params['Lq']
+    max_current_a = params['Current_Max_A']
+    voltage_limit_v = params['Bus_Voltage_Max']
+
 
     output = OrderedDict()
     output['Current_Lookup_Speed_index'] = []
@@ -177,10 +181,10 @@ def compute_current_loop(params, rows):
 
         wc = 2.0 * PI * f_pwm / bw_ratio
 
-        id_kp = Ld * wc
-        id_ki = Rs * wc * Ts
-        iq_kp = Lq * wc
-        iq_ki = Rs * wc * Ts
+        id_kp = Ld * wc * max_current_a / voltage_limit_v
+        id_ki = Rs * wc * Ts * max_current_a / voltage_limit_v
+        iq_kp = Lq * wc * max_current_a / voltage_limit_v
+        iq_ki = Rs * wc * Ts * max_current_a / voltage_limit_v
 
         output['Current_Lookup_Speed_index'].append(rpm)
         output['Current_ID_PI_Kp_Lookup_1D'].append(id_kp)
@@ -205,13 +209,39 @@ def compute_speed_loop(params, rows):
     output['Speed_Loop_Speed_PI_Kp_1D'] = []
     output['Speed_Loop_Speed_PI_Ki_1D'] = []
 
+    We_b = params['Speed_Max_Rpm'] * 2.0 * PI / 60.0 * params['Pn']  # 电角速度上限 rad/s
+    I_b = params['Current_Max_A']  # 电流上限 A
+
     for r in rows:
-        output['Speed_Loop_Speed_Index'].append(float(r[0]))
-        output['Speed_Loop_Speed_PI_Kp_1D'].append(float(r[1]))
-        output['Speed_Loop_Speed_PI_Ki_1D'].append(float(r[2]))
+        speed_rpm = float(r[0])
+        Kp = float(r[1]) * We_b / I_b
+        Ki = float(r[2]) * We_b / I_b
+
+        output['Speed_Loop_Speed_Index'].append(speed_rpm)
+        output['Speed_Loop_Speed_PI_Kp_1D'].append(Kp)
+        output['Speed_Loop_Speed_PI_Ki_1D'].append(Ki)
 
     return output
+def compute_IFStartup(params, rows):
+    """
+    IF 启动参数（经验调谐值，非公式计算）。
 
+    输入: ramp_sec, speed_rpm, iq_a  (直接存储调谐后的值)
+
+    输出列:
+      IF_Start_Ramp_Sec, IF_Start_Speed_RPM, IF_Start_Iq_A
+    """
+    output = OrderedDict()
+    output['IF_Start_Ramp_Sec'] = []
+    output['IF_Start_Speed_RPM'] = []
+    output['IF_Start_Iq_A'] = []
+
+    for r in rows:
+        output['IF_Start_Ramp_Sec'].append(float(r[0]))
+        output['IF_Start_Speed_RPM'].append(float(r[1]))
+        output['IF_Start_Iq_A'].append(float(r[2]))
+
+    return output
 
 # 区块名 → (计算函数, 预期的调谐参数列数)
 MODULE_PIPELINE = OrderedDict({
@@ -222,7 +252,7 @@ MODULE_PIPELINE = OrderedDict({
 
 RAW_MODULES = {
     'SpeedLoop':  (compute_speed_loop, 3),
-    'IFStartup':  (None, 3),  # 无公式, 直接用 read_raw_1d
+    'IFStartup':  (compute_IFStartup, 3), 
 }
 
 # ─── 工具函数 ──────────────────────────────────────────────────────────
@@ -402,23 +432,23 @@ EXPECTED_2D = {
     "EFFlux_Angle_Comp_table_2D",
 }
 
-# MotorBase 参数名 → (C 宏名, 结构体字段名)
-# current_loop_hz 仅用于脚本内计算，不生成宏；
-# rs_identified 结构体无对应字段，不生成宏。
+# MotorBase 参数名(CSV) → (C 宏名, 结构体字段名)
+# Current_loop_hz 仅用于脚本内计算，不生成宏（见 SCALAR_IGNORED）
 SCALAR_MACROS = OrderedDict([
-    ("pole_pairs",      ("MOTOR_POLE_PAIRS",       "pole_pairs")),
-    ("max_current_a",   ("MOTOR_MAX_CURRENT_A",    "max_current_a")),
-    ("voltage_limit_v", ("MOTOR_VOLTAGE_LIMIT_V",  "voltage_limit_v")),
-    ("flux_rpm_per_v",  ("MOTOR_FLUX_RPM_PER_V",   "flux_rpm_per_v")),
+    ("Pn",              ("MOTOR_PN",               "Pn")),
+    ("Current_Max_A",   ("MOTOR_CURRENT_MAX_A",    "Current_Max_A")),
+    ("Bus_Voltage_Max", ("MOTOR_BUS_VOLTAGE_MAX",  "Bus_Voltage_Max")),
+    ("Flux_Vkrpm",      ("MOTOR_FLUX_VKRPM",       "Flux_Vkrpm")),
+    ("Flux_Vs",         ("MOTOR_FLUX_VS",          "flux_linkage_wb")),
     ("Rs",              ("MOTOR_RS",               "Rs")),
     ("Ld",              ("MOTOR_LD",               "Ld")),
     ("Lq",              ("MOTOR_LQ",               "Lq")),
-    ("power_limit_w",   ("MOTOR_POWER_LIMIT",      "Power_Limit")),
-    ("speed_max",       ("MOTOR_SPEED_MAX",        "max_rpm")),
+    ("Power_Max_W",     ("MOTOR_POWER_MAX_W",      "Power_Max_W")),
+    ("Speed_Max_Rpm",   ("MOTOR_SPEED_MAX_RPM",    "Speed_Max_Rpm")),
 ])
 
-# MotorBase 中允许存在但不生成宏的参数（脚本专用/结构体无字段）
-SCALAR_IGNORED = {"current_loop_hz", "rs_identified"}
+# MotorBase 中允许存在但不生成宏的参数（脚本专用）
+SCALAR_IGNORED = {"Current_loop_hz"}
 
 
 def gen_motor_param_macros(motor_params):
@@ -438,24 +468,31 @@ def gen_motor_param_macros(motor_params):
     return lines
 
 
-# 生成头文件的包含守卫，须与 Motor_Control.h 中定义的宏一致
-HEADER_GUARD = "MOTOR_LOOKUP_TABLES_FLOAT"
+# 数组段的包含守卫（宏段不在此守卫内，保证 FOC_Config.h include 时即可用）
+ARRAY_GUARD = "MOTOR_LOOKUP_TABLES_FLOAT"
 
 
 def gen_lookup_tables_h(motor_params, all_1d, all_2d):
-    """生成 Motor_Lookup_Tables_Float.h（查表 + 电机基本参数）"""
+    """生成 Motor_Lookup_Tables.h（电机宏 + 查表数组）
+
+    布局:
+      1. 电机基本参数宏 —— 不设守卫，FOC_Config.h 直接 include 即可用
+      2. 查表数组 —— 由 ARRAY_GUARD(MOTOR_LOOKUP_TABLES_FLOAT) 守卫，
+         仅 Motor_Control.c 在定义该宏后二次 include 时展开，避免多 TU 重复定义
+    """
     lines = [
         '// Auto-generated by generate.py from Motor_Para/Motor_Parameters.csv',
         '// DO NOT EDIT manually.',
         '',
-        f'#ifdef {HEADER_GUARD}',
-        '',
     ]
 
-    # 电机基本参数宏
+    # 1. 电机基本参数宏（守卫外，始终可见）
     lines.extend(gen_motor_param_macros(motor_params))
     lines.append('')
+    lines.append(f'#ifdef {ARRAY_GUARD}')
+    lines.append('')
 
+    # 2. 查表数组
     for var_name in sorted(all_1d.keys()):
         values = all_1d[var_name]
         count = len(values)
@@ -481,7 +518,7 @@ def gen_lookup_tables_h(motor_params, all_1d, all_2d):
         lines.append('};')
         lines.append('')
 
-    lines.append('#endif')
+    lines.append(f'#endif // {ARRAY_GUARD}')
     return '\n'.join(lines) + '\n'
 
 
