@@ -154,15 +154,14 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
     {
         /* DWT 周期计数器 — 不受中断优先级影响, 精度 6.25ns @160MHz */
         uint32_t cb_start = DWT->CYCCNT;
-
-        adc_adjustment.ADC_j1 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1); // Read injected channel value
-        adc_adjustment.ADC_j2 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1); // Read another injected channel value
-        adc_adjustment.ADC_j3 = HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_2); // Read another injected channel value
-        adc_adjustment.ADC_j4 = HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_2); // Read another injected channel value
-        PMSM_42J.Input.Ia_fb_raw = (adc_adjustment.ADC_j1 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 1 value
-        PMSM_42J.Input.Ib_fb_raw = (adc_adjustment.ADC_j2 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC2 injected channel 1 value
-        PMSM_42J.Input.Ic_fb_raw = (adc_adjustment.ADC_j3 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 2 value
-        PMSM_42J.Input.Udc_ADISR = adc_adjustment.ADC_j4 / ADC_VDDA_REF / 2;
+        // adc_adjustment.ADC_j1 = hadc1.Instance->JDR1; // Read injected channel value
+        // adc_adjustment.ADC_j2 = hadc2.Instance->JDR1; // Read another injected channel value
+        // adc_adjustment.ADC_j3 = hadc1.Instance->JDR2; // Read another injected channel value
+        // adc_adjustment.ADC_j4 = hadc2.Instance->JDR2; // Read another injected channel value
+        PMSM_42J.Input.Ia_fb_raw = (hadc1.Instance->JDR1 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 1 value
+        PMSM_42J.Input.Ib_fb_raw = (hadc2.Instance->JDR1 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC2 injected channel 1 value
+        PMSM_42J.Input.Ic_fb_raw = (hadc1.Instance->JDR2 - ADC_VDDA_REF) / ADC_VDDA_REF / 2; // Adjust ADC1 injected channel 2 value
+        PMSM_42J.Input.Udc_ADISR = (hadc2.Instance->JDR2 ) / ADC_VDDA_REF / 2;
 
         // PMSM_42J.Input_Fixed.Ia_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc1, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read injected channel value
         // PMSM_42J.Input_Fixed.Ib_fb_raw = ((HAL_ADCEx_InjectedGetValue(&hadc2, ADC_INJECTED_RANK_1)) << 3) - 0x4000; // Read another injected channel value
@@ -172,13 +171,16 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         /*调用电流环切换函数*/
         Current_Loop_Task(&PMSM_42J);
 
-        if (PMSM_42J.Current_Loop.PWM_OPEN_Flag == PWM_OPEN)
+        if(PMSM_42J.Current_Loop.PWM_OPEN_Flag_z != PMSM_42J.Current_Loop.PWM_OPEN_Flag)
         {
-            Bsp_STM32G431_PWM_Enable();
-        }
-        else
-        {
-            Bsp_STM32G431_PWM_Disable();
+            if (PMSM_42J.Current_Loop.PWM_OPEN_Flag == PWM_OPEN)
+            {
+                Bsp_STM32G431_PWM_Enable();
+            }
+            else
+            {
+                Bsp_STM32G431_PWM_Disable();
+            }
         }
         Bsp_STM32G431_PWM_SetDuty();
 
@@ -212,13 +214,12 @@ inline void Bsp_STM32G431_PWM_Disable(void)
 
 void Bsp_STM32G431_PWM_SetDuty()
 {
-    
     __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
-    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
+    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PMSM_42J.Output.PWM_duty_d);

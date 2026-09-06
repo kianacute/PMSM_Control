@@ -190,6 +190,7 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
     else
     {
         pControl->Speed_Loop.Status = SPEED_IDLE;
+        SPEED_Idle_Task(pControl);
     }
     pControl->Speed_Loop.Loop_count++;
 }

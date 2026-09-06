@@ -1,35 +1,5 @@
 #include "Hal_Math_Float.h"
 
-/// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间
-/// @param controller PI控制器对象，包含增益、积分项、输出限制等参数
-/// @param error 输入误差
-/// @return 输出
-float32_t Hal_PI_f32(Hal_PI_f32_t *controller, float error)
-{
-     controller->integral += controller->ki * error - 
-                             controller->Kd * (controller->output_raw - controller->output); // 抗饱和项
-     controller->output_raw = controller->kp * error +                               // 比例项
-                              controller->integral;                                 
-
-     // Clamp output to min/max limits
-     if (controller->output_raw > controller->out_max)
-     {
-          controller->output = controller->out_max;
-     }
-     else if (controller->output_raw < controller->out_min)
-     {
-          controller->output = controller->out_min;
-     }
-     else
-     {
-          controller->output = controller->output_raw;
-     }
-
-     // Update previous error
-     controller->prev_error = error;
-
-     return controller->output;
-}
 
 /// @brief 二分查找，数组必须满足单调性
 /// @param arr 浮点数组，数组下标从0开始
@@ -141,34 +111,6 @@ float Lookup_Table_2D_Linear_f32(float x, float y, Lookup_Table_2D_f32_t *table)
 
     // 再在y方向插值
     return z0 + (z1 - z0) * (y_clamped - y0) / (y1 - y0);
-}
-
-/// @brief 斜波函数，cur_value向end_value以Sub_Step和Add_Step的速度靠近
-/// @param end_value 目标值
-/// @param cur_value 当前值
-/// @param Sub_Step 减速步长
-/// @param Add_Step 加速步长
-/// @return 更新后的值
-float Oblique_Wave_f32(float end_value, float cur_value, float Add_Step, float Sub_Step)
-{
-     float cur = cur_value;
-     if (cur_value < end_value)
-     {
-          cur += Add_Step;
-          if (cur > end_value)
-          {
-               cur = end_value;
-          }
-     }
-     else if (cur_value > end_value)
-     {
-          cur -= Sub_Step;
-          if (cur < end_value)
-          {
-               cur = end_value;
-          }
-     }
-     return cur;
 }
 
 /// @brief 滞回比较器初始化函数

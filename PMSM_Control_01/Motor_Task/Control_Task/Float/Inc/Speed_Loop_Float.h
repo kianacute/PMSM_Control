@@ -9,10 +9,13 @@ typedef struct Speed_Loop_FLoat
     float FREQ_Hz;                      // 循环周期
     uint64_t IF_Start_Cnt;               // 速度控制非空闲状态计时器
     float target_iq, target_id, target_is; // 目标电流
+    float Speed_Low_Id;
     float Speed_Command;                   // 速度命令
     float Speed_Ref, Speed_Fb;             // 速度参考值和反馈值
     float Speed_Fb_1s;
     float Speed_Sub_Step, Speed_Add_Step;  // 速度增减步长
+    float Speed_Align_Id_A;
+    uint32_t Speed_Align_Time_Count;
     Hal_PI_f32_t Speed_PI;                     // 速度PI控制器参数
     uint32_t Speed_Switch_Cnt;             // IF模式切换计数器
     uint8_t Speed_Switch_Flag;             // 速度闭环标志

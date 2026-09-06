@@ -46,41 +46,44 @@
 
 /*速度环参数*/
 
-#define SPEED_ADD_STEP                          (1000.0f / 1000.0f / MOTOR_RPM_BASE)
-#define SPEED_SUB_STEP                          (1000.0f / 1000.0f / MOTOR_RPM_BASE)
-#define SPEED_ID_ADD_STEP                       (1.0f / 1000.0f / MOTOR_I_BASE)
-#define SPEED_ID_SUB_STEP                       (1.0f / 1000.0f / MOTOR_I_BASE)
-#define SPEED_SWITCH_ID_SUB_STEP                (0.001f / MOTOR_I_BASE)
-#define MOTOR_SPEED_MIDDLE_THD                  (500.0f/MOTOR_RPM_BASE)
+#define SPEED_LOW_ADD_STEP                          (200.0f / 1000.0f / MOTOR_RPM_BASE)
+#define SPEED_LOW_ID_TARGET_A                       (0.5f/MOTOR_I_BASE)
+#define SPEED_MIDDLE_HIGH_ADD_STEP                  (200.0f / 1000.0f / MOTOR_RPM_BASE)
+#define SPEED_SUB_STEP                              (1000.0f / 1000.0f / MOTOR_RPM_BASE)
+#define SPEED_ID_ADD_STEP                           (1.0f / 1000.0f / MOTOR_I_BASE)
+#define SPEED_ID_SUB_STEP                           (1.0f / 1000.0f / MOTOR_I_BASE)
+#define SPEED_SWITCH_ID_SUB_STEP                    (0.001f / MOTOR_I_BASE)
+#define SPEED_MIDDLE_THD_RPM                        (500.0f/MOTOR_RPM_BASE)
+#define SPEED_ALIGN_ID_A                            (1.0f/MOTOR_I_BASE)
+#define SPEED_ALIGN_TIME_S                          (2u * MOTOR_SPEED_LOOP_HZ)
 
+#define PWM_SWITH_FREQ_MAX                          (20000.0f)
+#define PWM_SWITH_FREQ_MIN                          (1000.0f)
+#define PWM_SWITH_FREQ_STEP                         (2000.0f/1000.0f)
 
-#define PWM_SWITH_FREQ_MAX                      (20000.0f)
-#define PWM_SWITH_FREQ_MIN                      (1000.0f)
-#define PWM_SWITH_FREQ_STEP                     (2000.0f/1000.0f)
-
-#define SPEED_OPEN2SWITCH_THD_RPM               (500.0f/MOTOR_RPM_BASE)
+#define SPEED_OPEN2SWITCH_THD_RPM                   (500.0f/MOTOR_RPM_BASE)
 
 
 /*系统环参数*/
 
-#define SYSTEM_HZ                              (1000.0f)
-#define SYSTEM_LV_INIT_TIME_S                  (uint32_t)(3.0f * SYSTEM_HZ)
-#define SYSTEM_HV_STANDY_TIME_S                (uint32_t)(0.1f * SYSTEM_HZ)
-#define SYSTEM_HV_STANDY_THD_V                 (12.0f / MOTOR_BUS_VOLTAGE_MAX)
-#define SYSTEM_WAIT_TIME_S                     (uint32_t)(3.0f * SYSTEM_HZ)
+#define SYSTEM_HZ                                   (1000.0f)
+#define SYSTEM_LV_INIT_TIME_S                       (uint32_t)(3.0f * SYSTEM_HZ)
+#define SYSTEM_HV_STANDY_TIME_S                     (uint32_t)(0.1f * SYSTEM_HZ)
+#define SYSTEM_HV_STANDY_THD_V                      (12.0f / MOTOR_BUS_VOLTAGE_MAX)
+#define SYSTEM_WAIT_TIME_S                          (uint32_t)(3.0f * SYSTEM_HZ)
 
 
 /*位置观测器选择*/
-// #define MOTOR_SMO_OBSERVER                 // 滑模观测器
-// #define MOTOR_NONFLUX_OBSERVER             // 非磁链观测器
-#define MOTOR_EFFECTIVE_FLUX_OBSERVER         // 有效磁链观测器
-// #define MOTOR_ENCODER_OBSERVER             // 编码器观测器
-// #define MOTOR_HFI_OBSERVER                 // 高频注入观测器
+// #define MOTOR_SMO_OBSERVER                   // 滑模观测器
+// #define MOTOR_NONFLUX_OBSERVER               // 非磁链观测器
+#define MOTOR_EFFECTIVE_FLUX_OBSERVER           // 有效磁链观测器
+// #define MOTOR_ENCODER_OBSERVER               // 编码器观测器
+// #define MOTOR_HFI_OBSERVER                   // 高频注入观测器
 
 
 /*电机启动方式*/
-#define MOTOR_OPEN_SETUP                     // 电机开环启动
-// #define MOTOR_CLOSE_SETUP                 // 电机闭环启动
+// #define MOTOR_OPEN_SETUP                        // 电机开环启动
+#define MOTOR_CLOSE_SETUP                    // 电机闭环启动
 
 /*System Paramater*/
 

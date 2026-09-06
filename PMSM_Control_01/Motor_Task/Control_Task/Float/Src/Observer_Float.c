@@ -228,6 +228,7 @@ void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control)
     EffFlux_OB.PLL_PI.kp = 200.1f / 1.0f;
     EffFlux_OB.PLL_PI.ki = 16.1f / 40.0f;
     EffFlux_OB.PLL_PI.Kd = 0.0f;
+    EffFlux_OB.PLL_PI.integral = 0.0f;
     EffFlux_OB.PLL_PI.out_max = 10000.0f;
     EffFlux_OB.PLL_PI.out_min = -10000.0f;
     EffFlux_OB.gama = 0.2000f;
@@ -267,6 +268,7 @@ void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ua
     Limit_2PI(&EFO->theta);
     EFO->Sin = arm_sin_f32(EFO->theta);
     EFO->Cos = arm_cos_f32(EFO->theta);
+    // arm_sin_cos_f32(EFO->theta, &EFO->Sin, &EFO->Cos);
     // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }
 

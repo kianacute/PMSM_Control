@@ -330,6 +330,8 @@ void Current_Loop_Run(Motor_Control_t *pControl)
 
     pCurrent_Loop_Float->sinVal = arm_sin_f32(pCurrent_Loop_Float->theta);
     pCurrent_Loop_Float->cosVal = arm_cos_f32(pCurrent_Loop_Float->theta);
+    // arm_sin_cos_f32(pCurrent_Loop_Float->theta, &pCurrent_Loop_Float->sinVal, &pCurrent_Loop_Float->cosVal);
+
     arm_park_f32(pCurrent_Loop_Float->ialpha_fb, pCurrent_Loop_Float->ibeta_fb, &pCurrent_Loop_Float->Id_fb,
                  &pCurrent_Loop_Float->Iq_fb, pCurrent_Loop_Float->sinVal, pCurrent_Loop_Float->cosVal);
 
@@ -386,7 +388,7 @@ void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts)
 void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
-    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    System_Loop_Float_t *pSystem_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
     // Code for MOTOR_IDLE state
     if (pSystem_Loop->Run_flag == 1)
     {
@@ -396,6 +398,13 @@ void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl)
     {
         pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
         pControl->Current_Loop.Status = MOTOR_IDLE;
+        pCurrent_Loop_Float->Id_fb = 0.0f;
+        pCurrent_Loop_Float->Iq_fb = 0.0f;
+        pCurrent_Loop_Float->Id_Ref = 0.0f;
+        pCurrent_Loop_Float->Iq_Ref = 0.0f;
+        pCurrent_Loop_Float->Is_fb = 0.0f;
+        pCurrent_Loop_Float->Bus_Current = 0.0f;
+        pCurrent_Loop_Float->Bus_Current_LPF = 0.0f;
     }
     return;
 }
@@ -405,7 +414,7 @@ void MOTOR_READY_TASK_Float(Motor_Control_t *pControl)
     // Code for MOTOR_READY state
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    System_Loop_Float_t *pSystem_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
     if (pSystem_Loop->Run_flag == 1)
     {
         if (Motor_Diag_Fault_Flag != 0)
@@ -429,7 +438,7 @@ void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    System_Loop_Float_t *pSystem_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
     if (pSystem_Loop->Run_flag == 1)
     {
         if (Motor_Diag_Fault_Flag != 0)
@@ -458,6 +467,7 @@ void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl)
                 else
                 {
                     pControl->Current_Loop.Status = MOTOR_RUN;
+                    pControl->Current_Loop.PWM_OPEN_Flag_z = pControl->Current_Loop.PWM_OPEN_Flag;
                     pControl->Current_Loop.PWM_OPEN_Flag = PWM_OPEN;
                 }
             }
@@ -474,7 +484,7 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    System_Loop_Float_t *pSystem_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
     /* Code for MOTOR_RUN state */
     if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < CURRENT_STOP_SPEED_RPM)
     {
@@ -489,6 +499,7 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl)
         else
         {
             Current_Loop_Run(pControl);
+            pControl->Current_Loop.PWM_OPEN_Flag_z = pControl->Current_Loop.PWM_OPEN_Flag;
         }
     }
     return;
@@ -499,6 +510,7 @@ void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     /* Code for MOTOR_FAULT state */
+    pControl->Current_Loop.PWM_OPEN_Flag_z = pControl->Current_Loop.PWM_OPEN_Flag;
     pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
     if (Motor_Diag_Fault_Flag == 0)
     {
@@ -516,6 +528,7 @@ void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     /* Code for MOTOR_WAIT state */
+    pControl->Current_Loop.PWM_OPEN_Flag_z = pControl->Current_Loop.PWM_OPEN_Flag;
     pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
     pCurrent_Loop_Float->Motor_Wait_Cnt++;
     if (pCurrent_Loop_Float->Motor_Wait_Cnt > ((uint32_t)(pCurrent_Loop_Float->FREQ_HZ * 5))) // 5s

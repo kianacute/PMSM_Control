@@ -25,7 +25,8 @@ typedef struct Current_Loop_Float
     float PWM_duty_a, PWM_duty_b, PWM_duty_c;
     uint8_t sector;
     float PWM_FREQ_Coeff;                               //变载频系数，PWM_FREQ_Coeff = CUR_HZ / FREQ_HZ
-
+    float Bus_Current, Bus_Current_LPF;
+    
     /*缺相诊断*/
     uint32_t offset_check_cnt;
     float A_Max, B_Max, C_Max;
@@ -35,7 +36,7 @@ typedef struct Current_Loop_Float
     /*其他参数*/
     uint32_t Motor_Wait_Cnt;
     uint8_t Dead_Zone_Enable_Flag;
-    float Bus_Current, Bus_Current_LPF;
+
     float Speed_fb_1ms;
     uint8_t avg_count;
 }Current_Loop_Float_t;

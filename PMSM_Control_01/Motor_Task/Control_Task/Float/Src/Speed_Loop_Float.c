@@ -50,7 +50,6 @@ void SPEED_Init_Float(Motor_Control_t *pControl)
     Speed_Loop_Float.target_is = 0;
     Speed_Loop_Float.Speed_Fb = 0;
 
-    // LADRC_FirstOrder_Init(&Speed_Loop.Speed_LADRC, 0.001f, 100000.0f, 200.0f, 20.0f, 8.0f, -8.0f);
 
     Hysteresis_Comp_Init_f32(&Speed_Loop_Float.Speed_Middle_High_Hcomp, 1000.0f, 800.0f, 1000);
     Speed_Loop_Float.Speed_Middle_High_Hcomp.enable = 1;
@@ -67,37 +66,39 @@ void Speed_Input_LPF()
 
 void SPEED_Idle_Task_Float(Motor_Control_t *pControl)
 {
-    System_Loop_FLoat_t *System_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
+    System_Loop_Float_t *System_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
+    Speed_Loop_Float_t *Speed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     if (System_Loop->Run_flag == 1)
     {
         SPEED_Init_Float(pControl);
         pControl->Speed_Loop.Status = SPEED_ALIGN;
+        Speed_Loop->Speed_Align_Time_Count = 0;
     }
     else
     {
         pControl->Speed_Loop.Status = SPEED_IDLE;
+        Speed_Loop->Speed_Ref = 0;
+        Speed_Loop->Speed_Fb = 0;
+        Speed_Loop->Speed_Fb_1s = 0;
+        Speed_Loop->target_id = 0;
+        Speed_Loop->target_iq = 0;
     }
-}
-
-void Align_Task(Motor_Control_t *pControl)
-{
-    Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    pSpeed_Loop->target_iq = 0;
-    pSpeed_Loop->Speed_Ref = 0;
 }
 
 void SPEED_Align_Task_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    System_Loop_FLoat_t *System_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
-    pSpeed_Loop->target_id = 0.0f;
-    if (System_Loop->Run_flag == 1)
+    System_Loop_Float_t *System_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
+    pSpeed_Loop->target_id = Oblique_Wave_f32(SPEED_ALIGN_ID_A, pSpeed_Loop->target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    pSpeed_Loop->Speed_Align_Time_Count ++;
+    if ((pSpeed_Loop->Speed_Align_Time_Count > SPEED_ALIGN_TIME_S) && (System_Loop->Run_flag == 1))
     {
         #if defined(MOTOR_OPEN_SETUP)
             pControl->Speed_Loop.Status = SPEED_OPEN;
             pSpeed_Loop->IF_Start_Cnt  = pControl->Speed_Loop.Loop_count;
         #elif defined(MOTOR_CLOSE_SETUP)
             pControl->Speed_Loop.Status = SPEED_LOW;
+            // pSpeed_Loop->Speed_Low_Id = SPEED_LOW_ID_TARGET_A;
         #endif
     }
 }
@@ -137,9 +138,10 @@ void SPEED_Switch_Task_Float(Motor_Control_t *pControl)
 void SPEED_Low_Task_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-
-    // Speed_Loop.target_id = Oblique_Wave(0.5f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
-    if (pSpeed_Loop->Speed_Ref > MOTOR_SPEED_MIDDLE_THD)
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_f32(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
+                                    SPEED_LOW_ADD_STEP, SPEED_SUB_STEP);
+    // pSpeed_Loop->Speed_Low_Id = Oblique_Wave_f32(SPEED_LOW_ID_TARGET_A, pSpeed_Loop->Speed_Low_Id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    if (pSpeed_Loop->Speed_Ref > SPEED_MIDDLE_THD_RPM)
     {
          pControl->Speed_Loop.Status = SPEED_MIDDLE;
     }
@@ -149,7 +151,9 @@ void SPEED_Low_Task_Float(Motor_Control_t *pControl)
 void SPEED_Middle_Task_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    // Speed_Loop.target_id = Oblique_Wave(0.2f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    // pSpeed_Loop->Speed_Low_Id = Oblique_Wave_f32(0.0f, pSpeed_Loop->Speed_Low_Id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_f32(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
+                                    SPEED_MIDDLE_HIGH_ADD_STEP, SPEED_SUB_STEP);
     SPEED_Run_Task_Float(pControl);
     Hysteresis_Comp_Process_Add_f32(&pSpeed_Loop->Speed_Middle_High_Hcomp, pSpeed_Loop->Speed_Ref);
     if (pSpeed_Loop->Speed_Middle_High_Hcomp.comp_out == 1)
@@ -162,6 +166,8 @@ void SPEED_High_Task_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     // Speed_Loop.target_id = Oblique_Wave(0.0f, Speed_Loop.target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_f32(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
+                                    SPEED_MIDDLE_HIGH_ADD_STEP, SPEED_SUB_STEP);
     SPEED_Run_Task_Float(pControl);
     Hysteresis_Comp_Process_Add_f32(&pSpeed_Loop->Speed_Middle_High_Hcomp, pSpeed_Loop->Speed_Ref);
     if (pSpeed_Loop->Speed_Middle_High_Hcomp.comp_out == 0)
@@ -177,9 +183,7 @@ void SPEED_Run_Task_Float(Motor_Control_t *pControl)
     Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;
     Motor_Parameter_t *Motor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
 
-    Power_Derating_Float(pControl, pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, Motor_Param->Power_Max_W);   
-    pSpeed_Loop->Speed_Ref = Oblique_Wave_f32(pSpeed_Loop->Speed_Command * pSpeed_Loop->Derating_Factor, pSpeed_Loop->Speed_Ref,
-                                        SPEED_ADD_STEP, SPEED_SUB_STEP);
+    // Power_Derating_Float(pControl, pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, Motor_Param->Power_Max_W);   
     // Speed_Loop.Speed_Ref = Speed_Loop.Speed_Command;
     Hysteresis_Comp_Process_Add_f32(&pSpeed_Loop->Weak_Control_Hcomp, pSpeed_Loop->Voltage_err);
     // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
@@ -193,7 +197,7 @@ void SPEED_Run_Task_Float(Motor_Control_t *pControl)
         pSpeed_Loop->Flux_Weak_Id = 0;
     }
     MTPA_Cal_Float(pControl,pSpeed_Loop->target_is);
-    pSpeed_Loop->target_id = pSpeed_Loop->MTPA_Id + pSpeed_Loop->Flux_Weak_Id;
+    pSpeed_Loop->target_id = pSpeed_Loop->MTPA_Id + pSpeed_Loop->Flux_Weak_Id + pSpeed_Loop->Speed_Low_Id;
     // Speed_Loop.target_id = Speed_Loop.MTPA_Id;
     arm_sqrt_f32(pCurrent_Loop_Float->Ud_Target * pCurrent_Loop_Float->Ud_Target + pCurrent_Loop_Float->Uq_Target * pCurrent_Loop_Float->Uq_Target, &pSpeed_Loop->Vs);
     pSpeed_Loop->Voltage_err = pSpeed_Loop->Vs - pInput->Udc_ADISR * WEAK_VOLTAGE_COMPENSATION;

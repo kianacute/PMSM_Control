@@ -19,7 +19,7 @@ typedef struct Current_Loop
     enum Motor_State Status;
     uint64_t Loop_count;                    // Current loop execution count
     void *pCurrent_Loop;                    // Pointer to the current loop structure (either float or fixed)
-    uint8_t PWM_OPEN_Flag;                  //PWM开关标志位
+    uint8_t PWM_OPEN_Flag, PWM_OPEN_Flag_z;                  //PWM开关标志位
 }Current_Loop_t;
 
 enum Speed_LoopState_t

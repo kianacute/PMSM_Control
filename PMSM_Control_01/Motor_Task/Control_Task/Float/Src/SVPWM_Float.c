@@ -5,23 +5,16 @@ void SVPWM_Init_f32(void)
     // Initialization code for SVPWM
 }
 
-// 修正后的SVPWM实现
-inline uint8_t SVPWM_Sector_Predict(float U_alpha, float U_beta)
-{
-    float V1 = U_beta;
-    float V2 = 0.8660254f * U_alpha - 0.5f * U_beta;
-    float V3 = -0.8660254f * U_alpha - 0.5f * U_beta;
-    uint8_t N = 0;
-    if (V1 > 0.0f) N |= 1;
-    if (V2 > 0.0f) N |= 2;
-    if (V3 > 0.0f) N |= 4;
-    return N;
-}
-
 void SVPWM_Calculate_f32(float T_s, float V_dc, float U_alpha, float U_beta,
                      float* T_a, float* T_b, float* T_c, uint8_t* N)
 {
-    int8_t sector = SVPWM_Sector_Predict(U_alpha, U_beta);
+    int8_t sector = 0;
+    float V1 = U_beta;
+    float V2 = 0.8660254f * U_alpha - 0.5f * U_beta;
+    float V3 = -0.8660254f * U_alpha - 0.5f * U_beta;
+    if (V1 > 0.0f) sector |= 1;
+    if (V2 > 0.0f) sector |= 2;
+    if (V3 > 0.0f) sector |= 4;    
     *N = sector;
     float factor = 1.7320508f * T_s / V_dc;  
     float X = factor * U_beta;
