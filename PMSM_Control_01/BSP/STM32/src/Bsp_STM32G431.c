@@ -135,8 +135,8 @@ int Bsp_Init(void)
     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
-    HAL_TIM_Base_Start(&htim16);
-    __HAL_TIM_ENABLE_IT(&htim16, TIM_IT_UPDATE);  //使能更新中断
+    // HAL_TIM_Base_Start(&htim16);
+    // __HAL_TIM_ENABLE_IT(&htim16, TIM_IT_UPDATE);  //使能更新中断
     
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
@@ -172,6 +172,16 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         /*调用电流环切换函数*/
         Current_Loop_Task(&PMSM_42J);
 
+        if (PMSM_42J.Current_Loop.PWM_OPEN_Flag == PWM_OPEN)
+        {
+            Bsp_STM32G431_PWM_Enable();
+        }
+        else
+        {
+            Bsp_STM32G431_PWM_Disable();
+        }
+        Bsp_STM32G431_PWM_SetDuty();
+
         uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
         Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
     }
@@ -180,7 +190,7 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
     }
 }
 
-void Bsp_STM32G431_PWM_Enable(void)
+inline void Bsp_STM32G431_PWM_Enable(void)
 {
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -190,7 +200,7 @@ void Bsp_STM32G431_PWM_Enable(void)
     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
 }
 
-void Bsp_STM32G431_PWM_Disable(void)
+inline void Bsp_STM32G431_PWM_Disable(void)
 {
     HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
     HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
@@ -202,10 +212,14 @@ void Bsp_STM32G431_PWM_Disable(void)
 
 void Bsp_STM32G431_PWM_SetDuty()
 {
+    
     __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PMSM_42J.Output.PWM_duty_d);
 }

@@ -23,6 +23,7 @@ void Current_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.theta = 0.0f;
     Current_Loop_FLoat.FREQ_HZ = MOTOR_CURRENT_LOOP_HZ;
     Current_Loop_FLoat.Loop_time_s = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
+
     /* 计算电流环参数 */
     Current_Loop_FLoat.Id_PI.Kd = 0.1f;
     Current_Loop_FLoat.Iq_PI.Kd = 0.1f;
@@ -49,22 +50,11 @@ void Current_Init_Float(Motor_Control_t *pControl)
     Current_Loop_FLoat.Id_PI.integral = 0;
     Current_Loop_FLoat.Iq_PI.integral = 0;
 
-    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 0;
+    Current_Loop_FLoat.Dead_Zone_Enable_Flag = 1;
     Current_Loop_FLoat.PWM_FREQ_Coeff = 1.0f;
+    pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
+    pControl->Output.PWM_HZ_Coeff = 1.0f;
 }                     
-
-void Current_PWM_Switch(uint8_t PWM_Flag)
-{
-    if (PWM_Flag == PWM_OPEN)
-    {
-        Bsp_STM32G431_PWM_Enable();
-    }
-    else if (PWM_Flag == PWM_CLOSE)
-    {
-        Bsp_STM32G431_PWM_Disable();
-    }
-    return;
-}
 
 
 inline void Current_Avg_Filt_Float(Motor_Control_t *pControl)
@@ -220,7 +210,8 @@ void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float the
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     float Ialpha_tmp, Ibeta_tmp;    
     float Ia_pre = 0.0f, Ib_pre = 0.0f, Ic_pre = 0.0f;
-    float theta_comp = theta + we * MOTOR_CURRENT_LOOP_CYCLE_TIME_S * (2.0f);
+    float theta_comp = theta + we * pCurrent_Loop_Float->Loop_time_s * (2.0f);
+    float Dead_Time_Duty = (Dead_TIME_S) / pCurrent_Loop_Float->Loop_time_s;
 
     Ialpha_tmp = pCurrent_Loop_Float->Id_fb * arm_cos_f32(theta_comp) - pCurrent_Loop_Float->Iq_fb * arm_sin_f32(theta_comp);
     Ibeta_tmp = pCurrent_Loop_Float->Id_fb * arm_sin_f32(theta_comp) + pCurrent_Loop_Float->Iq_fb * arm_cos_f32(theta_comp);
@@ -234,17 +225,17 @@ void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float the
          pControl->Speed_Loop.Status == SPEED_MIDDLE ||
          pControl->Speed_Loop.Status == SPEED_HIGH))
     {
-        if (Ia_pre > MOTOR_DEAD_ZONE_THD)
+        if (Ia_pre > MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_a = pCurrent_Loop_Float->PWM_duty_a + Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_a = pCurrent_Loop_Float->PWM_duty_a + Dead_Time_Duty;
             if (pControl->Output.PWM_duty_a > 1)
             {
                 pControl->Output.PWM_duty_a = 1;
             }
         }
-        else if (Ia_pre < -MOTOR_DEAD_ZONE_THD)
+        else if (Ia_pre < -MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_a = pCurrent_Loop_Float->PWM_duty_a - Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_a = pCurrent_Loop_Float->PWM_duty_a - Dead_Time_Duty ;
             if (pControl->Output.PWM_duty_a < 0)
             {
                 pControl->Output.PWM_duty_a = 0;
@@ -254,17 +245,17 @@ void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float the
         {
             pControl->Output.PWM_duty_a = pCurrent_Loop_Float->PWM_duty_a;
         }
-        if (Ib_pre > MOTOR_DEAD_ZONE_THD)
+        if (Ib_pre > MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_b = pCurrent_Loop_Float->PWM_duty_b + Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_b = pCurrent_Loop_Float->PWM_duty_b + Dead_Time_Duty;
             if (pControl->Output.PWM_duty_b > 1)
             {
                 pControl->Output.PWM_duty_b = 1;
             }
         }
-        else if (Ib_pre < -MOTOR_DEAD_ZONE_THD)
+        else if (Ib_pre < -MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_b = pCurrent_Loop_Float->PWM_duty_b - Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_b = pCurrent_Loop_Float->PWM_duty_b - Dead_Time_Duty;
             if (pControl->Output.PWM_duty_b < 0)
             {
                 pControl->Output.PWM_duty_b = 0;
@@ -274,17 +265,17 @@ void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float the
         {
             pControl->Output.PWM_duty_b = pCurrent_Loop_Float->PWM_duty_b;
         }
-        if (Ic_pre > MOTOR_DEAD_ZONE_THD)
+        if (Ic_pre > MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_c = pCurrent_Loop_Float->PWM_duty_c + Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_c = pCurrent_Loop_Float->PWM_duty_c + Dead_Time_Duty;
             if (pControl->Output.PWM_duty_c > 1)
             {
                 pControl->Output.PWM_duty_c = 1;
             }
         }
-        else if (Ic_pre < -MOTOR_DEAD_ZONE_THD)
+        else if (Ic_pre < -MOTOR_DEAD_ZONE_THD_A)
         {
-            pControl->Output.PWM_duty_c = pCurrent_Loop_Float->PWM_duty_c - Dead_TIME_DUTY;
+            pControl->Output.PWM_duty_c = pCurrent_Loop_Float->PWM_duty_c - Dead_Time_Duty;
             if (pControl->Output.PWM_duty_c < 0)
             {
                 pControl->Output.PWM_duty_c = 0;
@@ -347,9 +338,6 @@ void Current_Loop_Run(Motor_Control_t *pControl)
     pCurrent_Loop_Float->Ud_Target = Hal_PI_f32(&pCurrent_Loop_Float->Id_PI, pCurrent_Loop_Float->Id_Ref - pCurrent_Loop_Float->Id_fb);
     pCurrent_Loop_Float->Uq_Target = Hal_PI_f32(&pCurrent_Loop_Float->Iq_PI, pCurrent_Loop_Float->Iq_Ref - pCurrent_Loop_Float->Iq_fb);
 
-    // pCurrent_Loop_Float->Ud_Target = -0.0f / MOTOR_BUS_VOLTAGE_MAX;
-    // pCurrent_Loop_Float->Uq_Target = 1.5f / MOTOR_BUS_VOLTAGE_MAX;
-
     arm_sqrt_f32(pCurrent_Loop_Float->Id_fb * pCurrent_Loop_Float->Id_fb + pCurrent_Loop_Float->Iq_fb * pCurrent_Loop_Float->Iq_fb, 
                     &pCurrent_Loop_Float->Is_fb);
     arm_inv_park_f32(pCurrent_Loop_Float->Ud_Target, pCurrent_Loop_Float->Uq_Target, &pCurrent_Loop_Float->Ualpha_Ref,
@@ -357,7 +345,7 @@ void Current_Loop_Run(Motor_Control_t *pControl)
     SVPWM_Calculate_f32(2, pControl->Input.Udc_ADISR, pCurrent_Loop_Float->Ualpha_Ref, pCurrent_Loop_Float->Ubeta_Ref,
                     &pCurrent_Loop_Float->PWM_duty_a, &pCurrent_Loop_Float->PWM_duty_b, &pCurrent_Loop_Float->PWM_duty_c, &pCurrent_Loop_Float->sector);
 
-    pCurrent_Loop_Float->Id_PI.out_max = pControl->Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * 1.02f;
+    pCurrent_Loop_Float->Id_PI.out_max = pControl->Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * CURRENT_PID_OUTPUT_LIMIT;
     pCurrent_Loop_Float->Id_PI.out_min = -pCurrent_Loop_Float->Id_PI.out_max;
     if (pCurrent_Loop_Float->Id_PI.out_max > pCurrent_Loop_Float->Ud_Target)
     {
@@ -381,9 +369,9 @@ void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Config_t *Motor_Config = (Motor_Config_t *)pControl->Motor_Config;
-    // pCurrent_Loop_Float->Loop_time_s = Ts;
-    // pCurrent_Loop_Float->FREQ_HZ = 1.0f / Ts;
-    // pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
+    pCurrent_Loop_Float->Loop_time_s = Ts;
+    pCurrent_Loop_Float->FREQ_HZ = 1.0f / (Ts * MOTOR_T_BASE);
+    pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
     pCurrent_Loop_Float->Id_PI.kp = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Fb_1s, &Motor_Config->ID_PI_Kp_Lookup)
                                      * pControl->Output.PWM_HZ_Coeff;
     pCurrent_Loop_Float->Iq_PI.ki = pCurrent_Loop_Float->Id_PI.ki = Lookup_Table_1D_Linear_f32(pSpeed_Loop->Speed_Ref,
@@ -406,7 +394,7 @@ void MOTOR_IDLE_TASK_Float(Motor_Control_t *pControl)
     }
     else
     {
-        Current_PWM_Switch(PWM_CLOSE);
+        pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
         pControl->Current_Loop.Status = MOTOR_IDLE;
     }
     return;
@@ -470,7 +458,7 @@ void MOTOR_OFFSET_CHECK_TASK_Float(Motor_Control_t *pControl)
                 else
                 {
                     pControl->Current_Loop.Status = MOTOR_RUN;
-                    Current_PWM_Switch(PWM_OPEN);
+                    pControl->Current_Loop.PWM_OPEN_Flag = PWM_OPEN;
                 }
             }
         }
@@ -488,7 +476,7 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl)
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     /* Code for MOTOR_RUN state */
-    if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < 3000.0f)
+    if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < CURRENT_STOP_SPEED_RPM)
     {
         pControl->Current_Loop.Status = MOTOR_WAIT;
     }
@@ -501,7 +489,6 @@ void MOTOR_RUN_TASK_Float(Motor_Control_t *pControl)
         else
         {
             Current_Loop_Run(pControl);
-            Bsp_STM32G431_PWM_SetDuty();
         }
     }
     return;
@@ -512,7 +499,7 @@ void MOTOR_FAULT_TASK_Float(Motor_Control_t *pControl)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     /* Code for MOTOR_FAULT state */
-    Current_PWM_Switch(PWM_CLOSE);
+    pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
     if (Motor_Diag_Fault_Flag == 0)
     {
         pControl->Current_Loop.Status = MOTOR_WAIT;
@@ -529,7 +516,7 @@ void MOTOR_WAIT_TASK_Float(Motor_Control_t *pControl)
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     /* Code for MOTOR_WAIT state */
-    Current_PWM_Switch(PWM_CLOSE);
+    pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
     pCurrent_Loop_Float->Motor_Wait_Cnt++;
     if (pCurrent_Loop_Float->Motor_Wait_Cnt > ((uint32_t)(pCurrent_Loop_Float->FREQ_HZ * 5))) // 5s
     {

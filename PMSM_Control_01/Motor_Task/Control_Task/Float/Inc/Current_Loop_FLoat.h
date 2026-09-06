@@ -34,7 +34,6 @@ typedef struct Current_Loop_Float
 
     /*其他参数*/
     uint32_t Motor_Wait_Cnt;
-    uint8_t PWM_OPEN_Flag;
     uint8_t Dead_Zone_Enable_Flag;
     float Bus_Current, Bus_Current_LPF;
     float Speed_fb_1ms;

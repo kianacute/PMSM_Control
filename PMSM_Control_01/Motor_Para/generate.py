@@ -62,8 +62,10 @@ def compute_nonflux_observer(params, rows):
     """
     Ts = 1.0 / params['Current_loop_hz']
     pp = params['Pn']
-    We_b = params['Speed_Max_Rpm'] * 2.0 * PI / 60.0 * pp  # 电角速度上限 rad/s
-    print(f"  [INFO] NonFluxObserver: We_b = {We_b:.3f} rad/s")
+    We_b = params['Speed_Max_Rpm'] * 2.0 * PI / 60.0 * pp  # 电角速度上限 rad/s    
+    max_rpm = params['Speed_Max_Rpm']
+
+
     output = OrderedDict()
     output['NonFlux_Lookup_Speed_index'] = []
     output['NonFlux_PLL_Kp_Lookup_1D'] = []
@@ -72,7 +74,9 @@ def compute_nonflux_observer(params, rows):
     output['EfFlux_Gama_Lookup_1D'] = []
     output['NonFlux_Lookup_Is_index'] = []
 
+
     for r in rows:
+
         rpm = float(r[0])
         damping = float(r[1])
         cutoff_coeff = float(r[2])
@@ -85,7 +89,7 @@ def compute_nonflux_observer(params, rows):
         kp = 2.0 * damping * wc / We_b
         ki = wc * wc * Ts / We_b
 
-        output['NonFlux_Lookup_Speed_index'].append(rpm)
+        output['NonFlux_Lookup_Speed_index'].append(rpm / max_rpm)
         output['NonFlux_PLL_Kp_Lookup_1D'].append(kp)
         output['NonFlux_PLL_Ki_Lookup_1D'].append(ki)
         output['NonFlux_Gama_Lookup_1D'].append(nf_gamma)
@@ -114,6 +118,7 @@ def compute_smo_observer(params, rows):
     Ts = 1.0 / params['Current_loop_hz']
     pp = params['Pn']
     ke = params['Flux_Vkrpm']  # V/(krpm)
+    max_rpm = params['Speed_Max_Rpm']
 
     output = OrderedDict()
     output['SMO_Lookup_Speed_index'] = []
@@ -122,7 +127,7 @@ def compute_smo_observer(params, rows):
     output['SMO_Gain_Lookup_1D'] = []
 
     for r in rows:
-        rpm = float(r[0])
+        rpm = float(r[0]) 
         damping = float(r[1])
         cutoff_coeff = float(r[2])
         smo_gain = float(r[3])
@@ -134,7 +139,7 @@ def compute_smo_observer(params, rows):
         kp = 2.0 * damping * wc / back_emf
         ki = wc * wc * Ts / back_emf
 
-        output['SMO_Lookup_Speed_index'].append(rpm)
+        output['SMO_Lookup_Speed_index'].append(rpm / max_rpm)
         output['SMO_PLL_Kp_Lookup_1D'].append(kp)
         output['SMO_PLL_Ki_Lookup_1D'].append(ki)
         output['SMO_Gain_Lookup_1D'].append(smo_gain)
@@ -166,7 +171,7 @@ def compute_current_loop(params, rows):
     Lq = params['Lq']
     max_current_a = params['Current_Max_A']
     voltage_limit_v = params['Bus_Voltage_Max']
-
+    max_rpm = params['Speed_Max_Rpm']
 
     output = OrderedDict()
     output['Current_Lookup_Speed_index'] = []
@@ -176,7 +181,7 @@ def compute_current_loop(params, rows):
     output['Current_IQ_PI_Ki_Lookup_1D'] = []
 
     for r in rows:
-        rpm = float(r[0])
+        rpm = float(r[0]) / max_rpm  # 归一化到 [0,1]
         bw_ratio = float(r[1])
 
         wc = 2.0 * PI * f_pwm / bw_ratio
@@ -211,9 +216,10 @@ def compute_speed_loop(params, rows):
 
     We_b = params['Speed_Max_Rpm'] * 2.0 * PI / 60.0 * params['Pn']  # 电角速度上限 rad/s
     I_b = params['Current_Max_A']  # 电流上限 A
+    max_rpm = params['Speed_Max_Rpm']
 
     for r in rows:
-        speed_rpm = float(r[0])
+        speed_rpm = float(r[0]) / max_rpm  # 归一化到 [0,1]
         Kp = float(r[1]) * We_b / I_b
         Ki = float(r[2]) * We_b / I_b
 

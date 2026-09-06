@@ -15,6 +15,7 @@ typedef struct SYSTEM_Ctrl
     uint32_t FREQ_Hz;                            // 循环周期
     uint32_t Fault_cnt;                          // 系统状态
     uint8_t Run_flag;                            // 在Run状态下管理运行指令
+    Hysteresis_Comp_TypeDef_f32_t System_Hv_Comp; // 系统高压滞回比较器
 } System_Loop_FLoat_t;
 
 

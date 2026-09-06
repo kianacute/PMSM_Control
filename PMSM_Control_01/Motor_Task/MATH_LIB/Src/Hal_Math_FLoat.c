@@ -179,7 +179,7 @@ float Oblique_Wave_f32(float end_value, float cur_value, float Add_Step, float S
 /// @author doubao
 void Hysteresis_Comp_Init_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float th_h, float th_l, uint32_t delay)
 {
-     hcomp->enable = 0;
+     hcomp->enable = 1;
      hcomp->reset = 0;
      hcomp->threshold_high = th_h;
      hcomp->threshold_low = th_l;

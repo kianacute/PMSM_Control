@@ -36,8 +36,8 @@ const float Current_IQ_PI_Kp_Lookup_1D[10] = {
 };
 
 const float Current_Lookup_Speed_index[10] = {
-    500.0f, 500.0f, 1000.0f, 1500.0f, 2000.0f, 2500.0f,
-    3000.0f, 3500.0f, 4000.0f, 5000.0f,
+    0.083333333f, 0.083333333f, 0.16666667f, 0.25f, 0.33333333f, 0.41666667f,
+    0.5f, 0.58333333f, 0.66666667f, 0.83333333f,
 };
 
 const float EfFlux_Gama_Lookup_1D[10] = {
@@ -71,8 +71,8 @@ const float NonFlux_Lookup_Is_index[10] = {
 };
 
 const float NonFlux_Lookup_Speed_index[10] = {
-    500.0f, 500.0f, 1000.0f, 1500.0f, 2000.0f, 2500.0f,
-    3000.0f, 3500.0f, 4000.0f, 5000.0f,
+    0.083333333f, 0.083333333f, 0.16666667f, 0.25f, 0.33333333f, 0.41666667f,
+    0.5f, 0.58333333f, 0.66666667f, 0.83333333f,
 };
 
 const float NonFlux_PLL_Ki_Lookup_1D[10] = {
@@ -91,8 +91,8 @@ const float SMO_Gain_Lookup_1D[10] = {
 };
 
 const float SMO_Lookup_Speed_index[10] = {
-    500.0f, 500.0f, 1000.0f, 1500.0f, 2000.0f, 2500.0f,
-    3000.0f, 3500.0f, 4000.0f, 5000.0f,
+    0.083333333f, 0.083333333f, 0.16666667f, 0.25f, 0.33333333f, 0.41666667f,
+    0.5f, 0.58333333f, 0.66666667f, 0.83333333f,
 };
 
 const float SMO_PLL_Ki_Lookup_1D[10] = {
@@ -106,8 +106,8 @@ const float SMO_PLL_Kp_Lookup_1D[10] = {
 };
 
 const float Speed_Loop_Speed_Index[10] = {
-    500.0f, 500.0f, 1000.0f, 1500.0f, 2000.0f, 2500.0f,
-    3000.0f, 3500.0f, 4000.0f, 5000.0f,
+    0.083333333f, 0.083333333f, 0.16666667f, 0.25f, 0.33333333f, 0.41666667f,
+    0.5f, 0.58333333f, 0.66666667f, 0.83333333f,
 };
 
 const float Speed_Loop_Speed_PI_Ki_1D[10] = {

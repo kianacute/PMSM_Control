@@ -21,6 +21,7 @@ void SYSTEM_Init_Float(Motor_Control_t *pControl)
     System_Diag_Init();
     Speed_Command = 1000.0f;
     System_Loop_FLoat.Run_flag = 0;
+    Hysteresis_Comp_Init_f32(&System_Loop_FLoat.System_Hv_Comp, SYSTEM_HV_STANDY_THD_V, 5.0f, SYSTEM_HV_STANDY_TIME_S); // 系统高压滞回比较器
 }
 
 void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl)
@@ -35,7 +36,8 @@ void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl)
 {
     System_Loop_FLoat_t *pSystem_Loop = (System_Loop_FLoat_t *)pControl->System_Loop.pSystem_Loop;
     Motor_Control_Input_t *pMotor_Control_Input = (Motor_Control_Input_t *)&pControl->Input;
-    if(pMotor_Control_Input->Udc_ADISR > (12.0f / MOTOR_BUS_VOLTAGE_MAX)) // Check if the DC bus voltage is above a certain threshold
+    Hysteresis_Comp_Process_Add_f32(&pSystem_Loop->System_Hv_Comp, pMotor_Control_Input->Udc_ADISR); // Update the high voltage hysteresis comparator
+    if(pSystem_Loop->System_Hv_Comp.comp_out) // Check if the DC bus voltage is above a certain threshold
     {
         pControl->System_Loop.Status = SYSTEM_RUN;
         pSystem_Loop->Run_flag = 0;
