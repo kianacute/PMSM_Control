@@ -266,8 +266,9 @@ void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ua
     EFO->we = Hal_PI_f32(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
     EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
     Limit_2PI(&EFO->theta);
-    EFO->Sin = arm_sin_f32(EFO->theta);
-    EFO->Cos = arm_cos_f32(EFO->theta);
+    // EFO->Sin = arm_sin_f32(EFO->theta);
+    // EFO->Cos = arm_cos_f32(EFO->theta);
+    SinCos_Lookup_f32(EFO->theta, &EFO->Sin, &EFO->Cos);
     // arm_sin_cos_f32(EFO->theta, &EFO->Sin, &EFO->Cos);
     // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }

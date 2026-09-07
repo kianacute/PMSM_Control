@@ -215,11 +215,15 @@ inline void Bsp_STM32G431_PWM_Disable(void)
 void Bsp_STM32G431_PWM_SetDuty()
 {
     __HAL_TIM_SET_AUTORELOAD(&htim1, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 1);            // Set the auto-reload value for TIM1
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
-    __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5); // Set initial compare value for TIM1 Channel 4
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
+    htim1.Instance->CCR4 = PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5;
+    htim1.Instance->CCR1 = PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    htim1.Instance->CCR2 = PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    htim1.Instance->CCR3 = PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, PMSM_42J.Output.PWM_duty_d);

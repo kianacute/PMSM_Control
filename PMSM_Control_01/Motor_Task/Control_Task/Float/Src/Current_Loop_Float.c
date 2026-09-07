@@ -213,8 +213,8 @@ void Dead_Zone_Compensation_Float(Motor_Control_t *pControl, float we, float the
     float theta_comp = theta + we * pCurrent_Loop_Float->Loop_time_s * (2.0f);
     float Dead_Time_Duty = (Dead_TIME_S) / pCurrent_Loop_Float->Loop_time_s;
 
-    Ialpha_tmp = pCurrent_Loop_Float->Id_fb * arm_cos_f32(theta_comp) - pCurrent_Loop_Float->Iq_fb * arm_sin_f32(theta_comp);
-    Ibeta_tmp = pCurrent_Loop_Float->Id_fb * arm_sin_f32(theta_comp) + pCurrent_Loop_Float->Iq_fb * arm_cos_f32(theta_comp);
+    Ialpha_tmp = pCurrent_Loop_Float->Id_fb * Cos_Lookup_f32(theta_comp) - pCurrent_Loop_Float->Iq_fb * Sin_Lookup_f32(theta_comp);
+    Ibeta_tmp = pCurrent_Loop_Float->Id_fb * Sin_Lookup_f32(theta_comp) + pCurrent_Loop_Float->Iq_fb * Cos_Lookup_f32(theta_comp);
 
     Ia_pre = Ialpha_tmp;
     Ib_pre = -0.5f * Ialpha_tmp + 0.8660254039f * Ibeta_tmp;
@@ -328,9 +328,10 @@ void Current_Loop_Run(Motor_Control_t *pControl)
     OBSERVE_Updata(pControl, pCurrent_Loop_Float->Ualpha_Ref, pCurrent_Loop_Float->Ubeta_Ref,  \
                     pCurrent_Loop_Float->ialpha_fb, pCurrent_Loop_Float->ibeta_fb);
 
-    pCurrent_Loop_Float->sinVal = arm_sin_f32(pCurrent_Loop_Float->theta);
-    pCurrent_Loop_Float->cosVal = arm_cos_f32(pCurrent_Loop_Float->theta);
-    // arm_sin_cos_f32(pCurrent_Loop_Float->theta, &pCurrent_Loop_Float->sinVal, &pCurrent_Loop_Float->cosVal);
+    // pCurrent_Loop_Float->sinVal = arm_sin_f32(pCurrent_Loop_Float->theta);
+    // pCurrent_Loop_Float->cosVal = arm_cos_f32(pCurrent_Loop_Float->theta);
+    SinCos_Lookup_f32(pCurrent_Loop_Float->theta, &pCurrent_Loop_Float->sinVal, &pCurrent_Loop_Float->cosVal);
+    // arm_sin_cos_f32(pCur rent_Loop_Float->theta, &pCurrent_Loop_Float->sinVal, &pCurrent_Loop_Float->cosVal);
 
     arm_park_f32(pCurrent_Loop_Float->ialpha_fb, pCurrent_Loop_Float->ibeta_fb, &pCurrent_Loop_Float->Id_fb,
                  &pCurrent_Loop_Float->Iq_fb, pCurrent_Loop_Float->sinVal, pCurrent_Loop_Float->cosVal);
