@@ -14,6 +14,7 @@
 #include "System_Diag.h"
 #include "Motor_Control.h"
 #include "SVPWM_Fixed.h"
+#include "SVPWM_Float.h"
 
 extern Motor_Control_t PMSM_42J;   
 
@@ -69,8 +70,9 @@ extern uint8_t MOTOR_Run_flag;
 
 q15_t sin_output1, cos_output1, input1;
 q15_t sin_output2, cos_output2, input2;
-q15_t add_output1, add_output2;
+q15_t add_output1 = 1000, add_output2;
 q15_t TT1, TT2, TT3;
+float TTT1, TTT2, TTT3;
 uint8_t sector_tmp;
 
 void my_task3(void *argument)
@@ -97,16 +99,19 @@ void my_task3(void *argument)
 
         // arm_sin_cos_q15(input1, &sin_output1, &cos_output1);
 
-        sin_output2 = arm_sin_q15(input1)/10;
-        cos_output2 = arm_cos_q15(input1)/10;
+        sin_output2 = arm_sin_q15(input1)/15;
+        cos_output2 = arm_cos_q15(input1)/15;
 
-        SVPWM_Calculate_q31(8192, 7536, sin_output2, cos_output2,
+        SVPWM_Calculate_q31(4000 * 2, 9142, sin_output2, cos_output2,
                         &TT1, &TT2, &TT3, &sector_tmp);
+
+        SVPWM_Calculate_f32(4000 * 2, 9142, sin_output2, cos_output2,
+                            &TTT1, &TTT2, &TTT3, &sector_tmp);
 
         vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
 
 
-        input1 = input1 + add_output1;
+        input1 = input1 - add_output1;
 
     }
 }
