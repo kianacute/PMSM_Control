@@ -4,7 +4,7 @@
 #include "arm_math.h"
 #include "Hal_Math_Fixed.h"
 
-typedef struct Current_Loop_Float
+typedef struct Current_Loop_Fixed
 {
     // Define any necessary variables and structures for the current task
     q31_t FREQ_HZ;                                       //电流环频率

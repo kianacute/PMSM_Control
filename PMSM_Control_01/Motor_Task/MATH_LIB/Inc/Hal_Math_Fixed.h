@@ -7,6 +7,8 @@
 #define MY_ABS(x) (((x)>0)?(x):(-(x)))
 #define Limit_2PI(theta) { while (*theta > 6.283185f) {*theta -= 6.283185f;} while (*theta < -6.283185f) {*theta += 6.283185f;}}
 
+#define MATH_SQRT_3_PER_2_Q15                      ((q15_t)(0.8660254f * 32768.0f))  // sqrt(3)/2 in Q15 format
+
 typedef struct Hal_PI_f32_q31
 {
     q31_t kp;        // Proportional gain

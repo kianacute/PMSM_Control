@@ -13,6 +13,7 @@
 #include "Motor_Diag.h"
 #include "System_Diag.h"
 #include "Motor_Control.h"
+#include "SVPWM_Fixed.h"
 
 extern Motor_Control_t PMSM_42J;   
 
@@ -65,6 +66,13 @@ void my_task2(void *argument)
 extern void MOTOR_Run_flag_UPDOWN(void);
 extern uint8_t MOTOR_Run_flag;
 
+
+q15_t sin_output1, cos_output1, input1;
+q15_t sin_output2, cos_output2, input2;
+q15_t add_output1, add_output2;
+q15_t TT1, TT2, TT3;
+uint8_t sector_tmp;
+
 void my_task3(void *argument)
 {
     // extern uint8_t sector;
@@ -77,19 +85,31 @@ void my_task3(void *argument)
         // vTaskList((char *)&load_send_buffer);  //获取任务运行时间信息
         // sprintf((char *)load_send_buffer, "adc: %d  %d\r\n", cup_adc_1, cup_adc_2);
         // HAL_UART_Transmit_DMA(&huart3, (uint8_t *)load_send_buffer, strlen((char *)load_send_buffer));
-        if(MOTOR_Run_flag == 1)
-        {
-            vTaskDelayUntil(&lasttick, 10000); // 每5000ms执行一次
-        }
-        else
-        {
-            vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
-        }
-        MOTOR_Run_flag_UPDOWN();
+        // if(MOTOR_Run_flag == 1)
+        // {
+        //     vTaskDelayUntil(&lasttick, 10000); // 每5000ms执行一次
+        // }
+        // else
+        // {
+        //     vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
+        // }
+        // MOTOR_Run_flag_UPDOWN();
+
+        // arm_sin_cos_q15(input1, &sin_output1, &cos_output1);
+
+        sin_output2 = arm_sin_q15(input1)/10;
+        cos_output2 = arm_cos_q15(input1)/10;
+
+        SVPWM_Calculate_q31(8192, 7536, sin_output2, cos_output2,
+                        &TT1, &TT2, &TT3, &sector_tmp);
+
+        vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
+
+
+        input1 = input1 + add_output1;
+
     }
 }
-
-q31_t sin_input1, sin_output1;
 
 void my_task4(void *argument)
 {
@@ -103,7 +123,6 @@ void my_task4(void *argument)
         System_Diag_Task();
         vTaskDelayUntil(&lasttick, 10); // 每10ms执行一次
         // osDelay(1);
-        sin_output1 = arm_sin_q31(sin_input1);
     }
 }
 
@@ -140,7 +159,7 @@ int Bsp_Init(void)
     
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
-    // xTaskCreate(my_task3, "MOTOR_Run_Task", 16, NULL, osPriorityNormal, NULL);
+    xTaskCreate(my_task3, "MOTOR_Run_Task", 128, NULL, osPriorityNormal, NULL);
     // xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     Profiler_Init();
     Motor_Control_Init(&PMSM_42J);
