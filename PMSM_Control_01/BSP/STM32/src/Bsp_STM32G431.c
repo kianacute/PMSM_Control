@@ -72,7 +72,6 @@ q15_t sin_output1, cos_output1, input1;
 q15_t sin_output2, cos_output2, input2;
 q15_t add_output1 = 1000, add_output2;
 q15_t TT1, TT2, TT3;
-float TTT1, TTT2, TTT3;
 uint8_t sector_tmp;
 
 void my_task3(void *argument)
@@ -107,9 +106,6 @@ void my_task3(void *argument)
         SVPWM_Calculate_q31(4000 * 2, 9142, sin_output2, cos_output2,
                         &TT1, &TT2, &TT3, &sector_tmp);
 
-        // SVPWM_Calculate_f32(4000 * 2, 9142, sin_output2, cos_output2,
-        //                     &TTT1, &TTT2, &TTT3, &sector_tmp);
-        
         uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
         Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
         vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次

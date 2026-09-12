@@ -4,7 +4,6 @@ void SVPWM_Init_f32(void)
 {
     // Initialization code for SVPWM
 }
-//__TARGET_FPU_VFP,__FPU_PRESENT,ARM_MATH_CM4
 
 void SVPWM_Calculate_f32(float T_s, float V_dc, float U_alpha, float U_beta,
                      float* T_a, float* T_b, float* T_c, uint8_t* N)

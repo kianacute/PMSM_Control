@@ -180,7 +180,7 @@ void SPEED_Run_Task_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
-    Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;
+    Motor_Control_Input_Float_t *pInput = (Motor_Control_Input_Float_t *)&pControl->Input;
     Motor_Parameter_t *Motor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
 
     // Power_Derating_Float(pControl, pCurrent_Loop_Float->Bus_Current_LPF, pInput->Udc_ADISR, Motor_Param->Power_Max_W);   
@@ -216,7 +216,7 @@ void SPEED_Run_Task_Float(Motor_Control_t *pControl)
 void Paramater_update_Float(Motor_Control_t *pControl)
 {
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;  
+    Motor_Control_Input_Float_t *pInput = (Motor_Control_Input_Float_t *)&pControl->Input;  
     Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
     PWM_Freq_Update_Float(pControl);
     Observer_Param_Lookup_Updata_Float(pControl, pSpeed_Loop->Speed_Ref, pSpeed_Loop->target_is, (MOTOR_WE_BASE/pSpeed_Loop->PWM_CUR_FREQ));

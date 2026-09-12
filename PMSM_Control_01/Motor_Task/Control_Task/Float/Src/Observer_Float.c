@@ -211,43 +211,43 @@ void Nonlinear_FluxObserver_Updata(struct NonFluxObserver_Parameter *NFO, float3
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
 
 /*有效磁链观测器*/
-struct EffFluxObserver_Parameter EffFlux_OB = 
+struct EffFluxObserver_Parameter EffFlux_OB_Float = 
 {
     .discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S,
     .freq = MOTOR_CURRENT_LOOP_HZ,
     .Angle_Comp = 0.0f,
 };
 
-void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control)
+void Effective_FluxObserver_Init_Float(Motor_Control_t *pMotor_control)
 {
-    pMotor_control->pObserver = &EffFlux_OB;
-    EffFlux_OB.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
-    EffFlux_OB.freq = MOTOR_CURRENT_LOOP_HZ;
-    EffFlux_OB.Flux_alpha = 0.0f;
-    EffFlux_OB.Flux_beta = 0.0f;
-    EffFlux_OB.PLL_PI.kp = 200.1f / 1.0f;
-    EffFlux_OB.PLL_PI.ki = 16.1f / 40.0f;
-    EffFlux_OB.PLL_PI.Kd = 0.0f;
-    EffFlux_OB.PLL_PI.integral = 0.0f;
-    EffFlux_OB.PLL_PI.out_max = 10000.0f;
-    EffFlux_OB.PLL_PI.out_min = -10000.0f;
-    EffFlux_OB.gama = 0.2000f;
-    EffFlux_OB.x_alpha_hat = 0.0f;
-    EffFlux_OB.x_beta_hat = 0.0f;
-    EffFlux_OB.y_alpha_hat = 0.0f;
-    EffFlux_OB.y_beta_hat = 0.0f;
-    EffFlux_OB.Eta_alpha = 0.0f;
-    EffFlux_OB.Eta_beta = 0.0f;
-    EffFlux_OB.Flux_hat = 0.0f;
-    EffFlux_OB.Flux_alpha = 0.0f;
-    EffFlux_OB.Flux_beta = 0.0f;
-    EffFlux_OB.we = 0.0f;
-    EffFlux_OB.theta = 0.0f;
-    EffFlux_OB.Angle_Comp = 0.0f;
+    pMotor_control->pObserver = &EffFlux_OB_Float;
+    EffFlux_OB_Float.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
+    EffFlux_OB_Float.freq = MOTOR_CURRENT_LOOP_HZ;
+    EffFlux_OB_Float.Flux_alpha = 0.0f;
+    EffFlux_OB_Float.Flux_beta = 0.0f;
+    EffFlux_OB_Float.PLL_PI.kp = 200.1f / 1.0f;
+    EffFlux_OB_Float.PLL_PI.ki = 16.1f / 40.0f;
+    EffFlux_OB_Float.PLL_PI.Kd = 0.0f;
+    EffFlux_OB_Float.PLL_PI.integral = 0.0f;
+    EffFlux_OB_Float.PLL_PI.out_max = 10000.0f;
+    EffFlux_OB_Float.PLL_PI.out_min = -10000.0f;
+    EffFlux_OB_Float.gama = 0.2000f;
+    EffFlux_OB_Float.x_alpha_hat = 0.0f;
+    EffFlux_OB_Float.x_beta_hat = 0.0f;
+    EffFlux_OB_Float.y_alpha_hat = 0.0f;
+    EffFlux_OB_Float.y_beta_hat = 0.0f;
+    EffFlux_OB_Float.Eta_alpha = 0.0f;
+    EffFlux_OB_Float.Eta_beta = 0.0f;
+    EffFlux_OB_Float.Flux_hat = 0.0f;
+    EffFlux_OB_Float.Flux_alpha = 0.0f;
+    EffFlux_OB_Float.Flux_beta = 0.0f;
+    EffFlux_OB_Float.we = 0.0f;
+    EffFlux_OB_Float.theta = 0.0f;
+    EffFlux_OB_Float.Angle_Comp = 0.0f;
     // EMF_CAL_Init();
 }
 
-void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
+void Effective_FluxObserver_Updata_Float(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
                                    float32_t Ialpha, float32_t Ibeta)
 {
     struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;

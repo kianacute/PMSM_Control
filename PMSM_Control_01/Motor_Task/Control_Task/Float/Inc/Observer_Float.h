@@ -133,18 +133,18 @@ struct EffFluxObserver_Parameter
     Hal_PI_f32_t PLL_PI;
     float we;
     float theta;
-    Lookup_Table_f32_t PLL_Kp_Lookup;
-    Lookup_Table_f32_t PLL_Ki_Lookup;
-    Lookup_Table_f32_t Gama_Lookup;
+    Lookup_Table_1D_f32_t PLL_Kp_Lookup;
+    Lookup_Table_1D_f32_t PLL_Ki_Lookup;
+    Lookup_Table_1D_f32_t Gama_Lookup;
     float Angle_Comp;
 };
 
-void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control);
-inline void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
+void Effective_FluxObserver_Init_Float(Motor_Control_t *pMotor_control);
+inline void Effective_FluxObserver_Updata_Float(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
                                    float32_t Ialpha, float32_t Ibeta);
-#define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init(pMotor_control)
+#define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init_Float(pMotor_control)
 #define OBSERVE_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)   \
-                    Effective_FluxObserver_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)
+                    Effective_FluxObserver_Updata_Float(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)
 
 #endif
 

@@ -2110,6 +2110,11 @@
               <FileType>5</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Inc\Motor_Lookup_Tables.h</FilePath>
             </File>
+            <File>
+              <FileName>Hal_Math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2140,11 +2145,6 @@
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Float\Src\SVPWM_Float.c</FilePath>
             </File>
-            <File>
-              <FileName>Hal_Math_FLoat.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math_FLoat.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -2156,19 +2156,9 @@
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Current_Loop_Fixed.c</FilePath>
             </File>
             <File>
-              <FileName>Observer_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Observer_Fixed.c</FilePath>
-            </File>
-            <File>
               <FileName>Speed_Loop_Fixed.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Speed_Loop_Fixed.c</FilePath>
-            </File>
-            <File>
-              <FileName>SVPWM_Fixed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\SVPWM_Fixed.c</FilePath>
             </File>
             <File>
               <FileName>System_Loop_FIxed.c</FileName>
@@ -2176,9 +2166,14 @@
               <FilePath>..\Motor_Task\Control_Task\Fixed\Src\System_Loop_FIxed.c</FilePath>
             </File>
             <File>
-              <FileName>Hal_Math_Fixed.c</FileName>
+              <FileName>Observer_Fixed.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math_Fixed.c</FilePath>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\Observer_Fixed.c</FilePath>
+            </File>
+            <File>
+              <FileName>SVPWM_Fixed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Motor_Task\Control_Task\Fixed\Src\SVPWM_Fixed.c</FilePath>
             </File>
           </Files>
         </Group>

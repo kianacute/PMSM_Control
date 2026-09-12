@@ -80,53 +80,65 @@ typedef struct Motor_Config
     Motor_Parameter_t *Motor_Param; // 电机参数
 
     // IF启动参数
-    Lookup_Table_f32_t IF_Start_Speed_Lookup;           // 启动速度查表
-    Lookup_Table_f32_t IF_Start_Iq_Lookup;              // 启动Iq查表
+    Lookup_Table_1D_f32_t IF_Start_Speed_Lookup;           // 启动速度查表
+    Lookup_Table_1D_f32_t IF_Start_Iq_Lookup;              // 启动Iq查表
 
     // 电流环查表参数
-    Lookup_Table_f32_t ID_PI_Kp_Lookup;  
-    Lookup_Table_f32_t IQ_PI_Kp_Lookup; 
-    Lookup_Table_f32_t ID_PI_Ki_Lookup; 
-    Lookup_Table_f32_t IQ_PI_Ki_Lookup; 
+    Lookup_Table_1D_f32_t ID_PI_Kp_Lookup;  
+    Lookup_Table_1D_f32_t IQ_PI_Kp_Lookup; 
+    Lookup_Table_1D_f32_t ID_PI_Ki_Lookup; 
+    Lookup_Table_1D_f32_t IQ_PI_Ki_Lookup; 
 
     // 速度环查表参数
-    Lookup_Table_f32_t Speed_PI_Kp_Lookup; // 速度PI比例增益查表
-    Lookup_Table_f32_t Speed_PI_Ki_Lookup; // 速度PI积分增益查表    
+    Lookup_Table_1D_f32_t Speed_PI_Kp_Lookup; // 速度PI比例增益查表
+    Lookup_Table_1D_f32_t Speed_PI_Ki_Lookup; // 速度PI积分增益查表    
 
     //磁链观测器查表参数
-    Lookup_Table_f32_t NonFlux_PLL_Kp_Lookup;
-    Lookup_Table_f32_t NonFlux_PLL_Ki_Lookup;
-    Lookup_Table_f32_t NonFlux_Gama_Lookup;
-    Lookup_Table_f32_t EfFlux_Gama_Lookup;
+    Lookup_Table_1D_f32_t NonFlux_PLL_Kp_Lookup;
+    Lookup_Table_1D_f32_t NonFlux_PLL_Ki_Lookup;
+    Lookup_Table_1D_f32_t NonFlux_Gama_Lookup;
+    Lookup_Table_1D_f32_t EfFlux_Gama_Lookup;
     Lookup_Table_2D_f32_t EfFlux_Angle_Comp; 
     
     //SMO观测器查表参数
-    Lookup_Table_f32_t SMO_PLL_Kp_Lookup;
-    Lookup_Table_f32_t SMO_PLL_Ki_Lookup;
-    Lookup_Table_f32_t SMO_Gain_Lookup;
-    
-
+    Lookup_Table_1D_f32_t SMO_PLL_Kp_Lookup;
+    Lookup_Table_1D_f32_t SMO_PLL_Ki_Lookup;
+    Lookup_Table_1D_f32_t SMO_Gain_Lookup;
 } Motor_Config_t;
 
-typedef struct Current_Loop_Input
+typedef struct Current_Loop_Input_Float
 {
     float Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
     float Udc_ADISR;
-} Motor_Control_Input_t;
+} Motor_Control_Input_Float_t;
 
-typedef struct Current_Loop_Output
+typedef struct Current_Loop_Output_Float
 {
     float PWM_HZ_Coeff;
     float PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
-} Motor_Control_Output_t;
+} Motor_Control_Output_Float_t;
+
+
+typedef struct Current_Loop_Input_Fixed
+{
+    q15_t Ia_fb_raw, Ib_fb_raw, Ic_fb_raw;
+    q15_t Udc_ADISR;
+} Motor_Control_Input_Fixed_t;
+
+typedef struct Current_Loop_Output_Fixed
+{
+    q15_t PWM_HZ_Coeff;
+    q15_t PWM_duty_a, PWM_duty_b, PWM_duty_c, PWM_duty_d;
+} Motor_Control_Output_Fixed_t;
+
 
 typedef struct Motor_Control    
 {
     System_Loop_t System_Loop;
     Current_Loop_t Current_Loop;
     Speed_Loop_t Speed_Loop;
-    Motor_Control_Input_t Input;
-    Motor_Control_Output_t Output;
+    Motor_Control_Input_Float_t Input;
+    Motor_Control_Output_Float_t Output;
     Motor_Config_t* Motor_Config;
     void *pObserver; // Pointer to the observer structure (either float or fixed)
 } Motor_Control_t;
