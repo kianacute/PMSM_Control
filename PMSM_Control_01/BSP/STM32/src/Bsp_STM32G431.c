@@ -99,15 +99,19 @@ void my_task3(void *argument)
 
         // arm_sin_cos_q15(input1, &sin_output1, &cos_output1);
 
-        sin_output2 = arm_sin_q15(input1)/15;
-        cos_output2 = arm_cos_q15(input1)/15;
+        sin_output2 = arm_sin_q15(input1)/5;
+        cos_output2 = arm_cos_q15(input1)/5;
+
+        uint32_t cb_start = DWT->CYCCNT;
 
         SVPWM_Calculate_q31(4000 * 2, 9142, sin_output2, cos_output2,
                         &TT1, &TT2, &TT3, &sector_tmp);
 
-        SVPWM_Calculate_f32(4000 * 2, 9142, sin_output2, cos_output2,
-                            &TTT1, &TTT2, &TTT3, &sector_tmp);
-
+        // SVPWM_Calculate_f32(4000 * 2, 9142, sin_output2, cos_output2,
+        //                     &TTT1, &TTT2, &TTT3, &sector_tmp);
+        
+        uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
+        Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
         vTaskDelayUntil(&lasttick, 100); // 每100ms执行一次
 
 
@@ -177,7 +181,7 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
     if (hadc->Instance == ADC1)
     {
         /* DWT 周期计数器 — 不受中断优先级影响, 精度 6.25ns @160MHz */
-        uint32_t cb_start = DWT->CYCCNT;
+        // uint32_t cb_start = DWT->CYCCNT;
         // adc_adjustment.ADC_j1 = hadc1.Instance->JDR1; // Read injected channel value
         // adc_adjustment.ADC_j2 = hadc2.Instance->JDR1; // Read another injected channel value
         // adc_adjustment.ADC_j3 = hadc1.Instance->JDR2; // Read another injected channel value
@@ -208,8 +212,8 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         }
         Bsp_STM32G431_PWM_SetDuty();
 
-        uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
-        Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
+        // uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
+        // Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
     }
     else if (hadc->Instance == ADC2)
     {

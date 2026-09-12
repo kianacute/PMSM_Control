@@ -36,9 +36,6 @@
             "defines": [
                 "USE_HAL_DRIVER",
                 "STM32G431xx",
-                "__TARGET_FPU_VFP",
-                "__FPU_PRESENT",
-                "ARM_MATH_CM4",
                 "__CC_ARM",
                 "__arm__",
                 "__align(x)=",

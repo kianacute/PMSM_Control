@@ -6,6 +6,8 @@ void SVPWM_Init_q31(void)
     // Initialization code for SVPWM
 }
 
+q31_t T_sum;
+
 void SVPWM_Calculate_q31(q15_t T_s, q15_t V_dc, q15_t U_alpha, q15_t U_beta,
                      q15_t* T_a, q15_t* T_b, q15_t* T_c, uint8_t* N)
 {
@@ -16,10 +18,10 @@ void SVPWM_Calculate_q31(q15_t T_s, q15_t V_dc, q15_t U_alpha, q15_t U_beta,
     Z = -MATH_SQRT_3_PER_2_Q15 * U_alpha - (U_beta << 14);   if (Z > 0) sector |= 4;    
     *N = sector;
     
-    q31_t factor = ((56756 * (q31_t)T_s)) / (q31_t)V_dc;  
-    X = factor * (q31_t)U_beta;
-    Y = factor * (((MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((16384 * (q31_t)U_beta) >> 15));
-    Z = factor * (((-MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((16384 * (q31_t)U_beta) >> 15));
+    q31_t factor = ((MATH_SQRT_3_Q15 * (q31_t)T_s)) / (q31_t)V_dc;  
+    X = (factor * (q31_t)U_beta) >> 15;
+    Y = (factor * (((MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15))) >> 15;
+    Z = (factor * (((-MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15))) >> 15;
     q31_t T1, T2;
 
     // 根据扇区选择时间
@@ -35,29 +37,25 @@ void SVPWM_Calculate_q31(q15_t T_s, q15_t V_dc, q15_t U_alpha, q15_t U_beta,
     }
     
     // 饱和处理
-    // q31_t T_sum = T1 + T2;
-    // if (T_sum > (T_s << 15))
-    // {
-    //     T1 = (T1 / T_sum) * T_s;
-    //     T2 = (T2 / T_sum) * T_s;
-    // }
-    // else if (T_sum < 0)
-    // {
-    //     T1 = 0;
-    //     T2 = 0;
-    // }
+    T_sum = T1 + T2;
+    if (T_sum > T_s)
+    {
+        T1 = (((T1 << 15) / T_sum)) * T_s >> 15;
+        T2 = (((T2 << 15) / T_sum)) * T_s >> 15;
+    }
+    else if (T_sum < 0)
+    {
+        T1 = 0;
+        T2 = 0;
+    }
     
-    q31_t T0 = (q31_t)(T_s << 15) - T1 - T2;
+    q31_t T0 = (q31_t)(T_s) - T1 - T2;
     
     // 计算七段式SVPWM的比较点
     q31_t T0_half = T0 >> 2;
     q31_t Ta = T0_half;
     q31_t Tb = Ta + (T1 >> 1);
     q31_t Tc = Tb + (T2 >> 1);
-
-    Ta = Ta >> 15;
-    Tb = Tb >> 15;
-    Tc = Tc >> 15;
     
     // 根据扇区分配比较值
     switch (sector)
