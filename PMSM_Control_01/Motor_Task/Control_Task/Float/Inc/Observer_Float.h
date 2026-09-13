@@ -2,7 +2,7 @@
 #define __Observer_H_
 
 #include <stdint.h>
-#include "Hal_Math_Float.h"
+#include "Hal_Math.h"
 #include "Motor_Control.h"
 
 struct EMF_Cal_Parameter

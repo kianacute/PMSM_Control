@@ -340,11 +340,11 @@ void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float S
 #endif
 
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
-    EffFlux_OB.PLL_PI.kp = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
-    EffFlux_OB.PLL_PI.ki = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
-    EffFlux_OB.gama = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
-    EffFlux_OB.Angle_Comp = Lookup_Table_2D_Linear_f32(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
-    EffFlux_OB.discrete_time = Ts;
+    EffFlux_OB_Float.PLL_PI.kp = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
+    EffFlux_OB_Float.PLL_PI.ki = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
+    EffFlux_OB_Float.gama = Lookup_Table_1D_Linear_f32(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
+    EffFlux_OB_Float.Angle_Comp = Lookup_Table_2D_Linear_f32(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
+    EffFlux_OB_Float.discrete_time = Ts;
 #endif
 
 #ifdef MOTOR_SMO_OBSERVER

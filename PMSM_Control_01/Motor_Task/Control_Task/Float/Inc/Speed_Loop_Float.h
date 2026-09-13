@@ -1,7 +1,7 @@
 #ifndef __Speed_LOOP_H__
 #define __Speed_LOOP_H__
 
-#include "Hal_Math_Float.h"
+#include "Hal_Math.h"
 #include "Motor_Control.h"
 
 typedef struct Speed_Loop_FLoat

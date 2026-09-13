@@ -249,7 +249,7 @@ void Hysteresis_Comp_Process_Sub_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float
 }
 
 
-#include "Hal_Math_Fixed.h"
+
 
 /// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间
 /// @param controller PI控制器对象，包含增益、积分项、输出限制等参数
@@ -328,7 +328,7 @@ q31_t Lookup_Table_1D_Linear_q31(q31_t x, Lookup_Table_1D_q31_t *table)
      {
           return table->y_table[table->table_size - 1];
      }
-     q31_t idx = Binary_Search_f32(table->x_table, table->table_size, x);
+     q31_t idx = Binary_Search_q31(table->x_table, table->table_size, x);
      float x0 = table->x_table[idx];
      float y0 = table->y_table[idx];
      float x1 = table->x_table[idx + 1];
@@ -366,8 +366,8 @@ q31_t Lookup_Table_2D_Linear_q31(q31_t x, q31_t y, Lookup_Table_2D_q31_t *table)
     }
 
     // 查找x轴和y轴的索引
-    int32_t ix = Binary_Search_f32(table->x_table, table->nx_size, x_clamped);
-    int32_t iy = Binary_Search_f32(table->y_table, table->ny_size, y_clamped);
+    int32_t ix = Binary_Search_q31(table->x_table, table->nx_size, x_clamped);
+    int32_t iy = Binary_Search_q31(table->y_table, table->ny_size, y_clamped);
 
     // 确保索引在有效范围内（边界情况下取nx_size-2或ny_size-2）
     if (ix >= (int32_t)(table->nx_size - 1)) ix = table->nx_size - 2;

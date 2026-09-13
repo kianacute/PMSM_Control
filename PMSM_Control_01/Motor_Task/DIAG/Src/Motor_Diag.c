@@ -30,7 +30,7 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node, Motor_Control_t *pControl)
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
     Speed_Loop_Float_t* pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
     Current_Loop_Float_t* pCurrent_Loop = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
-    if(pControl->Current_Loop.Status == MOTOR_WAIT || pControl->Current_Loop.Status == MOTOR_IDLE)
+    if(pControl->Current_Loop.Status == CURRENT_WAIT || pControl->Current_Loop.Status == CURRENT_IDLE)
     {
         Motor_Phase_A_Lock.hcomp.reset = 1;
         Motor_Phase_B_Lock.hcomp.reset = 1;
@@ -42,7 +42,7 @@ static void MOTOR_PHASE_LOCK(Diag_Node_t *node, Motor_Control_t *pControl)
         Motor_Phase_B_Lock.hcomp.reset = 0;
         Motor_Phase_C_Lock.hcomp.reset = 0;
     }
-    if(pControl->Current_Loop.Status == MOTOR_RUN)
+    if(pControl->Current_Loop.Status == CURRENT_RUN)
     {
         Motor_Phase_A_Lock.hcomp.enable = 1;
         Motor_Phase_B_Lock.hcomp.enable = 1;
@@ -86,7 +86,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node, Motor_Control_t *pControl)
     Motor_Diag_Item_t *item = (Motor_Diag_Item_t *)node;
     Current_Loop_Float_t* pCurrent_Loop = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t* pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    if(pControl->Current_Loop.Status == MOTOR_WAIT || pControl->Current_Loop.Status == MOTOR_IDLE)
+    if(pControl->Current_Loop.Status == CURRENT_WAIT || pControl->Current_Loop.Status == CURRENT_IDLE)
     {
         item->hcomp.reset = 1; // 系统未运行时复位比较器
     }
@@ -94,7 +94,7 @@ static void MOTOR_BLOCK_DETECT(Diag_Node_t *node, Motor_Control_t *pControl)
     {
         item->hcomp.reset = 0; // 系统运行时正常工作
     }
-    if(pControl->Current_Loop.Status == MOTOR_RUN)
+    if(pControl->Current_Loop.Status == CURRENT_RUN)
     {
         item->hcomp.enable = 1; // 系统运行时使能比较器
     }

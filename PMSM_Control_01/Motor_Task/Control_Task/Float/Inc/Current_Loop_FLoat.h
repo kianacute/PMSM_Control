@@ -2,7 +2,7 @@
 #define __Current_Loop_H__
 
 #include <stdint.h>
-#include "Hal_Math_Float.h"
+#include "Hal_Math.h"
 #include "Motor_Control.h"
 
 typedef struct Current_Loop_Float

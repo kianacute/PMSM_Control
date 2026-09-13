@@ -1,5 +1,5 @@
 #include "SVPWM_Fixed.h"
-#include "Hal_Math_Fixed.h"
+#include "Hal_Math.h"
 
 void SVPWM_Init_q31(void)
 {

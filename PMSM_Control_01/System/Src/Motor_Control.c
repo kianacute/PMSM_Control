@@ -110,30 +110,30 @@ void Current_Loop_Task(Motor_Control_t *pControl)
     {
         switch (pControl->Current_Loop.Status)
         {
-        case MOTOR_IDLE:
+        case CURRENT_IDLE:
             // Handle idle state
-            MOTOR_IDLE_TASK(pControl);
+            Current_IDLE_TASK(pControl);
             break;
-        case MOTOR_READY:
+        case CURRENT_READY:
             // Handle ready state
-            MOTOR_READY_TASK(pControl);
+            Current_READY_TASK(pControl);
             break;
-        case MOTOR_OFFSET_CHECK:
+        case CURRENT_OFFSET_CHECK:
             // Handle offset check state
-            MOTOR_OFFSET_CHECK_TASK(pControl);
+            Current_OFFSET_CHECK_TASK(pControl);
             break;
-        case MOTOR_RUN:
+        case CURRENT_RUN:
             // Handle run state
-            MOTOR_RUN_TASK(pControl);
+            Current_RUN_TASK(pControl);
             break;
-        case MOTOR_FAULT:
+        case CURRENT_FAULT:
             // Handle fault state
             // Add fault handling code here
-            MOTOR_FAULT_TASK(pControl);
+            Current_FAULT_TASK(pControl);
             break;
-        case MOTOR_WAIT:
+        case CURRENT_WAIT:
             // Handle wait state
-            MOTOR_WAIT_TASK(pControl);
+            Current_WAIT_TASK(pControl);
             break;
         default:
             break;
@@ -141,15 +141,15 @@ void Current_Loop_Task(Motor_Control_t *pControl)
     }
     else
     {
-        MOTOR_IDLE_TASK(pControl);
-        pControl->Current_Loop.Status = MOTOR_IDLE;
+        Current_IDLE_TASK(pControl);
+        pControl->Current_Loop.Status = CURRENT_IDLE;
     }
     pControl->Current_Loop.Loop_count++;
 }
 
 void Speed_Loop_Task(Motor_Control_t *pControl)
 {
-    if (pControl->System_Loop.Status == SYSTEM_RUN && pControl->Current_Loop.Status == MOTOR_RUN)
+    if (pControl->System_Loop.Status == SYSTEM_RUN && pControl->Current_Loop.Status == CURRENT_RUN)
     {
         Paramater_update_Float(pControl);
         switch (pControl->Speed_Loop.Status)

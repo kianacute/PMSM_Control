@@ -1,7 +1,7 @@
 #ifndef __MOTOR_DIAG_H__
 #define __MOTOR_DIAG_H__
 
-#include "Hal_Math_Float.h"
+#include "Hal_Math.h"
 #include "Diag_List.h"
 #include "Motor_Control.h"
 

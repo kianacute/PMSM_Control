@@ -36,6 +36,10 @@
             "defines": [
                 "USE_HAL_DRIVER",
                 "STM32G431xx",
+                "MOTOR_CONTROL_FLOAT",
+                "__TARGET_FPU_VFP",
+                "__FPU_PRESENT",
+                "ARM_MATH_CM4",
                 "__CC_ARM",
                 "__arm__",
                 "__align(x)=",
