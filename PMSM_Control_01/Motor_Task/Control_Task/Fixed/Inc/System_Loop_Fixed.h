@@ -1,7 +1,8 @@
-#ifndef __SYSTEM_H__
-#define __SYSTEM_H__
+#ifndef __SYSTEM_LOOP_FIXED_H__
+#define __SYSTEM_LOOP_FIXED_H__
 
-#include "Hal_Math_Fixed.h"
+#include "Hal_Math.h"
+#include "Motor_Control.h"
 
 #define SYSTEM_HZ               (1000.0f)
 
@@ -9,24 +10,13 @@
 #define SYSTEM_HV_STANDY_TIME       (uint32_t)(0.1f * SYSTEM_HZ)
 #define SYSTEM_WAIT_TIME            (uint32_t)(3.0f * SYSTEM_HZ)
 
-enum SYSTEM_State_t
-{
-    SYSTEM_LV_STANDY = 0,
-    SYSTEM_HV_STANDY,
-    SYSTEM_RUN,
-    SYSTEM_FAULT,
-    SYSTEM_WAIT,
-};
-
-typedef struct SYSTEM_Ctrl
+typedef struct SYSTEM_Loop_Fixed
 {
     uint32_t FREQ_Hz;                            // 循环周期
-    enum SYSTEM_State_t system_state;  
     uint32_t Fault_cnt;                          // 系统状态
     uint8_t Run_flag;                            // 在Run状态下管理运行指令
-} SYSTEM_t;
+    Hysteresis_Comp_TypeDef_q31_t System_Hv_Comp; // 系统高压滞回比较器
+} System_Loop_Fixed_t;
 
-void SYSTEM_Init(void);
-void SYSTEM_Task(void);
 
-#endif // __SYSTEM_H__
+#endif // __SYSTEM_LOOP_FIXED_H__

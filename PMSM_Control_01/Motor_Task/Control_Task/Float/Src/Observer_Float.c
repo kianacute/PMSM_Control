@@ -1,7 +1,7 @@
 #include "Observer_Float.h"
 #include "Motor_Control.h"
 
-struct EMF_Cal_Parameter EMF_Cal = {0};
+struct EMF_Cal_Parameter EMF_Cal_Float = {0};
 
 // void EMF_CAL_Init(void)
 // {
@@ -251,7 +251,7 @@ void Effective_FluxObserver_Updata_Float(Motor_Control_t *pMotor_control, float3
                                    float32_t Ialpha, float32_t Ibeta)
 {
     struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
-    Motor_Parameter_t *pMotor = (Motor_Parameter_t *)pMotor_control->Motor_Config->Motor_Param;
+    Motor_Parameter_Float_t *pMotor = (Motor_Parameter_Float_t *)pMotor_control->Motor_Config->Motor_Param;
     arm_park_f32(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
     EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;
     EFO->Flux_Q = EFO->Iq * pMotor->Lq;
@@ -332,7 +332,7 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id)
 void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float Speed, float Is, float Ts)
 {
 
-    Motor_Config_t* pMotor_Config = (Motor_Config_t*)pMotor_Control->Motor_Config;
+    struct Motor_Config_Float *pMotor_Config = (struct Motor_Config_Float *)pMotor_Control->Motor_Config;
 #ifdef MOTOR_NONFLUX_OBSERVER
     NonFlux_OB.tPLL.PLL_PI.kp = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Kp_Lookup);
     NonFlux_OB.tPLL.PLL_PI.ki = Lookup_Table_Linear(Speed, &PMSM_42JS_Config.NonFlux_PLL_Ki_Lookup);

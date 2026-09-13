@@ -72,7 +72,6 @@
 #define SYSTEM_HV_STANDY_THD_V                      (12.0f / MOTOR_BUS_VOLTAGE_MAX)
 #define SYSTEM_WAIT_TIME_S                          (uint32_t)(3.0f * SYSTEM_HZ)
 
-
 /*位置观测器选择*/
 // #define MOTOR_SMO_OBSERVER                   // 滑模观测器
 // #define MOTOR_NONFLUX_OBSERVER               // 非磁链观测器

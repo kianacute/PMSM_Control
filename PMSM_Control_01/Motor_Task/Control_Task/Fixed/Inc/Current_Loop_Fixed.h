@@ -1,8 +1,8 @@
-#ifndef __Current_Loop_FIXED_H__
-#define __Current_Loop_FIXED_H__
+#ifndef __CURRENT_LOOP_FIXED_H__
+#define __CURRENT_LOOP_FIXED_H__
 
 #include "arm_math.h"
-#include "Hal_Math_Fixed.h"
+#include "Hal_Math.h"
 
 typedef struct Current_Loop_Fixed
 {
@@ -21,7 +21,7 @@ typedef struct Current_Loop_Fixed
     q31_t ialpha_fb, ibeta_fb;
     q31_t Ia_fb, Ib_fb, Ic_fb;
     q31_t Ia_fb_offset, Ib_fb_offset, Ic_fb_offset;
-    q31_t PWM_duty_a, PWM_duty_b, PWM_duty_c;
+    q15_t PWM_duty_a, PWM_duty_b, PWM_duty_c;
     uint8_t sector;
     q31_t PWM_FREQ_Coeff;                               //变载频系数，PWM_FREQ_Coeff = CUR_HZ / FREQ_HZ
 
@@ -40,4 +40,4 @@ typedef struct Current_Loop_Fixed
     uint8_t avg_count;
 }Current_Loop_Fixed_t;
 
-#endif // __Current_Loop_Fixed_H__
+#endif // __CURRENT_LOOP_FIXED_H__

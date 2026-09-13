@@ -1,6 +1,5 @@
 #include "Hal_Math.h"
 
-
 /// @brief 二分查找，数组必须满足单调性
 /// @param arr 浮点数组，数组下标从0开始
 /// @param n 数组长度
@@ -563,7 +562,7 @@ void Hysteresis_Comp_Process_Sub_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp, q31_t
  * sin/cos 合表查找表: g_SinCos_LUT_Sin[i] = sin(2*pi*i/2048), i = 0..2047
  * 每个元素为正确舍入到 float32 的值, 与 Hal_Math_Float.h 中 SinCos_Lookup_f32() 配套
  * ============================================================================*/
-const float g_SinCos_LUT_Sin[SINCOS_LUT_SIZE] = {
+const float g_SinCos_LUT_Sin[SINCOS_LUT_SIZE] = { 
     0.0f, 0.00306795677f, 0.00613588467f, 0.009203754f, 0.0122715384f, 0.015339206f, 0.01840673f, 0.02147408f,
     0.024541229f, 0.027608145f, 0.030674804f, 0.0337411724f, 0.0368072242f, 0.0398729257f, 0.04293826f, 0.04600318f,
     0.0490676761f, 0.052131705f, 0.0551952459f, 0.0582582653f, 0.061320737f, 0.06438263f, 0.06744392f, 0.070504576f,

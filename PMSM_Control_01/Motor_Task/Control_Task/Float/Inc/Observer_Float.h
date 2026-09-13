@@ -1,5 +1,5 @@
-#ifndef __Observer_H_
-#define __Observer_H_
+#ifndef __Observer_FLOAT_H_
+#define __Observer_FLOAT_H_
 
 #include <stdint.h>
 #include "Hal_Math.h"

@@ -1,20 +1,20 @@
-#ifndef __OBSERVER_FIXED_H_
-#define __OBSERVER_FIXED_H_
+#ifndef __Observer_FIXED_H_
+#define __Observer_FIXED_H_
 
 #include <stdint.h>
-#include "Hal_Math_Fixed.h"
+#include "Hal_Math.h"
 #include "Motor_Control.h"
 
 struct EMF_Cal_Parameter
 {
-    float EMF_alpha;
-    float EMF_beta;
-    float Ls_Ialpha;
-    float Ls_Ibeta;
-    float ialpha_last;
-    float ibeta_last;
-    float EMF;
-    float EMF_LPF_Coff;
+    q31_t EMF_alpha;
+    q31_t EMF_beta;
+    q31_t Ls_Ialpha;
+    q31_t Ls_Ibeta;
+    q31_t ialpha_last;
+    q31_t ibeta_last;
+    q31_t EMF;
+    q31_t EMF_LPF_Coff;
 };
 
 #ifdef MOTOR_SMO_OBSERVER
@@ -113,7 +113,7 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
 
-struct EffFluxObserver_Parameter_Fixed
+struct EffFluxObserver_Parameter
 {
     q31_t discrete_time;
     q31_t freq;
@@ -139,12 +139,12 @@ struct EffFluxObserver_Parameter_Fixed
     q31_t Angle_Comp;
 };
 
-void Effective_FluxObserver_Init(Motor_Control_t *pMotor_control);
-inline void Effective_FluxObserver_Updata(Motor_Control_t *pMotor_control, float32_t Ualpha, float32_t Ubeta,
-                                   float32_t Ialpha, float32_t Ibeta);
-#define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init(pMotor_control)
+void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control);
+inline void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t Ualpha, q31_t Ubeta,
+                                   q31_t Ialpha, q31_t Ibeta);
+#define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init_Fixed(pMotor_control)
 #define OBSERVE_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)   \
-                    Effective_FluxObserver_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)
+                    Effective_FluxObserver_Updata_Fixed(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)
 
 #endif
 
@@ -178,6 +178,6 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 #endif
 
 
-void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, float Speed, float Is, float Ts);
+void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, q31_t Speed, q31_t Is, q31_t Ts);
 
-#endif // __OBSERVER_FIXED_H__
+#endif // __EST_H__

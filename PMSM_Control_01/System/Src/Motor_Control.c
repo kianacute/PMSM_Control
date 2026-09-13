@@ -2,8 +2,8 @@
 #include "Motor_Lookup_Tables.h"
 
 Motor_Control_t PMSM_42J; 
-Motor_Parameter_t PMSM_42JS_Parameter;
-Motor_Config_t PMSM_42JS_Config;
+Motor_Parameter_Float_t PMSM_42JS_Parameter;
+struct Motor_Config_Float PMSM_42JS_Config;
 
 void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
 {
@@ -29,7 +29,7 @@ void Motor_Config_Init(Motor_Control_t *pMotor_Control)
 {
     Motor_Parameter_Init(pMotor_Control);
     pMotor_Control->Motor_Config = (Motor_Config_t*)&PMSM_42JS_Config;
-    pMotor_Control->Motor_Config->Motor_Param = &PMSM_42JS_Parameter;
+    pMotor_Control->Motor_Config->Motor_Param = (Motor_Parameter_Fixed_t*)&PMSM_42JS_Parameter;
 
     // IF启动参数查表初始化
     PMSM_42JS_Config.IF_Start_Iq_Lookup.x_table = IF_Start_Ramp_Sec;

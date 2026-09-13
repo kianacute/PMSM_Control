@@ -1,5 +1,4 @@
 #include "System_Loop_Float.h"
-#include "arm_math.h"
 #include "Current_Loop_Float.h"
 #include "Hal_Math.h"
 #include "Observer_Float.h"
@@ -9,8 +8,7 @@
 
 extern uint8_t MOTOR_Run_flag;
 extern float Speed_Command;
-
-uint8_t System_Fault_Flag = 0;
+uint8_t System_Fault_Flag;
 
 System_Loop_Float_t System_Loop_FLoat;
 
@@ -35,7 +33,7 @@ void SYSTEM_LV_Standy_Float(Motor_Control_t *pControl)
 void SYSTEM_HV_Standy_Float(Motor_Control_t *pControl)
 {
     System_Loop_Float_t *pSystem_Loop = (System_Loop_Float_t *)pControl->System_Loop.pSystem_Loop;
-    Motor_Control_Input_t *pMotor_Control_Input = (Motor_Control_Input_t *)&pControl->Input;
+    struct Current_Loop_Input_Float *pMotor_Control_Input = (struct Current_Loop_Input_Float *)&pControl->Input;
     Hysteresis_Comp_Process_Add_f32(&pSystem_Loop->System_Hv_Comp, pMotor_Control_Input->Udc_ADISR); // Update the high voltage hysteresis comparator
     if(pSystem_Loop->System_Hv_Comp.comp_out) // Check if the DC bus voltage is above a certain threshold
     {

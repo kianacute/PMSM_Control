@@ -1,16 +1,10 @@
-#ifndef __SYSTEM_H__
-#define __SYSTEM_H__
+#ifndef __SYSTEM_LOOP_FLOAT_H__
+#define __SYSTEM_LOOP_FLOAT_H__
 
 #include "Hal_Math.h"
 #include "Motor_Control.h"
 
-#define SYSTEM_HZ               (1000.0f)
-
-#define SYSTEM_LV_INIT_TIME         (uint32_t)(3.0f * SYSTEM_HZ)
-#define SYSTEM_HV_STANDY_TIME       (uint32_t)(0.1f * SYSTEM_HZ)
-#define SYSTEM_WAIT_TIME            (uint32_t)(3.0f * SYSTEM_HZ)
-
-typedef struct SYSTEM_Ctrl
+typedef struct SYSTEM_Loop_Float
 {
     uint32_t FREQ_Hz;                            // 循环周期
     uint32_t Fault_cnt;                          // 系统状态
@@ -19,4 +13,4 @@ typedef struct SYSTEM_Ctrl
 } System_Loop_Float_t;
 
 
-#endif // __SYSTEM_H__
+#endif // __SYSTEM_LOOP_FLOAT_H__

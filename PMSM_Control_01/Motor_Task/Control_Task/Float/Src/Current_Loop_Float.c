@@ -9,9 +9,8 @@
 
 Current_Loop_Float_t Current_Loop_FLoat;  
 
-const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
-// const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3};
-
+static const uint8_t rewrite_phase_index[6] = {3, 2, 3, 1, 1, 2};
+// const uint8_t rewrite_phase_index[6] = {2, 1, 1, 3, 2, 3}
 
 void Current_Init_Float(Motor_Control_t *pControl)
 {
@@ -61,7 +60,7 @@ inline void Current_Avg_Filt_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
+    Motor_Parameter_Float_t *pMotor_Param = (Motor_Parameter_Float_t *)pControl->Motor_Config->Motor_Param;
     struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
     if (pCurrent_Loop_Float->avg_count >= ((uint32_t)(pCurrent_Loop_Float->FREQ_HZ / pSpeed_Loop->FREQ_Hz)))
     {
@@ -77,7 +76,7 @@ void Current_Speed_Switch_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Parameter_t *pMotor_Param = (Motor_Parameter_t *)pControl->Motor_Config->Motor_Param;
+    Motor_Parameter_Float_t *pMotor_Param = (Motor_Parameter_Float_t *)pControl->Motor_Config->Motor_Param;
     struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
     switch (pControl->Speed_Loop.Status)
     {
@@ -308,7 +307,7 @@ inline void MOTOR_Bus_Current_Rewrite_Float(Motor_Control_t *pControl)
 }
 
 
-void Current_Loop_Run(Motor_Control_t *pControl)
+void Current_Loop_Run_Float(Motor_Control_t *pControl)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
@@ -371,7 +370,7 @@ void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts)
 {
     Current_Loop_Float_t *pCurrent_Loop_Float = (Current_Loop_Float_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Float_t *pSpeed_Loop = (Speed_Loop_Float_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Config_t *Motor_Config = (Motor_Config_t *)pControl->Motor_Config;
+    struct Motor_Config_Float *Motor_Config = (struct Motor_Config_Float *)pControl->Motor_Config;
     pCurrent_Loop_Float->Loop_time_s = Ts;
     pCurrent_Loop_Float->FREQ_HZ = 1.0f / (Ts * MOTOR_T_BASE);
     pCurrent_Loop_Float->PWM_FREQ_Coeff = pCurrent_Loop_Float->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
@@ -499,7 +498,7 @@ void Current_RUN_TASK_Float(Motor_Control_t *pControl)
         }
         else
         {
-            Current_Loop_Run(pControl);
+            Current_Loop_Run_Float(pControl);
             pControl->Current_Loop.PWM_OPEN_Flag_z = pControl->Current_Loop.PWM_OPEN_Flag;
         }
     }

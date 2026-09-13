@@ -1,5 +1,5 @@
-#ifndef __Speed_LOOP_H__
-#define __Speed_LOOP_H__
+#ifndef __Speed_LOOP_FLOAT_H__
+#define __Speed_LOOP_FLOAT_H__
 
 #include "Hal_Math.h"
 #include "Motor_Control.h"
@@ -34,4 +34,4 @@ typedef struct Speed_Loop_FLoat
 } Speed_Loop_Float_t;
 
 
-#endif // __Speed_Loop_H__
+#endif // __Speed_LOOP_FLOAT_H__
