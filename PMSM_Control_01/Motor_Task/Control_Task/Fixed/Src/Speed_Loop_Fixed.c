@@ -106,7 +106,7 @@ void SPEED_Align_Task_Fixed(Motor_Control_t *pControl)
 void SPEED_Open_Task_Fixed(Motor_Control_t *pControl)
 {
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
-    Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
+    struct Motor_Config_Fixed *pMotor_Config = (struct Motor_Config_Fixed *)pControl->Motor_Config;
     float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
     pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
     pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
@@ -217,7 +217,7 @@ void Paramater_update_Fixed(Motor_Control_t *pControl)
 {
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     Motor_Control_Input_t *pInput = (Motor_Control_Input_t *)&pControl->Input;  
-    Motor_Config_t *pMotor_Config = (Motor_Config_t *)pControl->Motor_Config;
+    struct Motor_Config_Fixed *pMotor_Config = (struct Motor_Config_Fixed *)pControl->Motor_Config;
     PWM_Freq_Update_Fixed(pControl);
     Observer_Param_Lookup_Updata_Fixed(pControl, pSpeed_Loop->Speed_Ref, pSpeed_Loop->target_is, (MOTOR_WE_BASE/pSpeed_Loop->PWM_CUR_FREQ));
     Current_Para_Updata_Fixed(pControl, pSpeed_Loop->Speed_Ref, (MOTOR_WE_BASE/pSpeed_Loop->PWM_CUR_FREQ));       

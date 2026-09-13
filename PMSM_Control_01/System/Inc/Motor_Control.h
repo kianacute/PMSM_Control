@@ -215,7 +215,6 @@ typedef struct Motor_Control
     void Current_RUN_TASK_Float(Motor_Control_t *pControl);
     void Current_FAULT_TASK_Float(Motor_Control_t *pControl);
     void Current_WAIT_TASK_Float(Motor_Control_t *pControl);
-    void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts);
 
     #define         Current_Init(pMotor_control)                    Current_Init_Float(pMotor_control)
     #define         Current_IDLE_TASK(pMotor_control)               Current_IDLE_TASK_Float(pMotor_control)                  
@@ -278,7 +277,6 @@ typedef struct Motor_Control
     void Current_RUN_TASK_Fixed(Motor_Control_t *pControl);
     void Current_FAULT_TASK_Fixed(Motor_Control_t *pControl);
     void Current_WAIT_TASK_Fixed(Motor_Control_t *pControl);
-    void Current_Para_Updata_Fixed(Motor_Control_t *pControl, q31_t speed, q31_t Ts);
 
     #define         Current_Init(pMotor_control)                    Current_Init_Fixed(pMotor_control)
     #define         Current_IDLE_TASK(pMotor_control)               Current_IDLE_TASK_Fixed(pMotor_control)                  

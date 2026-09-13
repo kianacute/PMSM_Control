@@ -41,6 +41,6 @@ typedef struct Current_Loop_Float
     uint8_t avg_count;
 }Current_Loop_Float_t;
 
-
+void Current_Para_Updata_Float(Motor_Control_t *pControl, float speed, float Ts);
 
 #endif // __Current_Loop_H__

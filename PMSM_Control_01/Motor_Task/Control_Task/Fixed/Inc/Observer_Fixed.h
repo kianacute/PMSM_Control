@@ -178,6 +178,6 @@ void HFSWInjection_NSF(struct HFSWInjection_Parameter *HFSW, float id);
 #endif
 
 
-void Observer_Param_Lookup_Updata_Float(Motor_Control_t *pMotor_Control, q31_t Speed, q31_t Is, q31_t Ts);
+void Observer_Param_Lookup_Updata_Fixed(Motor_Control_t *pMotor_Control, q31_t Speed, q31_t Is, q31_t Ts);
 
 #endif // __EST_H__

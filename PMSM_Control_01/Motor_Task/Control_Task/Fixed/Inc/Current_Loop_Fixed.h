@@ -3,6 +3,7 @@
 
 #include "arm_math.h"
 #include "Hal_Math.h"
+#include "Motor_Control.h"
 
 typedef struct Current_Loop_Fixed
 {
@@ -39,5 +40,8 @@ typedef struct Current_Loop_Fixed
     q31_t Speed_fb_1ms;
     uint8_t avg_count;
 }Current_Loop_Fixed_t;
+
+
+void Current_Para_Updata_Fixed(Motor_Control_t *pControl, q31_t speed, q31_t Ts);
 
 #endif // __CURRENT_LOOP_FIXED_H__
