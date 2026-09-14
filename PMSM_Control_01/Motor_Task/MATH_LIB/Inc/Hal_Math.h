@@ -294,4 +294,47 @@ inline void Hysteresis_Comp_Process_Add_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp
 inline void Hysteresis_Comp_Process_Sub_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp, q31_t analog_input);
 
 
+static inline void arm_clarke_q15(q15_t Ia, q15_t Ib, q15_t * pIalpha, q15_t * pIbeta)
+{
+    q15_t product1, product2;                    /* Temporary variables used to store intermediate results */
+
+    /* Calculating pIalpha from Ia by equation pIalpha = Ia */
+    *pIalpha = Ia;
+
+    /* Intermediate product is calculated by (1/(sqrt(3)) * Ia) */
+    product1 = (q15_t) (((q31_t) Ia * 18919) >> 15);
+
+    /* Intermediate product is calculated by (2/sqrt(3) * Ib) */
+    product2 = (q15_t) (((q31_t) Ib * 37837) >> 15);
+
+    /* pIbeta is calculated by adding the intermediate products */
+    *pIbeta = clip_q31_to_q15((q31_t)product1 + (q31_t)product2);
+}
+
+static inline void arm_park_q15(q15_t Ialpha, q15_t Ibeta, q15_t * pId, q15_t * pIq, q15_t sinVal, q15_t cosVal)
+{
+    q15_t product1, product2;                    /* Temporary variables used to store intermediate results */
+    q15_t product3, product4;                    /* Temporary variables used to store intermediate results */
+
+    /* Intermediate product is calculated by (Ialpha * cosVal) */
+    product1 = (q15_t) (((q31_t) (Ialpha) * (cosVal)) >> 15);
+
+    /* Intermediate product is calculated by (Ibeta * sinVal) */
+    product2 = (q15_t) (((q31_t) (Ibeta) * (sinVal)) >> 15);
+
+    /* Intermediate product is calculated by (Ialpha * sinVal) */
+    product3 = (q15_t) (((q31_t) (Ialpha) * (sinVal)) >> 15);
+
+    /* Intermediate product is calculated by (Ibeta * cosVal) */
+    product4 = (q15_t) (((q31_t) (Ibeta) * (cosVal)) >> 15);
+
+    /* Calculate pId by adding the two intermediate products 1 and 2 */
+    *pId = clip_q31_to_q15((q31_t)product1 + (q31_t)product2);
+
+    /* Calculate pIq by subtracting the two intermediate products 3 from 4 */
+    *pIq = clip_q31_to_q15((q31_t)product4 - (q31_t)product3);
+}
+
+
+
 #endif

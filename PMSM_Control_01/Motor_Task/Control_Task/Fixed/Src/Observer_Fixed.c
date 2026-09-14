@@ -252,10 +252,10 @@ void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t 
 {
     struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
     Motor_Parameter_Fixed_t *pMotor = (Motor_Parameter_Fixed_t *)pMotor_control->Motor_Config->Motor_Param;
-    arm_park_q31(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
+    arm_park_q15(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
     EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;
     EFO->Flux_Q = EFO->Iq * pMotor->Lq;
-    arm_inv_park_q31(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
+    arm_inv_park_q15(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
     EFO->x_alpha_hat += ((Ualpha + EFO->gama * (EFO->Flux_alpha - EFO->x_alpha_hat)) * EFO->discrete_time);
     EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
     EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;

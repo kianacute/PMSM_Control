@@ -5,7 +5,7 @@
 
 #define ADC_OPAMP_GAIN          (0.02197265625f)
 #define PWM_MAX_DUTY            (4000.0f)
-#define ADC_VDDA_REF            ((float)4096/2)
+#define ADC_VDDA_REF            (4096)
 
 
 /* Profiler 槽位索引

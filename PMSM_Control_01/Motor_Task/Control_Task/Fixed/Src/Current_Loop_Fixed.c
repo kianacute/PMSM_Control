@@ -65,7 +65,7 @@ inline void Current_Avg_Filt_Fixed(Motor_Control_t *pControl)
     struct EffFluxObserver_Parameter *pObserver = (struct EffFluxObserver_Parameter *)pControl->pObserver;
     if (pCurrent_Loop_Fixed->avg_count >= ((uint32_t)(pCurrent_Loop_Fixed->FREQ_HZ / pSpeed_Loop->FREQ_Hz)))
     {
-        pSpeed_Loop->Speed_Fb = pCurrent_Loop_Fixed->Speed_fb_1ms / pCurrent_Loop_Fixed->avg_count;
+        pSpeed_Loop->Speed_Fb = (pCurrent_Loop_Fixed->Speed_fb_1ms << 15) / pCurrent_Loop_Fixed->avg_count;
         pCurrent_Loop_Fixed->Speed_fb_1ms = 0;
         pCurrent_Loop_Fixed->avg_count = 0;
     }
@@ -90,16 +90,14 @@ void Current_Speed_Switch_Fixed(Motor_Control_t *pControl)
     }
     case SPEED_OPEN:
     {
-        pCurrent_Loop_Fixed->theta += pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s;
+        pCurrent_Loop_Fixed->theta += ((pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s) >> 15);
         // pCurrent_Loop_Fixed->theta += 0.002f;
-        Limit_2PI(&pCurrent_Loop_Fixed->theta);
         break;
     }
     case SPEED_SWITCH:
     {
-        pCurrent_Loop_Fixed->theta += pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s;
-        Limit_2PI(&pCurrent_Loop_Fixed->theta);
-        if (MY_ABS(pObserver->theta - pCurrent_Loop_Fixed->theta) < 0.18f)
+        pCurrent_Loop_Fixed->theta += ((pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s) >> 15);
+        if (MY_ABS(pObserver->theta - pCurrent_Loop_Fixed->theta) < 1638)
         {
             pSpeed_Loop->Speed_Switch_Cnt++;
             if (pSpeed_Loop->Speed_Switch_Cnt > 10)
@@ -115,7 +113,6 @@ void Current_Speed_Switch_Fixed(Motor_Control_t *pControl)
     case SPEED_LOW:
     {
         pCurrent_Loop_Fixed->theta = pObserver->theta;
-        Limit_2PI(&pCurrent_Loop_Fixed->theta);
         break;
     }
     default:
@@ -322,7 +319,7 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
                                 MY_ABS(pCurrent_Loop_Fixed->Ib_fb), 
                                  MY_ABS(pCurrent_Loop_Fixed->Ic_fb));
 
-    arm_clarke_q31(pCurrent_Loop_Fixed->Ia_fb, pCurrent_Loop_Fixed->Ib_fb, 
+    arm_clarke_q15(pCurrent_Loop_Fixed->Ia_fb, pCurrent_Loop_Fixed->Ib_fb, 
                     &pCurrent_Loop_Fixed->ialpha_fb, &pCurrent_Loop_Fixed->ibeta_fb);
 
     OBSERVE_Updata(pControl, pCurrent_Loop_Fixed->Ualpha_Ref, pCurrent_Loop_Fixed->Ubeta_Ref,  \
@@ -399,13 +396,13 @@ void Current_IDLE_TASK_Fixed(Motor_Control_t *pControl)
     {
         pControl->Current_Loop.PWM_OPEN_Flag = PWM_CLOSE;
         pControl->Current_Loop.Status = CURRENT_IDLE;
-        pCurrent_Loop_Fixed->Id_fb = 0.0f;
-        pCurrent_Loop_Fixed->Iq_fb = 0.0f;
-        pCurrent_Loop_Fixed->Id_Ref = 0.0f;
-        pCurrent_Loop_Fixed->Iq_Ref = 0.0f;
-        pCurrent_Loop_Fixed->Is_fb = 0.0f;
-        pCurrent_Loop_Fixed->Bus_Current = 0.0f;
-        pCurrent_Loop_Fixed->Bus_Current_LPF = 0.0f;
+        pCurrent_Loop_Fixed->Id_fb = 0;
+        pCurrent_Loop_Fixed->Iq_fb = 0;
+        pCurrent_Loop_Fixed->Id_Ref = 0;
+        pCurrent_Loop_Fixed->Iq_Ref = 0;
+        pCurrent_Loop_Fixed->Is_fb = 0;
+        pCurrent_Loop_Fixed->Bus_Current = 0;
+        pCurrent_Loop_Fixed->Bus_Current_LPF = 0;
     }
     return;
 }
@@ -455,12 +452,12 @@ void Current_OFFSET_CHECK_TASK_Fixed(Motor_Control_t *pControl)
             pCurrent_Loop_Fixed->Ic_fb_offset += pControl->Input.Ic_fb_raw; // Accumulate ADC1 injected channel 2 value
             if (pCurrent_Loop_Fixed->offset_check_cnt >= MOTOR_ADC_OFFSET_SAMPLE_CNT)
             {
-                pCurrent_Loop_Fixed->Ia_fb_offset /= (float)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC1 injected channel 1
-                pCurrent_Loop_Fixed->Ib_fb_offset /= (float)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC2 injected channel 1
-                pCurrent_Loop_Fixed->Ic_fb_offset /= (float)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC1 injected channel 2
-                if (pCurrent_Loop_Fixed->Ia_fb_offset > MOTOR_PHASE_LOCK_THRESHOLD || pCurrent_Loop_Fixed->Ia_fb_offset < -MOTOR_PHASE_LOCK_THRESHOLD ||
-                    pCurrent_Loop_Fixed->Ib_fb_offset > MOTOR_PHASE_LOCK_THRESHOLD || pCurrent_Loop_Fixed->Ib_fb_offset < -MOTOR_PHASE_LOCK_THRESHOLD ||
-                    pCurrent_Loop_Fixed->Ic_fb_offset > MOTOR_PHASE_LOCK_THRESHOLD || pCurrent_Loop_Fixed->Ic_fb_offset < -MOTOR_PHASE_LOCK_THRESHOLD)
+                pCurrent_Loop_Fixed->Ia_fb_offset /= (q15_t)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC1 injected channel 1
+                pCurrent_Loop_Fixed->Ib_fb_offset /= (q15_t)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC2 injected channel 1
+                pCurrent_Loop_Fixed->Ic_fb_offset /= (q15_t)pCurrent_Loop_Fixed->offset_check_cnt; // Calculate average for ADC1 injected channel 2
+                if (pCurrent_Loop_Fixed->Ia_fb_offset > 1638 || pCurrent_Loop_Fixed->Ia_fb_offset < -1638 ||
+                    pCurrent_Loop_Fixed->Ib_fb_offset > 1638 || pCurrent_Loop_Fixed->Ib_fb_offset < -1638 ||
+                    pCurrent_Loop_Fixed->Ic_fb_offset > 1638 || pCurrent_Loop_Fixed->Ic_fb_offset < -1638)
                 {
                     Motor_Diag_Fault_Flag |= MOTOR_CURRENT_OFFSET_OVER_FLAG_MASK;
                     pControl->Current_Loop.Status = CURRENT_FAULT;
@@ -487,7 +484,7 @@ void Current_RUN_TASK_Fixed(Motor_Control_t *pControl)
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     System_Loop_Fixed_t *pSystem_Loop = (System_Loop_Fixed_t *)pControl->System_Loop.pSystem_Loop;
     /* Code for CURRENT_RUN state */
-    if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < CURRENT_STOP_SPEED_RPM)
+    if (pSystem_Loop->Run_flag == 0 && pSpeed_Loop->Speed_Fb < 16384)
     {
         pControl->Current_Loop.Status = CURRENT_WAIT;
     }
