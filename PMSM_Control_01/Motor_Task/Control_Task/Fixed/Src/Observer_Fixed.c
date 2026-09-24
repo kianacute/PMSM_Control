@@ -250,24 +250,23 @@ void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control)
 void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t Ualpha, q31_t Ubeta,
                                    q31_t Ialpha, q31_t Ibeta)
 {
-    struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
-    Motor_Parameter_Fixed_t *pMotor = (Motor_Parameter_Fixed_t *)pMotor_control->Motor_Config->Motor_Param;
-    arm_park_q15(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
-    EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;
-    EFO->Flux_Q = EFO->Iq * pMotor->Lq;
-    arm_inv_park_q15(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
-    EFO->x_alpha_hat += ((Ualpha + EFO->gama * (EFO->Flux_alpha - EFO->x_alpha_hat)) * EFO->discrete_time);
-    EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
-    EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;
-    EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta; 
-    EFO->Eta_alpha = EFO->y_alpha_hat * pMotor->One_per_Flux;
-    EFO->Eta_beta = EFO->y_beta_hat * pMotor->One_per_Flux;
-    // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
-    EFO->we = Hal_PI_q31(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
-    EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
-    Limit_2PI(&EFO->theta);
-    EFO->Sin = arm_sin_q31(EFO->theta);
-    EFO->Cos = arm_cos_q31(EFO->theta);
+    // struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
+    // Motor_Parameter_Fixed_t *pMotor = (Motor_Parameter_Fixed_t *)pMotor_control->Motor_Config->Motor_Param;
+    // arm_park_q15(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
+    // EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;
+    // EFO->Flux_Q = EFO->Iq * pMotor->Lq;
+    // arm_inv_park_q15(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
+    // EFO->x_alpha_hat += ((Ualpha + EFO->gama * (EFO->Flux_alpha - EFO->x_alpha_hat)) * EFO->discrete_time);
+    // EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
+    // EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;
+    // EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta; 
+    // EFO->Eta_alpha = EFO->y_alpha_hat * pMotor->One_per_Flux;
+    // EFO->Eta_beta = EFO->y_beta_hat * pMotor->One_per_Flux;
+    // // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
+    // EFO->we = Hal_PI_q31(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
+    // EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
+    // EFO->Sin = arm_sin_q31(EFO->theta);
+    // EFO->Cos = arm_cos_q31(EFO->theta);
     // SinCos_Lookup_q31(EFO->theta, &EFO->Sin, &EFO->Cos);
     // arm_sin_cos_f32(EFO->theta, &EFO->Sin, &EFO->Cos);
     // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);

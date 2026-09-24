@@ -325,12 +325,12 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
     OBSERVE_Updata(pControl, pCurrent_Loop_Fixed->Ualpha_Ref, pCurrent_Loop_Fixed->Ubeta_Ref,  \
                     pCurrent_Loop_Fixed->ialpha_fb, pCurrent_Loop_Fixed->ibeta_fb);
 
-    pCurrent_Loop_Fixed->sinVal = arm_sin_q31(pCurrent_Loop_Fixed->theta);
-    pCurrent_Loop_Fixed->cosVal = arm_cos_q31(pCurrent_Loop_Fixed->theta);
+    pCurrent_Loop_Fixed->sinVal = arm_sin_q15(pCurrent_Loop_Fixed->theta);
+    pCurrent_Loop_Fixed->cosVal = arm_cos_q15(pCurrent_Loop_Fixed->theta);
     // SinCos_Lookup_q31(pCurrent_Loop_Fixed->theta, &pCurrent_Loop_Fixed->sinVal, &pCurrent_Loop_Fixed->cosVal);
     // arm_sin_cos_q31(pCur rent_Loop_Fixed->theta, &pCurrent_Loop_Fixed->sinVal, &pCurrent_Loop_Fixed->cosVal);
 
-    arm_park_q31(pCurrent_Loop_Fixed->ialpha_fb, pCurrent_Loop_Fixed->ibeta_fb, &pCurrent_Loop_Fixed->Id_fb,
+    arm_park_q15(pCurrent_Loop_Fixed->ialpha_fb, pCurrent_Loop_Fixed->ibeta_fb, &pCurrent_Loop_Fixed->Id_fb,
                  &pCurrent_Loop_Fixed->Iq_fb, pCurrent_Loop_Fixed->sinVal, pCurrent_Loop_Fixed->cosVal);
 
     pCurrent_Loop_Fixed->Id_Ref = pSpeed_Loop->target_id;
@@ -338,9 +338,9 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
     pCurrent_Loop_Fixed->Ud_Target = Hal_PI_q31(&pCurrent_Loop_Fixed->Id_PI, pCurrent_Loop_Fixed->Id_Ref - pCurrent_Loop_Fixed->Id_fb);
     pCurrent_Loop_Fixed->Uq_Target = Hal_PI_q31(&pCurrent_Loop_Fixed->Iq_PI, pCurrent_Loop_Fixed->Iq_Ref - pCurrent_Loop_Fixed->Iq_fb);
 
-    arm_sqrt_q31(pCurrent_Loop_Fixed->Id_fb * pCurrent_Loop_Fixed->Id_fb + pCurrent_Loop_Fixed->Iq_fb * pCurrent_Loop_Fixed->Iq_fb, 
+    arm_sqrt_q15(pCurrent_Loop_Fixed->Id_fb * pCurrent_Loop_Fixed->Id_fb + pCurrent_Loop_Fixed->Iq_fb * pCurrent_Loop_Fixed->Iq_fb, 
                     &pCurrent_Loop_Fixed->Is_fb);
-    arm_inv_park_q31(pCurrent_Loop_Fixed->Ud_Target, pCurrent_Loop_Fixed->Uq_Target, &pCurrent_Loop_Fixed->Ualpha_Ref,
+    arm_inv_park_q15(pCurrent_Loop_Fixed->Ud_Target, pCurrent_Loop_Fixed->Uq_Target, &pCurrent_Loop_Fixed->Ualpha_Ref,
                      &pCurrent_Loop_Fixed->Ubeta_Ref, pCurrent_Loop_Fixed->sinVal, pCurrent_Loop_Fixed->cosVal);
     SVPWM_Calculate_q31(2, pControl->Input.Udc_ADISR, pCurrent_Loop_Fixed->Ualpha_Ref, pCurrent_Loop_Fixed->Ubeta_Ref,
                     &pCurrent_Loop_Fixed->PWM_duty_a, &pCurrent_Loop_Fixed->PWM_duty_b, &pCurrent_Loop_Fixed->PWM_duty_c, &pCurrent_Loop_Fixed->sector);
@@ -349,7 +349,7 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
     pCurrent_Loop_Fixed->Id_PI.out_min = -pCurrent_Loop_Fixed->Id_PI.out_max;
     if (pCurrent_Loop_Fixed->Id_PI.out_max > pCurrent_Loop_Fixed->Ud_Target)
     {
-        arm_sqrt_q31(pCurrent_Loop_Fixed->Id_PI.out_max * pCurrent_Loop_Fixed->Id_PI.out_max -
+        arm_sqrt_q15(pCurrent_Loop_Fixed->Id_PI.out_max * pCurrent_Loop_Fixed->Id_PI.out_max -
                          pCurrent_Loop_Fixed->Ud_Target * pCurrent_Loop_Fixed->Ud_Target,
                      &pCurrent_Loop_Fixed->Iq_PI.out_max);
     }

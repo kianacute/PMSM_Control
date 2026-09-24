@@ -256,9 +256,9 @@ void Hysteresis_Comp_Process_Sub_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float
 /// @return 输出
 q31_t Hal_PI_q31(Hal_PI_q31_t *controller, q31_t error)
 {
-     controller->integral += controller->ki * error - 
-                             controller->Kd * (controller->output_raw - controller->output); // 抗饱和项
-     controller->output_raw = controller->kp * error +                               // 比例项
+     controller->integral += ((controller->ki * error) >> 15) - 
+                             ((controller->Kd * (controller->output_raw - controller->output)) >> 15); // 抗饱和项
+     controller->output_raw = ((controller->kp * error) >> 15) +                               // 比例项
                               controller->integral;                                 
 
      // Clamp output to min/max limits

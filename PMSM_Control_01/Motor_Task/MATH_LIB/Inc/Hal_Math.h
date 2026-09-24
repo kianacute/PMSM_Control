@@ -229,15 +229,15 @@ static inline float Cos_Lookup_f32(float theta)
 
 typedef struct Hal_PI_f32_q31
 {
-    q31_t kp;        // Proportional gain
-    q31_t ki;        // Integral gain
-    q31_t Kd;        // 抗饱和 gain
-    q63_t integral;  // Integral term
-    q31_t prev_error;// Previous error term
-    q31_t out_min;   // Minimum output limit
-    q31_t out_max;   // Maximum output limit
-    q31_t output_raw;// Output value
-    q31_t output;    // Output value
+    q15_t kp;        // Proportional gain
+    q15_t ki;        // Integral gain
+    q15_t Kd;        // 抗饱和 gain
+    q31_t integral;  // Integral term
+    q15_t prev_error;// Previous error term
+    q15_t out_min;   // Minimum output limit
+    q15_t out_max;   // Maximum output limit
+    q15_t output_raw;// Output value
+    q15_t output;    // Output value
 }Hal_PI_q31_t;
 
 typedef struct Lookup_Table_q31
@@ -296,37 +296,58 @@ inline void Hysteresis_Comp_Process_Sub_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp
 
 static inline void arm_clarke_q15(q15_t Ia, q15_t Ib, q15_t * pIalpha, q15_t * pIbeta)
 {
-    q15_t product1, product2;                    /* Temporary variables used to store intermediate results */
+    q31_t product1, product2;                    /* Temporary variables used to store intermediate results */
 
     /* Calculating pIalpha from Ia by equation pIalpha = Ia */
     *pIalpha = Ia;
 
     /* Intermediate product is calculated by (1/(sqrt(3)) * Ia) */
-    product1 = (q15_t) (((q31_t) Ia * 18919) >> 15);
+    product1 = (q31_t) (((q31_t) Ia * 18919) >> 15);
 
     /* Intermediate product is calculated by (2/sqrt(3) * Ib) */
-    product2 = (q15_t) (((q31_t) Ib * 37837) >> 15);
+    product2 = (q31_t) (((q31_t) Ib * 37837) >> 15);
 
     /* pIbeta is calculated by adding the intermediate products */
     *pIbeta = clip_q31_to_q15((q31_t)product1 + (q31_t)product2);
+    // *pIbeta = product1 + product2;
 }
+
+static inline void arm_inv_clarke_q15(q15_t Ialpha, q15_t Ibeta, q15_t * pIa, q15_t * pIb, q15_t * pIc)
+{
+    q31_t product1, product2;                    /* Temporary variables used to store intermediate results */
+
+    /* Calculating pIa from Ialpha by equation pIa = Ialpha */
+    *pIa = Ialpha;
+    // arm_inv_clarke_q31
+    /* Intermediate product is calculated by (1/(2*sqrt(3)) * Ia) */
+    product1 = (q31_t) (((q31_t) (Ialpha) * (q31_t)(16384)) >> 15);
+
+    /* Intermediate product is calculated by (1/sqrt(3) * pIb) */
+    product2 = (q31_t) (((q31_t) (Ibeta) * (q31_t)(28378)) >> 15);
+
+    /* pIb is calculated by subtracting the products */
+    *pIb = clip_q31_to_q15((q31_t)product2 - (q31_t)product1);
+    
+    *pIc = clip_q31_to_q15((-((q31_t)*pIa) - (*pIb)));
+}
+
 
 static inline void arm_park_q15(q15_t Ialpha, q15_t Ibeta, q15_t * pId, q15_t * pIq, q15_t sinVal, q15_t cosVal)
 {
-    q15_t product1, product2;                    /* Temporary variables used to store intermediate results */
-    q15_t product3, product4;                    /* Temporary variables used to store intermediate results */
+    q31_t product1, product2;                    /* Temporary variables used to store intermediate results */
+    q31_t product3, product4;                    /* Temporary variables used to store intermediate results */
 
     /* Intermediate product is calculated by (Ialpha * cosVal) */
-    product1 = (q15_t) (((q31_t) (Ialpha) * (cosVal)) >> 15);
+    product1 = (q31_t) (((q31_t) (Ialpha) * (q31_t)(cosVal)) >> 15);
 
     /* Intermediate product is calculated by (Ibeta * sinVal) */
-    product2 = (q15_t) (((q31_t) (Ibeta) * (sinVal)) >> 15);
+    product2 = (q31_t) (((q31_t) (Ibeta) * (q31_t)(sinVal)) >> 15);
 
     /* Intermediate product is calculated by (Ialpha * sinVal) */
-    product3 = (q15_t) (((q31_t) (Ialpha) * (sinVal)) >> 15);
+    product3 = (q31_t) (((q31_t) (Ialpha) * (q31_t)(sinVal)) >> 15);
 
     /* Intermediate product is calculated by (Ibeta * cosVal) */
-    product4 = (q15_t) (((q31_t) (Ibeta) * (cosVal)) >> 15);
+    product4 = (q31_t) (((q31_t) (Ibeta) * (q31_t)(cosVal)) >> 15);
 
     /* Calculate pId by adding the two intermediate products 1 and 2 */
     *pId = clip_q31_to_q15((q31_t)product1 + (q31_t)product2);
@@ -335,6 +356,29 @@ static inline void arm_park_q15(q15_t Ialpha, q15_t Ibeta, q15_t * pId, q15_t * 
     *pIq = clip_q31_to_q15((q31_t)product4 - (q31_t)product3);
 }
 
+static inline void arm_inv_park_q15(q15_t Id, q15_t Iq, q15_t * pIalpha, q15_t * pIbeta, q15_t sinVal, q15_t cosVal)
+{
+    q31_t product1, product2;                    /* Temporary variables used to store intermediate results */
+    q31_t product3, product4;                    /* Temporary variables used to store intermediate results */
 
+    /* Intermediate product is calculated by (Id * cosVal) */
+    product1 = (q31_t) (((q31_t) (Id) * (cosVal)) >> 15);
+
+    /* Intermediate product is calculated by (Iq * sinVal) */
+    product2 = (q31_t) (((q31_t) (Iq) * (sinVal)) >> 15);
+
+
+    /* Intermediate product is calculated by (Id * sinVal) */
+    product3 = (q31_t) (((q31_t) (Id) * (sinVal)) >> 15);
+
+    /* Intermediate product is calculated by (Iq * cosVal) */
+    product4 = (q31_t) (((q31_t) (Iq) * (cosVal)) >> 15);
+
+    /* Calculate pIalpha by using the two intermediate products 1 and 2 */
+    *pIalpha = clip_q31_to_q15((q31_t)product1 - (q31_t)product2);
+
+    /* Calculate pIbeta by using the two intermediate products 3 and 4 */
+    *pIbeta = clip_q31_to_q15((q31_t)product4 + (q31_t)product3);
+}
 
 #endif
