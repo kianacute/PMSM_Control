@@ -64,40 +64,44 @@ void Speed_Input_LPF_Fixed(void)
     Speed_Loop_Fixed.Speed_Fb_1s =  Speed_Loop_Fixed.Speed_Fb_1s * 0.999f + Speed_Loop_Fixed.Speed_Fb * 0.001f;
 }
 
+uint32_t tt_Speed_Align_Time_Count;
+
 void SPEED_Idle_Task_Fixed(Motor_Control_t *pControl)
 {
     System_Loop_Fixed_t *System_Loop = (System_Loop_Fixed_t *)pControl->System_Loop.pSystem_Loop;
-    Speed_Loop_Fixed_t *Speed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
+    Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     if (System_Loop->Run_flag == 1)
     {
-        SPEED_Init_Fixed(pControl);
+        // SPEED_Init_Fixed(pControl);
         pControl->Speed_Loop.Status = SPEED_ALIGN;
-        Speed_Loop->Speed_Align_Time_Count = 0;
+        // tt_Speed_Align_Time_Count = 0;
+        // pSpeed_Loop->Speed_Align_Time_Count = 0;
     }
     else
     {
         pControl->Speed_Loop.Status = SPEED_IDLE;
-        Speed_Loop->Speed_Ref = 0;
-        Speed_Loop->Speed_Fb = 0;
-        Speed_Loop->Speed_Fb_1s = 0;
-        Speed_Loop->target_id = 0;
-        Speed_Loop->target_iq = 0;
+        pSpeed_Loop->Speed_Ref = 0;
+        pSpeed_Loop->Speed_Fb = 0;
+        pSpeed_Loop->Speed_Fb_1s = 0;
+        pSpeed_Loop->target_id = 0;
+        pSpeed_Loop->target_iq = 0;
     }
 }
+
 
 void SPEED_Align_Task_Fixed(Motor_Control_t *pControl)
 {
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     System_Loop_Fixed_t *System_Loop = (System_Loop_Fixed_t *)pControl->System_Loop.pSystem_Loop;
-    pSpeed_Loop->target_id = Oblique_Wave_q31(SPEED_ALIGN_ID_A, pSpeed_Loop->target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
+    // pSpeed_Loop->target_id = Oblique_Wave_q31(SPEED_ALIGN_ID_A, pSpeed_Loop->target_id, SPEED_ID_ADD_STEP, SPEED_ID_SUB_STEP);
     pSpeed_Loop->Speed_Align_Time_Count ++;
-    if ((pSpeed_Loop->Speed_Align_Time_Count > SPEED_ALIGN_TIME_S) && (System_Loop->Run_flag == 1))
+    if ((pSpeed_Loop->Speed_Align_Time_Count > (uint32_t)1000u) && (System_Loop->Run_flag == 1))
     {
         #if defined(MOTOR_OPEN_SETUP)
             pControl->Speed_Loop.Status = SPEED_OPEN;
             pSpeed_Loop->IF_Start_Cnt  = pControl->Speed_Loop.Loop_count;
         #elif defined(MOTOR_CLOSE_SETUP)
-            pControl->Speed_Loop.Status = SPEED_LOW;
+             pControl->Speed_Loop.Status = SPEED_LOW;
             // pSpeed_Loop->Speed_Low_Id = SPEED_LOW_ID_TARGET_A;
         #endif
     }
@@ -108,12 +112,16 @@ void SPEED_Open_Task_Fixed(Motor_Control_t *pControl)
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     struct Motor_Config_Fixed *pMotor_Config = (struct Motor_Config_Fixed *)pControl->Motor_Config;
     float tick_count = ((float)(pControl->Speed_Loop.Loop_count - pSpeed_Loop->IF_Start_Cnt) / pSpeed_Loop->FREQ_Hz);
-    pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
-    pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
+    // pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
+    // pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
+
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_q31(pSpeed_Loop->Speed_Command / 10, pSpeed_Loop->Speed_Ref, 1, 1);
+    pSpeed_Loop->target_iq = 721;
+
     pSpeed_Loop->target_id = 0;
     if (pSpeed_Loop->Speed_Ref >= SPEED_OPEN2SWITCH_THD_RPM)
     { 
-        pControl->Speed_Loop.Status= SPEED_SWITCH;
+        // pControl->Speed_Loop.Status= SPEED_SWITCH;
     }
 }
 

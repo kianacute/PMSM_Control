@@ -8,8 +8,8 @@
 typedef struct Current_Loop_Fixed
 {
     // Define any necessary variables and structures for the current task
-    q15_t FREQ_HZ;                                       //电流环频率
-    q15_t Loop_time_s;                                      //电流环循环时间
+    uint16_t FREQ_HZ;                                       //电流环频率
+    uint16_t Loop_time_s;                                      //电流环循环时间
     /*电压电流，PI控制*/
     Hal_PI_q31_t Id_PI;                                     //d轴电流PI控制器参数
     Hal_PI_q31_t Iq_PI;                                     //q轴电流PI控制器参数

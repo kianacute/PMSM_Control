@@ -429,7 +429,7 @@ q31_t Oblique_Wave_q31(q31_t end_value, q31_t cur_value, q31_t Add_Step, q31_t S
 /// @author doubao
 void Hysteresis_Comp_Init_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp, q31_t th_h, q31_t th_l, uint32_t delay)
 {
-     hcomp->enable = 0;
+     hcomp->enable = 1;
      hcomp->reset = 0;
      hcomp->threshold_high = th_h;
      hcomp->threshold_low = th_l;

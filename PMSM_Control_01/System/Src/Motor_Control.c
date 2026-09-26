@@ -151,7 +151,7 @@ void Speed_Loop_Task(Motor_Control_t *pControl)
 {
     if (pControl->System_Loop.Status == SYSTEM_RUN && pControl->Current_Loop.Status == CURRENT_RUN)
     {
-        Paramater_update_Float(pControl);
+        Paramater_update(pControl);
         switch (pControl->Speed_Loop.Status)
         {
         case SPEED_IDLE:

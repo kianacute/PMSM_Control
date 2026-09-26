@@ -6,23 +6,29 @@ void SVPWM_Init_q31(void)
     // Initialization code for SVPWM
 }
 
-q31_t T_sum;
-
 void SVPWM_Calculate_q31(q15_t T_s, q15_t V_dc, q15_t U_alpha, q15_t U_beta,
                      q15_t* T_a, q15_t* T_b, q15_t* T_c, uint8_t* N)
 {
     uint8_t sector = 0;
     q31_t X, Y, Z;
     X = (q31_t)U_beta;  if (X > 0) sector |= 1;
-    Y = MATH_SQRT_3_PER_2_Q15 * U_alpha - (U_beta << 14);  if (Y > 0) sector |= 2;
-    Z = -MATH_SQRT_3_PER_2_Q15 * U_alpha - (U_beta << 14);   if (Z > 0) sector |= 4;    
+    Y = (q31_t)MATH_SQRT_3_PER_2_Q15 * U_alpha - ((q31_t)MATH_1_PER_2_Q15 * U_beta);  if (Y > 0) sector |= 2;
+    Z = -(q31_t)MATH_SQRT_3_PER_2_Q15 * U_alpha - ((q31_t)MATH_1_PER_2_Q15 * U_beta);   if (Z > 0) sector |= 4;    
     *N = sector;
+    q31_t pro1, pro2;
     
     q31_t factor = ((MATH_SQRT_3_Q15 * (q31_t)T_s)) / (q31_t)V_dc;  
     X = (factor * (q31_t)U_beta) >> 15;
-    Y = (factor * (((MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15))) >> 15;
-    Z = (factor * (((-MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15) + ((MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15))) >> 15;
-    q31_t T1, T2;
+
+    pro1 = (MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15;
+    pro2 = (MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15;
+    Y = (factor * clip_q31_to_q15(pro1 + pro2)) >> 15;
+
+    pro1 = (-MATH_SQRT_3_PER_2_Q15 * U_alpha) >> 15;
+    pro2 = (MATH_1_PER_2_Q15 * (q31_t)U_beta) >> 15;
+    Z = (factor * clip_q31_to_q15(pro1 + pro2)) >> 15;
+
+    q31_t T1, T2, T_sum;
 
     // 根据扇区选择时间
     switch (sector)
@@ -49,13 +55,13 @@ void SVPWM_Calculate_q31(q15_t T_s, q15_t V_dc, q15_t U_alpha, q15_t U_beta,
         T2 = 0;
     }
     
-    q31_t T0 = (q31_t)(T_s) - T1 - T2;
+    q15_t T0 = clip_q31_to_q15((q31_t)(T_s) - T1 - T2);
     
     // 计算七段式SVPWM的比较点
-    q31_t T0_half = T0 >> 2;
-    q31_t Ta = T0_half;
-    q31_t Tb = Ta + (T1 >> 1);
-    q31_t Tc = Tb + (T2 >> 1);
+    q15_t T0_half = T0 >> 2;
+    q15_t Ta = T0_half;
+    q15_t Tb = Ta + (T1 >> 1);
+    q15_t Tc = Tb + (T2 >> 1);
     
     // 根据扇区分配比较值
     switch (sector)

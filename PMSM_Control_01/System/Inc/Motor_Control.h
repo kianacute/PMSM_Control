@@ -329,6 +329,8 @@ typedef struct Motor_Control
     void Motor_Config_Init(Motor_Control_t *pMotor_Control);
     void Paramater_update_Fixed(Motor_Control_t *pControl);
 
+    #define         Paramater_update(pMotor_control)        Paramater_update_Fixed(pMotor_control)  
+
 
 #endif
 

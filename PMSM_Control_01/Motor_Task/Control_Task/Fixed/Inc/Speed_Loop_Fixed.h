@@ -15,7 +15,6 @@ typedef struct Speed_Loop_Fixed
     q31_t Speed_Fb_1s;
     q31_t Speed_Sub_Step, Speed_Add_Step;  // 速度增减步长
     q31_t Speed_Align_Id_A;
-    uint32_t Speed_Align_Time_Count;
     Hal_PI_q31_t Speed_PI;                     // 速度PI控制器参数
     uint32_t Speed_Switch_Cnt;             // IF模式切换计数器
     uint8_t Speed_Switch_Flag;             // 速度闭环标志
@@ -31,6 +30,7 @@ typedef struct Speed_Loop_Fixed
     q31_t Flux_Weak_Id;
     q31_t PWM_SWITCH_FREQ;
     q31_t PWM_CUR_FREQ;
+    uint32_t Speed_Align_Time_Count;
 } Speed_Loop_Fixed_t;
 
 

@@ -81,8 +81,8 @@
 
 
 /*电机启动方式*/
-// #define MOTOR_OPEN_SETUP                        // 电机开环启动
-#define MOTOR_CLOSE_SETUP                    // 电机闭环启动
+#define MOTOR_OPEN_SETUP                        // 电机开环启动
+// #define MOTOR_CLOSE_SETUP                    // 电机闭环启动
 
 /*System Paramater*/
 

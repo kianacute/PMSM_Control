@@ -102,7 +102,7 @@ void my_task3(void *argument)
         // sin_output1 = arm_cos_q15(input1);
         // cos_output1 = arm_cos_q15(input1 + 21845u);
         // sin_output2 = arm_sin_q15(input1 - 21845u);
-        uint32_t cb_start = DWT->CYCCNT;
+        // uint32_t cb_start = DWT->CYCCNT;
 
         // SVPWM_Calculate_q31(4000 * 2, 9142, sin_output2, cos_output2,
         //                 &TT1, &TT2, &TT3, &sector_tmp);
@@ -112,8 +112,8 @@ void my_task3(void *argument)
         arm_inv_park_q15(id_t, iq_t, &sin_output2, &cos_output2, arm_sin_q15(input1), arm_cos_q15(input1));
         arm_inv_clarke_q15(sin_output2, cos_output2, &sin_output1, &cos_output1, &input2);
 
-        uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
-        Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
+        // uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
+        // Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
         vTaskDelayUntil(&lasttick, 10); // 每100ms执行一次
 
 
@@ -170,7 +170,7 @@ int Bsp_Init(void)
     
     xTaskCreate(my_task1, "Speed_Ctrl_Task", 256, NULL, osPriorityRealtime, NULL);
     xTaskCreate(my_task2, "SYSTEM_Task", 256, NULL, osPriorityHigh, NULL);
-    xTaskCreate(my_task3, "MOTOR_Run_Task", 128, NULL, osPriorityNormal, NULL);
+    // xTaskCreate(my_task3, "MOTOR_Run_Task", 128, NULL, osPriorityNormal, NULL);
     // xTaskCreate(my_task4, "System_Diag_Task", 256, NULL, osPriorityAboveNormal, NULL);
     Profiler_Init();
     Motor_Control_Init(&PMSM_42J);
@@ -183,7 +183,7 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
     if (hadc->Instance == ADC1)
     {
         /* DWT 周期计数器 — 不受中断优先级影响, 精度 6.25ns @160MHz */
-        // uint32_t cb_start = DWT->CYCCNT;
+        uint32_t cb_start = DWT->CYCCNT;
         // adc_adjustment.ADC_j1 = hadc1.Instance->JDR1; // Read injected channel value
         // adc_adjustment.ADC_j2 = hadc2.Instance->JDR1; // Read another injected channel value
         // adc_adjustment.ADC_j3 = hadc1.Instance->JDR2; // Read another injected channel value
@@ -209,8 +209,8 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         }
         Bsp_STM32G431_PWM_SetDuty();
 
-        // uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
-        // Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
+        uint32_t cb_elapsed = DWT->CYCCNT - cb_start;
+        Profiler_Record(CPU_ADC_INT_INDEX, cb_elapsed);
     }
     else if (hadc->Instance == ADC2)
     {
@@ -244,10 +244,15 @@ void Bsp_STM32G431_PWM_SetDuty()
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff);
-    htim1.Instance->CCR4 = PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5;
-    htim1.Instance->CCR1 = PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
-    htim1.Instance->CCR2 = PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
-    htim1.Instance->CCR3 = PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    // htim1.Instance->CCR4 = PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff - 5;
+    // htim1.Instance->CCR1 = PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    // htim1.Instance->CCR2 = PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+    // htim1.Instance->CCR3 = PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY/PMSM_42J.Output.PWM_HZ_Coeff;
+
+    htim1.Instance->CCR4 = 4000 - 5;
+    htim1.Instance->CCR1 = PMSM_42J.Output.PWM_duty_a;
+    htim1.Instance->CCR2 = PMSM_42J.Output.PWM_duty_b;
+    htim1.Instance->CCR3 = PMSM_42J.Output.PWM_duty_c;
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_1, PMSM_42J.Output.PWM_duty_a*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_2, PMSM_42J.Output.PWM_duty_b*PWM_MAX_DUTY);
     // __HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_3, PMSM_42J.Output.PWM_duty_c*PWM_MAX_DUTY);

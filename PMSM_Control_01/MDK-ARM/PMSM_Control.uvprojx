@@ -2115,6 +2115,11 @@
               <FileType>1</FileType>
               <FilePath>..\Motor_Task\MATH_LIB\Src\Hal_Math.c</FilePath>
             </File>
+            <File>
+              <FileName>Motor_Control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\System\Inc\Motor_Control.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

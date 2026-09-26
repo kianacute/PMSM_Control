@@ -20,7 +20,7 @@ void SYSTEM_Init_Fixed(Motor_Control_t *pControl)
     System_Diag_Init();
     Speed_Command = 1000.0f;
     System_Loop_Fixed.Run_flag = 0;
-    Hysteresis_Comp_Init_q31(&System_Loop_Fixed.System_Hv_Comp, SYSTEM_HV_STANDY_THD_V, 5.0f, SYSTEM_HV_STANDY_TIME_S); // 系统高压滞回比较器
+    Hysteresis_Comp_Init_q31(&System_Loop_Fixed.System_Hv_Comp, 1, 0, SYSTEM_HV_STANDY_TIME_S); // 系统高压滞回比较器
 }
 
 void SYSTEM_LV_Standy_Fixed(Motor_Control_t *pControl)
@@ -59,7 +59,7 @@ void SYSTEM_Run_Fixed(Motor_Control_t *pControl)
     }
     if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
     {
-        pSpeed_Loop->Speed_Command = Speed_Command / MOTOR_RPM_BASE; // Convert speed command to base units
+        pSpeed_Loop->Speed_Command = (q15_t)(Speed_Command / MOTOR_RPM_BASE * 32768); // Convert speed command to base units
         pSystem_Loop->Run_flag = 1;
     }
     else 

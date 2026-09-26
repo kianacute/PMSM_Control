@@ -222,9 +222,9 @@ static inline float Cos_Lookup_f32(float theta)
     return c0 + fract * (c1 - c0);
 }
 
-#define MATH_SQRT_3_Q15                             ((q31_t)(1.732051f * 32768.0f))  // sqrt(3)/2 in Q15 format
-#define MATH_SQRT_3_PER_2_Q15                       ((q15_t)(0.866025f * 32768.0f))  // sqrt(3)/2 in Q15 format
-#define MATH_1_PER_2_Q15                            ((q15_t)(0.5f * 32768.0f))  // 1/2 in Q15 format
+#define MATH_SQRT_3_Q15                             ((q31_t)(56756))  // sqrt(3) in Q15 format
+#define MATH_SQRT_3_PER_2_Q15                       ((q15_t)(28378))  // sqrt(3)/2 in Q15 format
+#define MATH_1_PER_2_Q15                            ((q15_t)(16384))  // 1/2 in Q15 format
 
 
 typedef struct Hal_PI_f32_q31
