@@ -27,6 +27,13 @@ void Current_Init_Fixed(Motor_Control_t *pControl)
     /* 计算电流环参数 */
     Current_Loop_Fixed.Id_PI.Kd = 0;
     Current_Loop_Fixed.Iq_PI.Kd = 0;
+    Current_Loop_Fixed.Id_PI.integral = 0;
+    Current_Loop_Fixed.Iq_PI.integral = 0;
+
+    Current_Loop_Fixed.Id_PI.out_max = 32767;
+    Current_Loop_Fixed.Id_PI.out_min = -32767;
+    Current_Loop_Fixed.Iq_PI.out_max = 32767;
+    Current_Loop_Fixed.Iq_PI.out_min = -32767;
 
     Current_Loop_Fixed.Speed_fb_1ms = 0;
     Current_Loop_Fixed.theta = 0;
@@ -37,8 +44,7 @@ void Current_Init_Fixed(Motor_Control_t *pControl)
     Current_Loop_Fixed.Iq_fb = 0;
     Current_Loop_Fixed.Id_Ref = 0;
     Current_Loop_Fixed.Iq_Ref = 0;
-    Current_Loop_Fixed.Id_PI.integral = 0;
-    Current_Loop_Fixed.Iq_PI.integral = 0;
+
     Current_Loop_Fixed.A_Max = 0;
     Current_Loop_Fixed.B_Max = 0;
     Current_Loop_Fixed.C_Max = 0;
@@ -47,8 +53,6 @@ void Current_Init_Fixed(Motor_Control_t *pControl)
     Current_Loop_Fixed.Ib_fb_offset = 0;
     Current_Loop_Fixed.Ic_fb_offset = 0;
     Current_Loop_Fixed.offset_check_cnt = 0;
-    Current_Loop_Fixed.Id_PI.integral = 0;
-    Current_Loop_Fixed.Iq_PI.integral = 0;
 
     Current_Loop_Fixed.Dead_Zone_Enable_Flag = 0;
     Current_Loop_Fixed.PWM_FREQ_Coeff = 1;
@@ -90,7 +94,8 @@ void Current_Speed_Switch_Fixed(Motor_Control_t *pControl)
     }
     case SPEED_OPEN:
     {
-        pCurrent_Loop_Fixed->theta += ((pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s) >> 15);
+        pCurrent_Loop_Fixed->theta += (uint16_t)(((q31_t)pSpeed_Loop->Speed_Ref * pCurrent_Loop_Fixed->Loop_time_s) >> 16);
+        // pCurrent_Loop_Fixed->theta += 10;
         // pCurrent_Loop_Fixed->theta += 0.002f;
         break;
     }
@@ -335,11 +340,11 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
 
     pCurrent_Loop_Fixed->Id_Ref = pSpeed_Loop->target_id;
     pCurrent_Loop_Fixed->Iq_Ref = pSpeed_Loop->target_iq;
-    // pCurrent_Loop_Fixed->Ud_Target = Hal_PI_q31(&pCurrent_Loop_Fixed->Id_PI, pCurrent_Loop_Fixed->Id_Ref - pCurrent_Loop_Fixed->Id_fb);
-    // pCurrent_Loop_Fixed->Uq_Target = Hal_PI_q31(&pCurrent_Loop_Fixed->Iq_PI, pCurrent_Loop_Fixed->Iq_Ref - pCurrent_Loop_Fixed->Iq_fb);
+    pCurrent_Loop_Fixed->Ud_Target = Hal_PI_q15(&pCurrent_Loop_Fixed->Id_PI, pCurrent_Loop_Fixed->Id_Ref - pCurrent_Loop_Fixed->Id_fb);
+    pCurrent_Loop_Fixed->Uq_Target = Hal_PI_q15(&pCurrent_Loop_Fixed->Iq_PI, pCurrent_Loop_Fixed->Iq_Ref - pCurrent_Loop_Fixed->Iq_fb);
 
-    pCurrent_Loop_Fixed->Ud_Target = 0;
-    pCurrent_Loop_Fixed->Uq_Target = 983;
+    // pCurrent_Loop_Fixed->Ud_Target = -200;
+    // pCurrent_Loop_Fixed->Uq_Target = 983;
 
 
     // arm_sqrt_q15(pCurrent_Loop_Fixed->Id_fb * pCurrent_Loop_Fixed->Id_fb + pCurrent_Loop_Fixed->Iq_fb * pCurrent_Loop_Fixed->Iq_fb, 
@@ -347,23 +352,23 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
     
     arm_inv_park_q15(pCurrent_Loop_Fixed->Ud_Target, pCurrent_Loop_Fixed->Uq_Target, &pCurrent_Loop_Fixed->Ualpha_Ref,
                      &pCurrent_Loop_Fixed->Ubeta_Ref, pCurrent_Loop_Fixed->sinVal, pCurrent_Loop_Fixed->cosVal);
-    SVPWM_Calculate_q31((q15_t)4000*2, /*pControl->Input.Udc_ADISR*/ 9145, pCurrent_Loop_Fixed->Ualpha_Ref, pCurrent_Loop_Fixed->Ubeta_Ref,
+    SVPWM_Calculate_q31((q15_t)4000*2, pControl->Input.Udc_ADISR, pCurrent_Loop_Fixed->Ualpha_Ref, pCurrent_Loop_Fixed->Ubeta_Ref,
                     &pCurrent_Loop_Fixed->PWM_duty_a, &pCurrent_Loop_Fixed->PWM_duty_b, &pCurrent_Loop_Fixed->PWM_duty_c, 
                     &pCurrent_Loop_Fixed->sector);
 
-    pCurrent_Loop_Fixed->Id_PI.out_max = pControl->Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * CURRENT_PID_OUTPUT_LIMIT;
-    pCurrent_Loop_Fixed->Id_PI.out_min = -pCurrent_Loop_Fixed->Id_PI.out_max;
-    if (pCurrent_Loop_Fixed->Id_PI.out_max > pCurrent_Loop_Fixed->Ud_Target)
-    {
-        arm_sqrt_q15(pCurrent_Loop_Fixed->Id_PI.out_max * pCurrent_Loop_Fixed->Id_PI.out_max -
-                         pCurrent_Loop_Fixed->Ud_Target * pCurrent_Loop_Fixed->Ud_Target,
-                     &pCurrent_Loop_Fixed->Iq_PI.out_max);
-    }
-    else
-    {
-        pCurrent_Loop_Fixed->Iq_PI.out_max = 0.0f;
-    }
-    pCurrent_Loop_Fixed->Iq_PI.out_min = -pCurrent_Loop_Fixed->Iq_PI.out_max;
+    // pCurrent_Loop_Fixed->Id_PI.out_max = pControl->Input.Udc_ADISR * WEAK_VOLTAGE_COMPENSATION * CURRENT_PID_OUTPUT_LIMIT;
+    // pCurrent_Loop_Fixed->Id_PI.out_min = -pCurrent_Loop_Fixed->Id_PI.out_max;
+    // if (pCurrent_Loop_Fixed->Id_PI.out_max > pCurrent_Loop_Fixed->Ud_Target)
+    // {
+    //     arm_sqrt_q15(pCurrent_Loop_Fixed->Id_PI.out_max * pCurrent_Loop_Fixed->Id_PI.out_max -
+    //                      pCurrent_Loop_Fixed->Ud_Target * pCurrent_Loop_Fixed->Ud_Target,
+    //                  &pCurrent_Loop_Fixed->Iq_PI.out_max);
+    // }
+    // else
+    // {
+    //     pCurrent_Loop_Fixed->Iq_PI.out_max = 0.0f;
+    // }
+    // pCurrent_Loop_Fixed->Iq_PI.out_min = -pCurrent_Loop_Fixed->Iq_PI.out_max;
     Dead_Zone_Compensation_Fixed(pControl, pObserver->we, pObserver->theta);
     MOTOR_Bus_Current_Rewrite_Fixed(pControl);
     pControl->Output.PWM_HZ_Coeff = pCurrent_Loop_Fixed->PWM_FREQ_Coeff;
@@ -375,7 +380,7 @@ void Current_Para_Updata_Fixed(Motor_Control_t *pControl, q31_t speed, q31_t Ts)
     Current_Loop_Fixed_t *pCurrent_Loop_Fixed = (Current_Loop_Fixed_t *)pControl->Current_Loop.pCurrent_Loop;
     Speed_Loop_Fixed_t *pSpeed_Loop = (Speed_Loop_Fixed_t *)pControl->Speed_Loop.pSpeed_Loop;
     struct Motor_Config_Fixed *Motor_Config = (struct Motor_Config_Fixed *)pControl->Motor_Config;
-    pCurrent_Loop_Fixed->Loop_time_s = 4116;
+    pCurrent_Loop_Fixed->Loop_time_s = 655;
     pCurrent_Loop_Fixed->FREQ_HZ = 20000;
     pCurrent_Loop_Fixed->PWM_FREQ_Coeff = pCurrent_Loop_Fixed->FREQ_HZ / MOTOR_CURRENT_LOOP_HZ;
     // pCurrent_Loop_Fixed->Id_PI.kp = Lookup_Table_1D_Linear_q31(pSpeed_Loop->Speed_Fb_1s, &Motor_Config->ID_PI_Kp_Lookup)
@@ -385,9 +390,9 @@ void Current_Para_Updata_Fixed(Motor_Control_t *pControl, q31_t speed, q31_t Ts)
     // pCurrent_Loop_Fixed->Iq_PI.kp = Lookup_Table_1D_Linear_q31(pSpeed_Loop->Speed_Fb_1s, &Motor_Config->IQ_PI_Kp_Lookup) 
     //                                  * pControl->Output.PWM_HZ_Coeff;
 
-    pCurrent_Loop_Fixed->Id_PI.kp = 1;
-    pCurrent_Loop_Fixed->Iq_PI.ki = pCurrent_Loop_Fixed->Id_PI.ki = 1;
-    pCurrent_Loop_Fixed->Iq_PI.kp = 1;
+    pCurrent_Loop_Fixed->Id_PI.kp = 32766/2;
+    pCurrent_Loop_Fixed->Iq_PI.ki = pCurrent_Loop_Fixed->Id_PI.ki = 3771/2;
+    pCurrent_Loop_Fixed->Iq_PI.kp = 32766/2;
                         
     pCurrent_Loop_Fixed->Phase_check_cnt_THD = (uint32_t)(pCurrent_Loop_Fixed->FREQ_HZ / (pSpeed_Loop->FREQ_Hz) * 60);
 }

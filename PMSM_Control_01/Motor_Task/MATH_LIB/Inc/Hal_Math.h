@@ -238,7 +238,7 @@ typedef struct Hal_PI_f32_q31
     q15_t out_max;   // Maximum output limit
     q15_t output_raw;// Output value
     q15_t output;    // Output value
-}Hal_PI_q31_t;
+}Hal_PI_q15_t;
 
 typedef struct Lookup_Table_q31
 {
@@ -258,7 +258,7 @@ typedef struct Lookup_Table_2D_q31
 
 struct PLL
 {
-    Hal_PI_q31_t PLL_PI;
+    Hal_PI_q15_t PLL_PI;
     q31_t we;
     q31_t theta;
 };
@@ -276,7 +276,40 @@ typedef struct {
     uint8_t comp_out;        // 最终输出
 } Hysteresis_Comp_TypeDef_q31_t;
 
-inline q31_t Hal_PI_q31(Hal_PI_q31_t* PI_Q31, q31_t error);
+
+/// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间
+/// @param pPi PI控制器对象，包含增益、积分项、输出限制等参数
+/// @param error 输入误差
+/// @return 输出
+static inline q15_t Hal_PI_q15(Hal_PI_q15_t *pPi, q15_t error)
+{
+    q31_t product1, product2;
+    product1 = ((q31_t)pPi->kp * error) >> 15;
+    product2 = ((q31_t)pPi->ki * error) >> 15; 
+                        // ((pPi->Kd * (pPi->output_raw - pPi->output)) >> 15); // 抗饱和项
+
+    pPi->integral += product2;
+    pPi->output_raw = clip_q31_to_q15(product1 + pPi->integral);                              
+
+    // Clamp output to min/max limits
+    if (pPi->output_raw > pPi->out_max)
+    {
+        pPi->output = pPi->out_max;
+    }
+    else if (pPi->output_raw < pPi->out_min)
+    {
+        pPi->output = pPi->out_min;
+    }
+    else
+    {
+        pPi->output = pPi->output_raw;
+    }
+
+    // Update previous error
+    pPi->prev_error = error;
+
+    return pPi->output;
+}
 
 inline q31_t Hal_LPF_q31(q31_t coff, q31_t input);
 
@@ -287,6 +320,28 @@ inline q31_t Lookup_Table_2D_Linear_q31(q31_t x, q31_t y, Lookup_Table_2D_q31_t 
 inline q31_t Binary_Search_q31(const q31_t* arr, uint32_t n, q31_t target);
 
 inline q31_t Oblique_Wave_q31(q31_t end_value, q31_t cur_value, q31_t Sub_Step, q31_t Add_Step);
+
+inline q15_t Oblique_Wave_q15(q15_t end_value, q15_t cur_value, q15_t Sub_Step, q15_t Add_Step)
+{
+    q15_t cur = cur_value;
+    if (cur_value < end_value)
+    {
+        cur += Add_Step;
+        if (cur > end_value)
+        {
+            cur = end_value;
+        }
+    }
+    else if (cur_value > end_value)
+    {
+        cur -= Sub_Step;
+        if (cur < end_value)
+        {
+            cur = end_value;
+        }
+    }
+    return cur;
+}
 
 inline void Hysteresis_Comp_Init_q31(Hysteresis_Comp_TypeDef_q31_t *hcomp, q31_t th_h, q31_t th_l, uint32_t delay);
 

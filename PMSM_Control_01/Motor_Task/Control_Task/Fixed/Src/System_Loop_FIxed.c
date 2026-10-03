@@ -59,7 +59,7 @@ void SYSTEM_Run_Fixed(Motor_Control_t *pControl)
     }
     if(MOTOR_Run_flag == 1 && Speed_Command > 50.0f)
     {
-        pSpeed_Loop->Speed_Command = (q15_t)(Speed_Command / MOTOR_RPM_BASE * 32768); // Convert speed command to base units
+        pSpeed_Loop->Speed_Command = (q15_t)((Speed_Command / MOTOR_RPM_BASE) * 32768); // Convert speed command to base units
         pSystem_Loop->Run_flag = 1;
     }
     else 

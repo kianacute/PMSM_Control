@@ -188,9 +188,9 @@ void HAL_ADCEx_InjectedConvCpltCallback(ADC_HandleTypeDef *hadc)
         // adc_adjustment.ADC_j2 = hadc2.Instance->JDR1; // Read another injected channel value
         // adc_adjustment.ADC_j3 = hadc1.Instance->JDR2; // Read another injected channel value
         // adc_adjustment.ADC_j4 = hadc2.Instance->JDR2; // Read another injected channel value
-        PMSM_42J.Input.Ia_fb_raw = ((hadc1.Instance->JDR1 - ADC_VDDA_REF / 2) << 3); // Adjust ADC1 injected channel 1 value
-        PMSM_42J.Input.Ib_fb_raw = ((hadc2.Instance->JDR1 - ADC_VDDA_REF / 2) << 3); // Adjust ADC2 injected channel 1 value
-        PMSM_42J.Input.Ic_fb_raw = ((hadc1.Instance->JDR2 - ADC_VDDA_REF / 2) << 3); // Adjust ADC1 injected channel 2 value
+        PMSM_42J.Input.Ia_fb_raw = ((hadc1.Instance->JDR1 - ADC_VDDA_REF / 2) * 8); // Adjust ADC1 injected channel 1 value
+        PMSM_42J.Input.Ib_fb_raw = ((hadc2.Instance->JDR1 - ADC_VDDA_REF / 2) * 8); // Adjust ADC2 injected channel 1 value
+        PMSM_42J.Input.Ic_fb_raw = ((hadc1.Instance->JDR2 - ADC_VDDA_REF / 2) * 8); // Adjust ADC1 injected channel 2 value
         PMSM_42J.Input.Udc_ADISR = ((hadc2.Instance->JDR2) << 3);
 
         /*调用电流环切换函数*/

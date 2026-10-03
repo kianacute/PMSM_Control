@@ -115,7 +115,7 @@ void SPEED_Open_Task_Fixed(Motor_Control_t *pControl)
     // pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
     // pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
 
-    pSpeed_Loop->Speed_Ref = Oblique_Wave_q31(pSpeed_Loop->Speed_Command / 10, pSpeed_Loop->Speed_Ref, 1, 1);
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_q15(pSpeed_Loop->Speed_Command / 10, pSpeed_Loop->Speed_Ref, 1, 1);
     pSpeed_Loop->target_iq = 721;
 
     pSpeed_Loop->target_id = 0;
@@ -195,10 +195,10 @@ void SPEED_Run_Task_Fixed(Motor_Control_t *pControl)
     // Speed_Loop.Speed_Ref = Speed_Loop.Speed_Command;
     Hysteresis_Comp_Process_Add_q31(&pSpeed_Loop->Weak_Control_Hcomp, pSpeed_Loop->Voltage_err);
     // Speed_Loop.target_is = LADRC_FirstOrder_Update(&Speed_Loop.Speed_LADRC, Speed_Loop.Speed_Ref, Speed_Loop.Speed_Fb);
-    pSpeed_Loop->target_is = Hal_PI_q31(&pSpeed_Loop->Speed_PI, pSpeed_Loop->Speed_Ref - pSpeed_Loop->Speed_Fb);
+    pSpeed_Loop->target_is = Hal_PI_q15(&pSpeed_Loop->Speed_PI, pSpeed_Loop->Speed_Ref - pSpeed_Loop->Speed_Fb);
     if (pSpeed_Loop->Weak_Control_Hcomp.comp_out == 1)
     {
-        pSpeed_Loop->Flux_Weak_Id = Hal_PI_q31(&pSpeed_Loop->Weak_Pi, (pSpeed_Loop->Weak_Control_Hcomp.threshold_high - pSpeed_Loop->Voltage_err));
+        pSpeed_Loop->Flux_Weak_Id = Hal_PI_q15(&pSpeed_Loop->Weak_Pi, (pSpeed_Loop->Weak_Control_Hcomp.threshold_high - pSpeed_Loop->Voltage_err));
     }
     else
     {
@@ -207,11 +207,11 @@ void SPEED_Run_Task_Fixed(Motor_Control_t *pControl)
     MTPA_Cal_Fixed(pControl,pSpeed_Loop->target_is);
     pSpeed_Loop->target_id = pSpeed_Loop->MTPA_Id + pSpeed_Loop->Flux_Weak_Id + pSpeed_Loop->Speed_Low_Id;
     // Speed_Loop.target_id = Speed_Loop.MTPA_Id;
-    arm_sqrt_q31(pCurrent_Loop_Fixed->Ud_Target * pCurrent_Loop_Fixed->Ud_Target + pCurrent_Loop_Fixed->Uq_Target * pCurrent_Loop_Fixed->Uq_Target, &pSpeed_Loop->Vs);
+    arm_sqrt_q15(pCurrent_Loop_Fixed->Ud_Target * pCurrent_Loop_Fixed->Ud_Target + pCurrent_Loop_Fixed->Uq_Target * pCurrent_Loop_Fixed->Uq_Target, &pSpeed_Loop->Vs);
     pSpeed_Loop->Voltage_err = pSpeed_Loop->Vs - pInput->Udc_ADISR * WEAK_VOLTAGE_COMPENSATION;
     if (pSpeed_Loop->target_is > pSpeed_Loop->target_id)
     {
-        arm_sqrt_q31(pSpeed_Loop->target_is * pSpeed_Loop->target_is - pSpeed_Loop->target_id * pSpeed_Loop->target_id,
+        arm_sqrt_q15(pSpeed_Loop->target_is * pSpeed_Loop->target_is - pSpeed_Loop->target_id * pSpeed_Loop->target_id,
                      &pSpeed_Loop->target_iq);
     }
     else
@@ -265,7 +265,7 @@ void Power_Derating_Fixed(Motor_Control_t *pControl, q31_t Bus_Current, q31_t Bu
     q31_t Error = Power_Limit - (Bus_Current * Bus_Voltage);
     // if((Error) < 10.0f)
     {
-        pSpeed_Loop->Derating_Factor = Hal_PI_q31(&pSpeed_Loop->Derating_Pi, Error);
+        pSpeed_Loop->Derating_Factor = Hal_PI_q15(&pSpeed_Loop->Derating_Pi, Error);
     }
 }
 

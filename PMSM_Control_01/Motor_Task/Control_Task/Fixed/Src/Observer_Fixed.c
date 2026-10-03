@@ -263,7 +263,7 @@ void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t 
     // EFO->Eta_alpha = EFO->y_alpha_hat * pMotor->One_per_Flux;
     // EFO->Eta_beta = EFO->y_beta_hat * pMotor->One_per_Flux;
     // // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
-    // EFO->we = Hal_PI_q31(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
+    // EFO->we = Hal_PI_q15(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
     // EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
     // EFO->Sin = arm_sin_q31(EFO->theta);
     // EFO->Cos = arm_cos_q31(EFO->theta);

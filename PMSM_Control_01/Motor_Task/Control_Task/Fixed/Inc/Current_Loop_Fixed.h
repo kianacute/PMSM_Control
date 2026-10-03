@@ -11,14 +11,14 @@ typedef struct Current_Loop_Fixed
     uint16_t FREQ_HZ;                                       //电流环频率
     uint16_t Loop_time_s;                                      //电流环循环时间
     /*电压电流，PI控制*/
-    Hal_PI_q31_t Id_PI;                                     //d轴电流PI控制器参数
-    Hal_PI_q31_t Iq_PI;                                     //q轴电流PI控制器参数
+    Hal_PI_q15_t Id_PI;                                     //d轴电流PI控制器参数
+    Hal_PI_q15_t Iq_PI;                                     //q轴电流PI控制器参数
     q15_t Ud_Target, Uq_Target;                             
     q15_t Id_Ref, Iq_Ref;
     q15_t Id_fb, Iq_fb;
     q15_t Is_fb;
     q15_t Ualpha_Ref, Ubeta_Ref, sinVal, cosVal;
-    q15_t theta;
+    uint16_t theta;
     q15_t ialpha_fb, ibeta_fb;
     q15_t Ia_fb, Ib_fb, Ic_fb;
     q15_t Ia_fb_offset, Ib_fb_offset, Ic_fb_offset;

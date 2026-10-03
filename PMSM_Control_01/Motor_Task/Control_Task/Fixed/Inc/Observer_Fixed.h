@@ -130,7 +130,7 @@ struct EffFluxObserver_Parameter
     q31_t y_beta_hat;
     q31_t Eta_alpha;
     q31_t Eta_beta;
-    Hal_PI_q31_t PLL_PI;
+    Hal_PI_q15_t PLL_PI;
     q31_t we;
     q31_t theta;
     Lookup_Table_1D_q31_t PLL_Kp_Lookup;

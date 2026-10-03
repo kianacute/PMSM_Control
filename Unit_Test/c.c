@@ -36,15 +36,17 @@ int main()
     q15_t T_a, T_b, T_c;
     uint8_t N;
 
-    int16_t a1 = 0x7f00; // 将浮点数转换为q15_t格式
+    int16_t a1 = 22938; // 将浮点数转换为q15_t格式
     int16_t a2 = 0x7f00;  // 将浮点数转换为q15_t格式
     int16_t a3 = 0x0001;  // 将浮点数转换为q15_t格式
     int32_t b1 = a1 * a2;      // 计算乘积
     int16_t c1 = -100;
-    int32_t c2 = -100;
+    uint16_t c2 = -100;
+    uint16_t d1 = 22938;
+    int16_t d2 = 60000;
 
-    b1 = a1 + a2;
-    c1 = a1 + a2;
+    c1 = (a1 * d1) >> 15;
+    c2 = (a1 * d1) >> 15;
 
     a3 = clip_q31_to_q15(b1);
     // SVPWM_Calculate_q31(T_s, V_dc, U_alpha, U_beta, &T_a, &T_b, &T_c, &N);
@@ -56,10 +58,10 @@ int main()
     printf("c1: 0x%x size: %d\n", c1, sizeof(c1));
     printf("\n---------------------------------------------------");
     printf("a1: %d\n", a1);
-    printf("a2: %d\n", a2);
-    printf("a3: %d\n", a3);
-    printf("b1: %d\n", b1);
+    printf("a2: %d\n", d1);
+    printf("a3: %d\n", d2);
     printf("c1: %d\n", c1);
+    printf("c2: %d\n", c2);
     // printf("Sector: %d\n", N);
     return 0;
 }

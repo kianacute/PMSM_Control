@@ -250,37 +250,6 @@ void Hysteresis_Comp_Process_Sub_f32(Hysteresis_Comp_TypeDef_f32_t *hcomp, float
 
 
 
-/// @brief 离散PI控制器计算函数，积分系数要求乘以采样周期，输出已经限制在out_min和out_max之间
-/// @param controller PI控制器对象，包含增益、积分项、输出限制等参数
-/// @param error 输入误差
-/// @return 输出
-q31_t Hal_PI_q31(Hal_PI_q31_t *controller, q31_t error)
-{
-     controller->integral += ((controller->ki * error) >> 15) - 
-                             ((controller->Kd * (controller->output_raw - controller->output)) >> 15); // 抗饱和项
-     controller->output_raw = ((controller->kp * error) >> 15) +                               // 比例项
-                              controller->integral;                                 
-
-     // Clamp output to min/max limits
-     if (controller->output_raw > controller->out_max)
-     {
-          controller->output = controller->out_max;
-     }
-     else if (controller->output_raw < controller->out_min)
-     {
-          controller->output = controller->out_min;
-     }
-     else
-     {
-          controller->output = controller->output_raw;
-     }
-
-     // Update previous error
-     controller->prev_error = error;
-
-     return controller->output;
-}
-
 /// @brief 二分查找，数组必须满足单调性
 /// @param arr 浮点数组，数组下标从0开始
 /// @param n 数组长度
