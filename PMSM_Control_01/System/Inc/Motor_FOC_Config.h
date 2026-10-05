@@ -22,8 +22,8 @@
 
 #define MOTOR_U_BASE        (MOTOR_BUS_VOLTAGE_MAX)                                        //母线电压采样最大值
 #define MOTOR_I_BASE        (MOTOR_CURRENT_MAX_A)                                          //相电流采样最大值
-#define MOTOR_FREQ_BASE     (MOTOR_SPEED_MAX_RPM/60.0f*MOTOR_PN)                            //最大电频率
-#define MOTOR_WE_BASE       (MOTOR_FREQ_BASE*3.14159265358979f*2.0f)
+#define MOTOR_FREQ_BASE     ((MOTOR_SPEED_MAX_RPM/(60.0f))*(MOTOR_PN))                       //最大电频率
+#define MOTOR_WE_BASE       ((MOTOR_FREQ_BASE)*3.14159265358979f*2.0f)
 #define MOTOR_L_BASE        (MOTOR_U_BASE/(MOTOR_I_BASE*MOTOR_WE_BASE))                     //电感基值
 #define MOTOR_T_BASE        (1.0f/MOTOR_WE_BASE)                                            //时间基值
 #define MOTOR_R_BASE        (MOTOR_U_BASE/MOTOR_I_BASE)                                     //电阻基值

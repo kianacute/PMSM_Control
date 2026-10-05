@@ -115,14 +115,14 @@ extern struct NonFluxObserver_Parameter NonFlux_OB;
 
 struct EffFluxObserver_Parameter
 {
-    q31_t discrete_time;
-    q31_t freq;
-    q31_t gama;
-    q31_t Sin, Cos;
-    q31_t Id, Iq;
-    q31_t FLux_D, Flux_Q;
-    q31_t Flux_alpha;
-    q31_t Flux_beta;
+    uint16_t discrete_time;
+    q15_t freq;
+    q15_t gama;
+    q15_t Sin, Cos;
+    q15_t Id, Iq;
+    q15_t FLux_D, Flux_Q;
+    q15_t Flux_alpha;
+    q15_t Flux_beta;
     q31_t Flux_hat;
     q31_t x_alpha_hat;
     q31_t x_beta_hat;
@@ -131,8 +131,8 @@ struct EffFluxObserver_Parameter
     q31_t Eta_alpha;
     q31_t Eta_beta;
     Hal_PI_q15_t PLL_PI;
-    q31_t we;
-    q31_t theta;
+    q15_t we;
+    uint16_t theta;
     Lookup_Table_1D_q31_t PLL_Kp_Lookup;
     Lookup_Table_1D_q31_t PLL_Ki_Lookup;
     Lookup_Table_1D_q31_t Gama_Lookup;
@@ -140,8 +140,8 @@ struct EffFluxObserver_Parameter
 };
 
 void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control);
-inline void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t Ualpha, q31_t Ubeta,
-                                   q31_t Ialpha, q31_t Ibeta);
+inline void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q15_t Ualpha, q15_t Ubeta,
+                                   q15_t Ialpha, q15_t Ibeta);
 #define OBSERVE_Init(pMotor_control)         Effective_FluxObserver_Init_Fixed(pMotor_control)
 #define OBSERVE_Updata(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)   \
                     Effective_FluxObserver_Updata_Fixed(pMotor_control, Ualpha, Ubeta, Ialpha, Ibeta)

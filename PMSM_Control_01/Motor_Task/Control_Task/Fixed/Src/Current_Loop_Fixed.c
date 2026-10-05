@@ -343,8 +343,8 @@ void Current_Loop_Run_Fixed(Motor_Control_t *pControl)
     pCurrent_Loop_Fixed->Ud_Target = Hal_PI_q15(&pCurrent_Loop_Fixed->Id_PI, pCurrent_Loop_Fixed->Id_Ref - pCurrent_Loop_Fixed->Id_fb);
     pCurrent_Loop_Fixed->Uq_Target = Hal_PI_q15(&pCurrent_Loop_Fixed->Iq_PI, pCurrent_Loop_Fixed->Iq_Ref - pCurrent_Loop_Fixed->Iq_fb);
 
-    // pCurrent_Loop_Fixed->Ud_Target = -200;
-    // pCurrent_Loop_Fixed->Uq_Target = 983;
+    // pCurrent_Loop_Fixed->Ud_Target = -450;
+    // pCurrent_Loop_Fixed->Uq_Target = 850;
 
 
     // arm_sqrt_q15(pCurrent_Loop_Fixed->Id_fb * pCurrent_Loop_Fixed->Id_fb + pCurrent_Loop_Fixed->Iq_fb * pCurrent_Loop_Fixed->Iq_fb, 
@@ -393,6 +393,7 @@ void Current_Para_Updata_Fixed(Motor_Control_t *pControl, q31_t speed, q31_t Ts)
     pCurrent_Loop_Fixed->Id_PI.kp = 32766/2;
     pCurrent_Loop_Fixed->Iq_PI.ki = pCurrent_Loop_Fixed->Id_PI.ki = 3771/2;
     pCurrent_Loop_Fixed->Iq_PI.kp = 32766/2;
+    pCurrent_Loop_Fixed->Iq_PI.Kd = pCurrent_Loop_Fixed->Id_PI.Kd = 16384;
                         
     pCurrent_Loop_Fixed->Phase_check_cnt_THD = (uint32_t)(pCurrent_Loop_Fixed->FREQ_HZ / (pSpeed_Loop->FREQ_Hz) * 60);
 }

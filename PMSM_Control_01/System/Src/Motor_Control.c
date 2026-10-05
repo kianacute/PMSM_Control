@@ -2,34 +2,55 @@
 #include "Motor_Lookup_Tables.h"
 
 Motor_Control_t PMSM_42J; 
-Motor_Parameter_Float_t PMSM_42JS_Parameter;
+Motor_Parameter_Float_t PMSM_42JS_Parameter_Float;
+Motor_Parameter_Fixed_t PMSM_42JS_Parameter_Fixed;
 struct Motor_Config_Float PMSM_42JS_Config;
+
+// void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
+// {
+//     // 电机基本参数数值来自 Motor_Parameters.csv，由 generate.py 生成到
+//     // Motor_Lookup_Tables.h 的宏定义中，请勿在此处直接改数值
+//     PMSM_42JS_Parameter_Float.Pn = MOTOR_PN;
+//     PMSM_42JS_Parameter_Float.Current_Max_A = 1.0f;
+//     PMSM_42JS_Parameter_Float.Bus_Voltage_Max = 1.0f;
+//     PMSM_42JS_Parameter_Float.Flux_Vkrpm = MOTOR_FLUX_VKRPM / MOTOR_FLUX_BASE;
+//     PMSM_42JS_Parameter_Float.Rs = MOTOR_RS / MOTOR_R_BASE;
+//     PMSM_42JS_Parameter_Float.Ld = MOTOR_LD / MOTOR_L_BASE;
+//     PMSM_42JS_Parameter_Float.Lq = MOTOR_LQ / MOTOR_L_BASE;
+//     PMSM_42JS_Parameter_Float.Power_Max_W = MOTOR_POWER_MAX_W / MOTOR_POWER_BASE;
+//     PMSM_42JS_Parameter_Float.Speed_Max_Rpm = 1.0f;
+//     PMSM_42JS_Parameter_Float.Ls = (PMSM_42JS_Parameter_Float.Ld + PMSM_42JS_Parameter_Float.Lq) / 2;
+//     PMSM_42JS_Parameter_Float.flux_linkage_wb = MOTOR_FLUX_VS / MOTOR_FLUX_BASE ;
+//     PMSM_42JS_Parameter_Float.Flux_Flux  = (PMSM_42JS_Parameter_Float.flux_linkage_wb * PMSM_42JS_Parameter_Float.flux_linkage_wb);
+//     PMSM_42JS_Parameter_Float.Ld_Lq = PMSM_42JS_Parameter_Float.Ld - PMSM_42JS_Parameter_Float.Lq;
+//     PMSM_42JS_Parameter_Float.One_per_Flux = (1.0f) / PMSM_42JS_Parameter_Float.flux_linkage_wb;
+// }
 
 void Motor_Parameter_Init(Motor_Control_t *pMotor_Control)
 {
     // 电机基本参数数值来自 Motor_Parameters.csv，由 generate.py 生成到
     // Motor_Lookup_Tables.h 的宏定义中，请勿在此处直接改数值
-    PMSM_42JS_Parameter.Pn = MOTOR_PN;
-    PMSM_42JS_Parameter.Current_Max_A = 1.0f;
-    PMSM_42JS_Parameter.Bus_Voltage_Max = 1.0f;
-    PMSM_42JS_Parameter.Flux_Vkrpm = MOTOR_FLUX_VKRPM / MOTOR_FLUX_BASE;
-    PMSM_42JS_Parameter.Rs = MOTOR_RS / MOTOR_R_BASE;
-    PMSM_42JS_Parameter.Ld = MOTOR_LD / MOTOR_L_BASE;
-    PMSM_42JS_Parameter.Lq = MOTOR_LQ / MOTOR_L_BASE;
-    PMSM_42JS_Parameter.Power_Max_W = MOTOR_POWER_MAX_W / MOTOR_POWER_BASE;
-    PMSM_42JS_Parameter.Speed_Max_Rpm = 1.0f;
-    PMSM_42JS_Parameter.Ls = (PMSM_42JS_Parameter.Ld + PMSM_42JS_Parameter.Lq) / 2;
-    PMSM_42JS_Parameter.flux_linkage_wb = MOTOR_FLUX_VS / MOTOR_FLUX_BASE;
-    PMSM_42JS_Parameter.Flux_Flux  = PMSM_42JS_Parameter.flux_linkage_wb * PMSM_42JS_Parameter.flux_linkage_wb;
-    PMSM_42JS_Parameter.Ld_Lq = PMSM_42JS_Parameter.Ld - PMSM_42JS_Parameter.Lq;
-    PMSM_42JS_Parameter.One_per_Flux = 1 / PMSM_42JS_Parameter.flux_linkage_wb;
+    PMSM_42JS_Parameter_Fixed.Pn = MOTOR_PN;
+    PMSM_42JS_Parameter_Fixed.Current_Max_A = 1.0f;
+    PMSM_42JS_Parameter_Fixed.Bus_Voltage_Max = 1.0f;
+    PMSM_42JS_Parameter_Fixed.Flux_Vkrpm = MOTOR_FLUX_VKRPM / MOTOR_FLUX_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Rs = MOTOR_RS / MOTOR_R_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Ld = MOTOR_LD / MOTOR_L_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Lq = MOTOR_LQ / MOTOR_L_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Power_Max_W = MOTOR_POWER_MAX_W / MOTOR_POWER_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Speed_Max_Rpm = 1.0f;
+    PMSM_42JS_Parameter_Fixed.Ls = (PMSM_42JS_Parameter_Fixed.Ld + PMSM_42JS_Parameter_Fixed.Lq) / 2;
+    PMSM_42JS_Parameter_Fixed.flux_linkage_wb = MOTOR_FLUX_VS / MOTOR_FLUX_BASE * 32767;
+    PMSM_42JS_Parameter_Fixed.Flux_Flux  = ((q31_t)PMSM_42JS_Parameter_Fixed.flux_linkage_wb * PMSM_42JS_Parameter_Fixed.flux_linkage_wb) >> 15;
+    PMSM_42JS_Parameter_Fixed.Ld_Lq = PMSM_42JS_Parameter_Fixed.Ld - PMSM_42JS_Parameter_Fixed.Lq;
+    PMSM_42JS_Parameter_Fixed.One_per_Flux = ((q31_t)1 << 30) / PMSM_42JS_Parameter_Fixed.flux_linkage_wb;
 }
 
 void Motor_Config_Init(Motor_Control_t *pMotor_Control)
 {
     Motor_Parameter_Init(pMotor_Control);
     pMotor_Control->Motor_Config = (Motor_Config_t*)&PMSM_42JS_Config;
-    pMotor_Control->Motor_Config->Motor_Param = (Motor_Parameter_Fixed_t*)&PMSM_42JS_Parameter;
+    pMotor_Control->Motor_Config->Motor_Param = (Motor_Parameter_Fixed_t*)&PMSM_42JS_Parameter_Fixed;
 
     // IF启动参数查表初始化
     PMSM_42JS_Config.IF_Start_Iq_Lookup.x_table = IF_Start_Ramp_Sec;

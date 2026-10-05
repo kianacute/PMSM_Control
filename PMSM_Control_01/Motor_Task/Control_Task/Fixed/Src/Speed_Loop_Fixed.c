@@ -115,7 +115,7 @@ void SPEED_Open_Task_Fixed(Motor_Control_t *pControl)
     // pSpeed_Loop->Speed_Ref = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Speed_Lookup);
     // pSpeed_Loop->target_iq = Lookup_Table_1D_Linear_q31(tick_count, &pMotor_Config->IF_Start_Iq_Lookup);
 
-    pSpeed_Loop->Speed_Ref = Oblique_Wave_q15(pSpeed_Loop->Speed_Command / 10, pSpeed_Loop->Speed_Ref, 1, 1);
+    pSpeed_Loop->Speed_Ref = Oblique_Wave_q15(pSpeed_Loop->Speed_Command, pSpeed_Loop->Speed_Ref, 1, 1);
     pSpeed_Loop->target_iq = 721;
 
     pSpeed_Loop->target_id = 0;

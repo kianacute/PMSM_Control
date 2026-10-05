@@ -283,12 +283,14 @@ typedef struct {
 /// @return 输出
 static inline q15_t Hal_PI_q15(Hal_PI_q15_t *pPi, q15_t error)
 {
-    q31_t product1, product2;
+    q31_t product1, product2, product3;                    /* Temporary variables used to store intermediate results */
     product1 = ((q31_t)pPi->kp * error) >> 15;
     product2 = ((q31_t)pPi->ki * error) >> 15; 
-                        // ((pPi->Kd * (pPi->output_raw - pPi->output)) >> 15); // 抗饱和项
+    product3 = ((q31_t)pPi->Kd * (pPi->output_raw - pPi->output)) >> 15; // 抗饱和项
 
-    pPi->integral += product2;
+    product2 = clip_q31_to_q15(product2);
+
+    pPi->integral += clip_q31_to_q15(product2 - product3); // 积分项更新，抗饱和项
     pPi->output_raw = clip_q31_to_q15(product1 + pPi->integral);                              
 
     // Clamp output to min/max limits

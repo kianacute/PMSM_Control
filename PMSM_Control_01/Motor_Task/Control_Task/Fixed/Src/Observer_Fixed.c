@@ -221,7 +221,7 @@ struct EffFluxObserver_Parameter EffFlux_OB_Fixed =
 void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control)
 {
     pMotor_control->pObserver = &EffFlux_OB_Fixed;
-    EffFlux_OB_Fixed.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE;
+    EffFlux_OB_Fixed.discrete_time = MOTOR_CURRENT_LOOP_CYCLE_TIME_S / MOTOR_T_BASE * 32768;
     EffFlux_OB_Fixed.freq = MOTOR_CURRENT_LOOP_HZ;
     EffFlux_OB_Fixed.Flux_alpha = 0;
     EffFlux_OB_Fixed.Flux_beta = 0;
@@ -229,9 +229,9 @@ void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control)
     EffFlux_OB_Fixed.PLL_PI.ki = 16 / 40;
     EffFlux_OB_Fixed.PLL_PI.Kd = 0;
     EffFlux_OB_Fixed.PLL_PI.integral = 0;
-    EffFlux_OB_Fixed.PLL_PI.out_max = 10000;
-    EffFlux_OB_Fixed.PLL_PI.out_min = -10000;
-    EffFlux_OB_Fixed.gama = 0.2000f;
+    EffFlux_OB_Fixed.PLL_PI.out_max = 30000;
+    EffFlux_OB_Fixed.PLL_PI.out_min = -30000;
+    EffFlux_OB_Fixed.gama = 6554;
     EffFlux_OB_Fixed.x_alpha_hat = 0;
     EffFlux_OB_Fixed.x_beta_hat = 0;
     EffFlux_OB_Fixed.y_alpha_hat = 0;
@@ -247,29 +247,49 @@ void Effective_FluxObserver_Init_Fixed(Motor_Control_t *pMotor_control)
     // EMF_CAL_Init();
 }
 
-void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q31_t Ualpha, q31_t Ubeta,
-                                   q31_t Ialpha, q31_t Ibeta)
+void Effective_FluxObserver_Updata_Fixed(Motor_Control_t *pMotor_control, q15_t Ualpha, q15_t Ubeta,
+                                   q15_t Ialpha, q15_t Ibeta)
 {
-    // struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
-    // Motor_Parameter_Fixed_t *pMotor = (Motor_Parameter_Fixed_t *)pMotor_control->Motor_Config->Motor_Param;
-    // arm_park_q15(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
-    // EFO->FLux_D = EFO->Id * pMotor->Ld + pMotor->flux_linkage_wb;
-    // EFO->Flux_Q = EFO->Iq * pMotor->Lq;
-    // arm_inv_park_q15(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
-    // EFO->x_alpha_hat += ((Ualpha + EFO->gama * (EFO->Flux_alpha - EFO->x_alpha_hat)) * EFO->discrete_time);
-    // EFO->x_beta_hat += ((Ubeta + EFO->gama * (EFO->Flux_beta - EFO->x_beta_hat)) * EFO->discrete_time);
-    // EFO->y_alpha_hat = EFO->x_alpha_hat - pMotor->Lq * Ialpha;
-    // EFO->y_beta_hat = EFO->x_beta_hat - pMotor->Lq * Ibeta; 
-    // EFO->Eta_alpha = EFO->y_alpha_hat * pMotor->One_per_Flux;
-    // EFO->Eta_beta = EFO->y_beta_hat * pMotor->One_per_Flux;
-    // // PLL_Update(&EFO->tPLL, EFO->Eta_beta, EFO->Eta_alpha, EFO->discrete_time);
-    // EFO->we = Hal_PI_q15(&EFO->PLL_PI, EFO->Eta_beta * EFO->Cos - EFO->Eta_alpha * EFO->Sin);
-    // EFO->theta = (EFO->theta + EFO->we * EFO->discrete_time);
-    // EFO->Sin = arm_sin_q31(EFO->theta);
-    // EFO->Cos = arm_cos_q31(EFO->theta);
+    struct EffFluxObserver_Parameter *EFO = (struct EffFluxObserver_Parameter*)pMotor_control->pObserver;
+    Motor_Parameter_Fixed_t *pMotor = (Motor_Parameter_Fixed_t *)pMotor_control->Motor_Config->Motor_Param;
+    q31_t produce1, produce2;
+
+    arm_park_q15(Ialpha, Ibeta, &EFO->Id, &EFO->Iq, EFO->Sin, EFO->Cos);
+    produce1 = (q31_t)(EFO->Id * pMotor->Ld) >> 15;
+    EFO->FLux_D = clip_q31_to_q15(produce1 + pMotor->flux_linkage_wb);
+    EFO->Flux_Q = (q31_t)(EFO->Iq * pMotor->Lq) >> 15;
+
+    arm_inv_park_q15(EFO->FLux_D, EFO->Flux_Q, &EFO->Flux_alpha, &EFO->Flux_beta, EFO->Sin, EFO->Cos);
+
+    produce1 = ((q31_t)EFO->Flux_alpha - EFO->x_alpha_hat);
+    produce2 = (q31_t)EFO->gama * produce1 >> 15;
+    produce1 = ((q31_t)Ualpha + produce2);
+    EFO->x_alpha_hat += ((produce1 * EFO->discrete_time) >> 15);
+
+    produce1 = ((q31_t)EFO->Flux_beta - EFO->x_beta_hat);
+    produce2 = (q31_t)EFO->gama * produce1 >> 15;
+    produce1 = ((q31_t)Ubeta + produce2);
+    EFO->x_beta_hat += ((produce1 * EFO->discrete_time) >> 15);
+
+    produce1 = ((q31_t)pMotor->Lq * Ialpha) >> 15;
+    produce2 = ((q31_t)pMotor->Lq * Ibeta) >> 15;
+
+    EFO->y_alpha_hat = clip_q31_to_q15(EFO->x_alpha_hat - produce1);
+    EFO->y_beta_hat = clip_q31_to_q15(EFO->x_beta_hat - produce2);
+
+    EFO->Eta_alpha = clip_q31_to_q15((q31_t)(((q63_t)EFO->y_alpha_hat * pMotor->One_per_Flux) >> 15));
+    EFO->Eta_beta = clip_q31_to_q15((q31_t)(((q63_t)EFO->y_beta_hat * pMotor->One_per_Flux) >> 15));
+
+    produce1 = ((q31_t)EFO->Eta_beta * EFO->Cos) >> 15;
+    produce2 = ((q31_t)EFO->Eta_alpha * EFO->Sin) >> 15;
+
+    EFO->we = Hal_PI_q15(&EFO->PLL_PI, clip_q31_to_q15(produce1 - produce2));
+    EFO->theta += (uint16_t)(((q31_t)EFO->we * EFO->discrete_time) >> 15);
+    EFO->Sin = arm_sin_q15(EFO->theta);
+    EFO->Cos = arm_cos_q15(EFO->theta);
     // SinCos_Lookup_q31(EFO->theta, &EFO->Sin, &EFO->Cos);
     // arm_sin_cos_f32(EFO->theta, &EFO->Sin, &EFO->Cos);
-    // EMF_CAL_Updata(&EMF_Cal, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
+    // EMF_CAL_Updata(&EMF_Cal_Fixed, Ualpha, Ubeta, Ialpha, Ibeta, EFO->discrete_time);
 }
 
 #endif
@@ -339,11 +359,18 @@ void Observer_Param_Lookup_Updata_Fixed(Motor_Control_t *pMotor_Control, q31_t S
 #endif
 
 #ifdef MOTOR_EFFECTIVE_FLUX_OBSERVER
-    EffFlux_OB_Fixed.PLL_PI.kp = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
-    EffFlux_OB_Fixed.PLL_PI.ki = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
-    EffFlux_OB_Fixed.gama = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
-    EffFlux_OB_Fixed.Angle_Comp = Lookup_Table_2D_Linear_q31(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
-    EffFlux_OB_Fixed.discrete_time = Ts;
+    // EffFlux_OB_Fixed.PLL_PI.kp = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->NonFlux_PLL_Kp_Lookup);
+    // EffFlux_OB_Fixed.PLL_PI.ki = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->NonFlux_PLL_Ki_Lookup);
+    // EffFlux_OB_Fixed.gama = Lookup_Table_1D_Linear_q31(Speed, &pMotor_Config->EfFlux_Gama_Lookup);
+    // EffFlux_OB_Fixed.Angle_Comp = Lookup_Table_2D_Linear_q31(Speed, Is, &pMotor_Config->EfFlux_Angle_Comp);
+    // EffFlux_OB_Fixed.discrete_time = Ts;
+
+    EffFlux_OB_Fixed.PLL_PI.kp = 9830;
+    EffFlux_OB_Fixed.PLL_PI.ki = 3;
+    EffFlux_OB_Fixed.PLL_PI.Kd = 16384;
+    EffFlux_OB_Fixed.gama = 1565;
+    EffFlux_OB_Fixed.Angle_Comp = 0;
+    EffFlux_OB_Fixed.discrete_time = 3424;
 #endif
 
 #ifdef MOTOR_SMO_OBSERVER

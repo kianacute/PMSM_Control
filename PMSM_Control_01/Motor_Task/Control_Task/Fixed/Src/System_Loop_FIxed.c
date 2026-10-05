@@ -18,7 +18,7 @@ void SYSTEM_Init_Fixed(Motor_Control_t *pControl)
     pControl->System_Loop.pSystem_Loop = (void*)&System_Loop_Fixed;
     Motor_Diag_Init();
     System_Diag_Init();
-    Speed_Command = 1000.0f;
+    Speed_Command = 500.0f;
     System_Loop_Fixed.Run_flag = 0;
     Hysteresis_Comp_Init_q31(&System_Loop_Fixed.System_Hv_Comp, 1, 0, SYSTEM_HV_STANDY_TIME_S); // 系统高压滞回比较器
 }
